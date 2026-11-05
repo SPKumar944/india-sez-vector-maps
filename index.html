@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>India SEZ Plot Demarcation Master Plan GIS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maharashtra SEZ Plot Demarcation GIS</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -12,37 +12,32 @@
         body { display: flex; height: 100vh; width: 100vw; overflow: hidden; background: #0b1120; color: #f8fafc; }
         
         #sidebar {
-            width: 440px; height: 100%; background: #0f172a; border-right: 1px solid #1e293b;
+            width: 420px; height: 100%; background: #0f172a; border-right: 1px solid #1e293b;
             display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 25px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
         }
-        .header { padding: 18px 20px; border-bottom: 1px solid #1e293b; background: #090d16; }
-        .header h1 { font-size: 17px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
-        .header p { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+        .header { padding: 16px 18px; border-bottom: 1px solid #1e293b; background: #090d16; }
+        .header h1 { font-size: 16px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
+        .header p { font-size: 11px; color: #94a3b8; margin-top: 3px; }
         
-        .content { padding: 16px 20px; overflow-y: auto; flex: 1; }
-        .control-group { margin-bottom: 14px; }
-        .control-group label { display: block; font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .content { padding: 14px 18px; overflow-y: auto; flex: 1; }
+        .control-group { margin-bottom: 12px; }
+        .control-group label { display: block; font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
         
         select, input {
-            width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid #334155;
-            border-radius: 6px; color: #f8fafc; font-size: 13px; outline: none; transition: all 0.2s;
+            width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid #38bdf8;
+            border-radius: 6px; color: #f8fafc; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s;
         }
-        select:focus, input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        select:focus, input:focus { border-color: #7dd3fc; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25); }
 
-        .district-box {
-            background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25);
-            border-radius: 8px; padding: 12px; margin-bottom: 14px;
-        }
-        .district-box label { color: #38bdf8; font-weight: 700; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+        .stat-card { background: #1e293b; padding: 8px 6px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
+        .stat-val { font-size: 15px; font-weight: 700; color: #38bdf8; }
+        .stat-lbl { font-size: 9px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; }
 
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-        .stat-card { background: #1e293b; padding: 10px 8px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
-        .stat-val { font-size: 16px; font-weight: 700; color: #38bdf8; }
-        .stat-lbl { font-size: 10px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; }
-
-        .filter-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+        .filter-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
         .filter-tab {
-            flex: 1; padding: 6px 4px; font-size: 11px; font-weight: 600; text-align: center;
+            flex: 1; padding: 6px 3px; font-size: 10.5px; font-weight: 600; text-align: center;
             background: #1e293b; border: 1px solid #334155; border-radius: 5px; color: #94a3b8;
             cursor: pointer; transition: all 0.15s;
         }
@@ -50,76 +45,89 @@
         .filter-tab.active { background: #0284c7; border-color: #38bdf8; color: white; }
 
         .plot-list-container {
-            max-height: 260px; overflow-y: auto; background: #090d16; border: 1px solid #1e293b;
-            border-radius: 6px; margin-bottom: 14px;
+            max-height: 220px; overflow-y: auto; background: #090d16; border: 1px solid #1e293b;
+            border-radius: 6px; margin-bottom: 12px;
         }
         .plot-row {
-            padding: 9px 12px; border-bottom: 1px solid #1e293b; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center; font-size: 12px;
+            padding: 8px 10px; border-bottom: 1px solid #1e293b; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;
             transition: background 0.15s;
         }
         .plot-row:hover { background: #1e293b; }
-        .plot-row.active { background: rgba(56, 189, 248, 0.15); border-left: 3px solid #38bdf8; }
+        .plot-row.active { background: rgba(56, 189, 248, 0.18); border-left: 3px solid #38bdf8; }
         .plot-row-no { font-weight: 700; color: #f8fafc; }
-        .plot-row-company { font-size: 11px; color: #94a3b8; max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .plot-row-company { font-size: 10.5px; color: #94a3b8; max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .badge-status {
-            font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+            font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
         }
-        .badge-allotted { background: rgba(234, 88, 12, 0.2); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.4); }
-        .badge-vacant { background: rgba(22, 163, 74, 0.2); color: #4ade80; border: 1px solid rgba(22, 163, 74, 0.4); }
-        .badge-reserved { background: rgba(139, 92, 246, 0.2); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.4); }
+        .badge-allotted { background: rgba(234, 88, 12, 0.25); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.5); }
+        .badge-vacant { background: rgba(22, 163, 74, 0.25); color: #4ade80; border: 1px solid rgba(22, 163, 74, 0.5); }
+        .badge-reserved { background: rgba(139, 92, 246, 0.25); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.5); }
 
         .selected-plot-card {
-            background: #1e293b; border: 1px solid #38bdf8; border-radius: 8px; padding: 12px 14px;
-            margin-bottom: 14px; font-size: 12px;
+            background: #1e293b; border: 1px solid #38bdf8; border-radius: 6px; padding: 10px 12px;
+            margin-bottom: 12px; font-size: 11.5px;
         }
-        .selected-plot-card h3 { font-size: 14px; color: #38bdf8; margin-bottom: 8px; display: flex; justify-content: space-between; }
-        .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; }
-        .prop-item { background: #0f172a; padding: 6px 8px; border-radius: 4px; }
-        .prop-item span { color: #94a3b8; display: block; font-size: 10px; }
-        .prop-item strong { color: #f8fafc; font-size: 11px; word-break: break-word; }
+        .selected-plot-card h3 { font-size: 13px; color: #38bdf8; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 10.5px; }
+        .prop-item { background: #0f172a; padding: 5px 7px; border-radius: 4px; }
+        .prop-item span { color: #94a3b8; display: block; font-size: 9.5px; }
+        .prop-item strong { color: #f8fafc; font-size: 10.5px; word-break: break-word; }
 
-        .legend-box { background: #1e293b; padding: 10px 12px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 14px; }
-        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #cbd5e1; }
-        .swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+        .legend-box { background: #1e293b; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 12px; }
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #cbd5e1; }
+        .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
 
         .download-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%; padding: 10px; background: #0284c7; color: white; border: none;
-            border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            width: 100%; padding: 9px; background: #0284c7; color: white; border: none;
+            border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; text-decoration: none;
             transition: background 0.2s;
         }
         .download-btn:hover { background: #0369a1; }
 
-        #map { flex: 1; height: 100%; background: #0b1120; }
+        #map-container { flex: 1; height: 100%; position: relative; }
+        #map { width: 100%; height: 100%; background: #0b1120; }
         
+        .mobile-toggle {
+            display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; background: #0284c7; color: white; padding: 10px 20px; border-radius: 25px;
+            font-size: 13px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.4); border: 1px solid #38bdf8;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            #sidebar {
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+                transform: translateY(100%); z-index: 1500;
+            }
+            #sidebar.open { transform: translateY(0); }
+            #map-container { width: 100%; height: 100%; }
+            .mobile-toggle { display: block; }
+        }
+
         .leaflet-popup-content-wrapper { background: #0f172a !important; color: #f8fafc !important; border: 1px solid #38bdf8; border-radius: 8px; }
         .leaflet-popup-tip { background: #0f172a !important; }
-        
-        .plot-label {
-            background: rgba(15, 23, 42, 0.85); border: 1px solid #38bdf8; color: #38bdf8;
-            font-size: 10px; font-weight: 700; padding: 1px 4px; border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
     </style>
 </head>
 <body>
     <div id="sidebar">
         <div class="header">
-            <h1>🏢 Special Economic Zones Plot Demarcation</h1>
-            <p>Plot-level geometries and demarcated allottee records from IILB</p>
+            <h1>🏢 Maharashtra SEZ Plot Demarcation</h1>
+            <p>Plot-level geometries and demarcated allottees from IILB</p>
         </div>
 
         <div class="content">
-            <div class="district-box">
-                <div class="control-group" style="margin-bottom: 0;">
-                    <label>📍 Select Maharashtra District / SEZ</label>
-                    <select id="districtSelect" onchange="switchSEZ(this.value)">
-                        <option value="seepz" selected>Mumbai Suburban — SEEPZ SEZ & Marol (464 Plots)</option>
-                        <option value="pune">Pune — Hinjewadi Infotech Park & SEZ (504 Plots)</option>
-                    </select>
-                </div>
+            <!-- Maharashtra District Selector Only -->
+            <div class="control-group">
+                <label>📍 Select District in Maharashtra</label>
+                <select id="districtSelect" onchange="switchDistrict(this.value)">
+                    <option value="mumbai_suburban" selected>Mumbai Suburban — SEEPZ SEZ & Marol (464 Plots Demarcated)</option>
+                    <option value="pune">Pune — Hinjewadi Infotech Park & SEZ (504 Plots Demarcated)</option>
+                </select>
             </div>
 
             <div class="stats-grid">
@@ -141,8 +149,8 @@
             </div>
 
             <!-- Search & Filter Tabs -->
-            <div class="control-group" style="margin-bottom: 8px;">
-                <input type="text" id="plotSearch" placeholder="🔍 Search Plot # (e.g. A-57, 30) or Company (Wipro, Tata)..." onkeyup="onSearch(this.value)">
+            <div class="control-group" style="margin-bottom: 6px;">
+                <input type="text" id="plotSearch" placeholder="🔍 Search Plot # (A-57, 30) or Company (Wipro, Tata)..." onkeyup="onSearch(this.value)">
             </div>
 
             <div class="filter-tabs">
@@ -159,18 +167,27 @@
                 <div class="legend-grid">
                     <div class="legend-item"><span class="swatch" style="background: #ea580c;"></span> Allotted Plot</div>
                     <div class="legend-item"><span class="swatch" style="background: #16a34a;"></span> Vacant (Available)</div>
-                    <div class="legend-item"><span class="swatch" style="background: #8b5cf6;"></span> Reserved / Infrastructure</div>
-                    <div class="legend-item"><span class="swatch" style="background: #ef4444; border: 1px dashed white;"></span> Outer SEZ Boundary</div>
+                    <div class="legend-item"><span class="swatch" style="background: #8b5cf6;"></span> Reserved / Utility</div>
+                    <div class="legend-item"><span class="swatch" style="background: #ef4444; border: 1px dashed white;"></span> Outer Boundary</div>
                 </div>
             </div>
 
             <a id="downloadBtn" class="download-btn" href="seepz_mumbai_plots.geojson" download>
                 📥 Download Demarcated Plots GeoJSON
             </a>
+            
+            <button id="closeSidebarBtn" class="download-btn" style="background: #334155; margin-top: 8px; display: none;" onclick="toggleMobileDrawer()">
+                ✖ Close & View Map
+            </button>
         </div>
     </div>
 
-    <div id="map"></div>
+    <div id="map-container">
+        <div id="map"></div>
+        <button class="mobile-toggle" id="mobileToggleBtn" onclick="toggleMobileDrawer()">
+            📋 View Plot Details & Directory
+        </button>
+    </div>
 
     <script>
         var rawData = {
@@ -81038,10 +81055,9 @@
 
             document.getElementById('selOwner').innerText = p.owner || 'Vacant / Not Allotted';
             document.getElementById('selSize').innerText = p.plotsize ? (p.plotsize + ' sq.m (' + (p.plotsize * 0.000247105).toFixed(2) + ' ac)') : 'N/A';
-            document.getElementById('selCat').innerText = p.plotcat || 'Industrial';
+            document.getElementById('selCat').innerText = p.plotcat || 'Industrial Plot';
             document.getElementById('selRate').innerText = p.plotrate ? '₹' + p.plotrate + '/sq.m' : 'Standard Tariff';
 
-            // Highlight in list
             document.querySelectorAll('.plot-row').forEach(function(el) { el.classList.remove('active'); });
             var row = document.getElementById('prow_' + p.plotno);
             if (row) {
@@ -81053,19 +81069,24 @@
                 map.flyToBounds(layer.getBounds(), { maxZoom: 18, duration: 0.8 });
                 layer.openPopup();
             }
+
+            // If on mobile, close drawer to show map
+            if (window.innerWidth <= 768) {
+                var sb = document.getElementById('sidebar');
+                if (sb.classList.contains('open')) toggleMobileDrawer();
+            }
         }
 
-        function switchSEZ(key) {
+        function switchDistrict(distKey) {
             if (currentPlotsLayer) map.removeLayer(currentPlotsLayer);
             if (currentBoundaryLayer) map.removeLayer(currentBoundaryLayer);
             plotLayersMap = {};
 
-            var plotsData = (key === 'seepz') ? rawData.seepz_plots : rawData.pune_plots;
-            var boundaryData = (key === 'seepz') ? rawData.seepz_boundary : rawData.pune_boundary;
+            var plotsData = (distKey === 'mumbai_suburban') ? rawData.seepz_plots : rawData.pune_plots;
+            var boundaryData = (distKey === 'mumbai_suburban') ? rawData.seepz_boundary : rawData.pune_boundary;
             var btn = document.getElementById('downloadBtn');
-            btn.href = (key === 'seepz') ? 'seepz_mumbai_plots.geojson' : 'pune_hinjewadi_plots.geojson';
+            btn.href = (distKey === 'mumbai_suburban') ? 'seepz_mumbai_plots.geojson' : 'pune_hinjewadi_plots.geojson';
 
-            // 1. Render Outer SEZ Boundary (thin dashed outline, 0 fill)
             currentBoundaryLayer = L.geoJSON(boundaryData, {
                 style: {
                     color: '#ef4444', weight: 2.5, opacity: 0.9,
@@ -81074,7 +81095,6 @@
                 interactive: false
             }).addTo(map);
 
-            // 2. Render Demarcated Plot Vectors
             activePlotsList = plotsData.features || [];
             
             var allottedCount = 0, vacantCount = 0, reservedCount = 0;
@@ -81109,7 +81129,6 @@
                     var p = f.properties || {};
                     plotLayersMap[p.plotno] = layer;
 
-                    // Plot permanent label visible on hover or click
                     var popupHtml = '<div style="min-width: 200px;">' +
                         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
                             '<strong style="font-size: 15px; color: #38bdf8;">Plot ' + (p.plotno || 'N/A') + '</strong>' +
@@ -81203,7 +81222,6 @@
             searchQuery = val;
             renderPlotList();
             
-            // Highlight matching plots on map
             if (!val) {
                 currentPlotsLayer.eachLayer(function(l) { currentPlotsLayer.resetStyle(l); });
                 return;
@@ -81221,8 +81239,27 @@
             });
         }
 
-        // Initialize on SEEPZ SEZ
-        switchSEZ('seepz');
+        function toggleMobileDrawer() {
+            var sb = document.getElementById('sidebar');
+            var btn = document.getElementById('mobileToggleBtn');
+            var closeBtn = document.getElementById('closeSidebarBtn');
+            if (sb.classList.contains('open')) {
+                sb.classList.remove('open');
+                btn.style.display = 'block';
+                closeBtn.style.display = 'none';
+            } else {
+                sb.classList.add('open');
+                btn.style.display = 'none';
+                closeBtn.style.display = 'block';
+            }
+        }
+
+        if (window.innerWidth <= 768) {
+            document.getElementById('closeSidebarBtn').style.display = 'block';
+        }
+
+        // Initialize directly on Mumbai Suburban
+        switchDistrict('mumbai_suburban');
     </script>
 </body>
 </html>
