@@ -3,94 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Maharashtra SEZ Plot Demarcation GIS</title>
+    <title>AGT Intelligence | Maharashtra SEZ & Industrial Cadastral Demarcation</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { display: flex; height: 100vh; width: 100vw; overflow: hidden; background: #0b1120; color: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { display: flex; height: 100vh; width: 100vw; overflow: hidden; background: #070b14; color: #f1f5f9; }
         
         #sidebar {
-            width: 420px; height: 100%; background: #0f172a; border-right: 1px solid #1e293b;
-            display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 25px rgba(0,0,0,0.5);
+            width: 430px; height: 100%; background: #0b1120; border-right: 1px solid #1e293b;
+            display: flex; flex-direction: column; z-index: 1000; box-shadow: 4px 0 30px rgba(0,0,0,0.6);
             transition: transform 0.3s ease;
         }
-        .header { padding: 16px 18px; border-bottom: 1px solid #1e293b; background: #090d16; }
-        .header h1 { font-size: 16px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
-        .header p { font-size: 11px; color: #94a3b8; margin-top: 3px; }
         
-        .content { padding: 14px 18px; overflow-y: auto; flex: 1; }
+        /* AGT Intelligence Header */
+        .brand-header {
+            padding: 16px 20px; border-bottom: 1px solid #1e293b; background: #070c18;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .brand-left { display: flex; align-items: center; gap: 12px; }
+        .brand-logo-mark {
+            width: 36px; height: 36px; border-radius: 8px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0f172a 100%);
+            border: 1px solid rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+        .brand-logo-mark svg { width: 22px; height: 22px; fill: #38bdf8; }
+        .brand-title-wrap h1 {
+            font-size: 15px; font-weight: 800; letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff 0%, #93c5fd 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .brand-title-wrap p {
+            font-size: 10.5px; color: #64748b; font-weight: 500; font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase; letter-spacing: 0.8px; margin-top: 1px;
+        }
+        .brand-link-btn {
+            font-size: 11px; font-weight: 600; color: #38bdf8; text-decoration: none;
+            padding: 4px 8px; border-radius: 5px; border: 1px solid rgba(56, 189, 248, 0.3);
+            background: rgba(56, 189, 248, 0.08); transition: all 0.2s;
+        }
+        .brand-link-btn:hover { background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; }
+
+        .sub-header {
+            padding: 10px 20px; background: rgba(15, 23, 42, 0.7); border-bottom: 1px solid #1e293b;
+            font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .content { padding: 14px 20px; overflow-y: auto; flex: 1; }
         .control-group { margin-bottom: 12px; }
-        .control-group label { display: block; font-size: 11px; font-weight: 700; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .control-group label {
+            display: block; font-size: 11px; font-weight: 700; color: #38bdf8;
+            text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.6px;
+        }
         
         select, input {
-            width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid #38bdf8;
+            width: 100%; padding: 10px 12px; background: #131d31; border: 1px solid #293d60;
             border-radius: 6px; color: #f8fafc; font-size: 13px; font-weight: 600; outline: none; transition: all 0.2s;
         }
-        select:focus, input:focus { border-color: #7dd3fc; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25); }
+        select:focus, input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25); }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
-        .stat-card { background: #1e293b; padding: 8px 6px; border-radius: 6px; border: 1px solid #334155; text-align: center; }
-        .stat-val { font-size: 15px; font-weight: 700; color: #38bdf8; }
-        .stat-lbl { font-size: 9px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; }
+        .stat-card { background: #131d31; padding: 8px 6px; border-radius: 6px; border: 1px solid #1e293b; text-align: center; }
+        .stat-val { font-size: 15px; font-weight: 800; color: #38bdf8; }
+        .stat-lbl { font-size: 9px; color: #94a3b8; margin-top: 2px; text-transform: uppercase; font-weight: 600; }
 
         .filter-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
         .filter-tab {
             flex: 1; padding: 6px 3px; font-size: 10.5px; font-weight: 600; text-align: center;
-            background: #1e293b; border: 1px solid #334155; border-radius: 5px; color: #94a3b8;
+            background: #131d31; border: 1px solid #1e293b; border-radius: 5px; color: #94a3b8;
             cursor: pointer; transition: all 0.15s;
         }
-        .filter-tab:hover { background: #334155; color: white; }
+        .filter-tab:hover { background: #1e293b; color: white; }
         .filter-tab.active { background: #0284c7; border-color: #38bdf8; color: white; }
 
         .plot-list-container {
-            max-height: 220px; overflow-y: auto; background: #090d16; border: 1px solid #1e293b;
+            max-height: 230px; overflow-y: auto; background: #070c18; border: 1px solid #1e293b;
             border-radius: 6px; margin-bottom: 12px;
         }
         .plot-row {
-            padding: 8px 10px; border-bottom: 1px solid #1e293b; cursor: pointer;
+            padding: 8px 10px; border-bottom: 1px solid #131d31; cursor: pointer;
             display: flex; justify-content: space-between; align-items: center; font-size: 11.5px;
             transition: background 0.15s;
         }
-        .plot-row:hover { background: #1e293b; }
+        .plot-row:hover { background: #131d31; }
         .plot-row.active { background: rgba(56, 189, 248, 0.18); border-left: 3px solid #38bdf8; }
-        .plot-row-no { font-weight: 700; color: #f8fafc; }
+        .plot-row-no { font-weight: 700; color: #f8fafc; font-family: 'JetBrains Mono', monospace; }
         .plot-row-company { font-size: 10.5px; color: #94a3b8; max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .badge-status {
-            font-size: 9.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+            font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
         }
         .badge-allotted { background: rgba(234, 88, 12, 0.25); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.5); }
         .badge-vacant { background: rgba(22, 163, 74, 0.25); color: #4ade80; border: 1px solid rgba(22, 163, 74, 0.5); }
         .badge-reserved { background: rgba(139, 92, 246, 0.25); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.5); }
 
         .selected-plot-card {
-            background: #1e293b; border: 1px solid #38bdf8; border-radius: 6px; padding: 10px 12px;
+            background: #131d31; border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 6px; padding: 10px 12px;
             margin-bottom: 12px; font-size: 11.5px;
         }
         .selected-plot-card h3 { font-size: 13px; color: #38bdf8; margin-bottom: 6px; display: flex; justify-content: space-between; }
         .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 10.5px; }
-        .prop-item { background: #0f172a; padding: 5px 7px; border-radius: 4px; }
-        .prop-item span { color: #94a3b8; display: block; font-size: 9.5px; }
+        .prop-item { background: #070c18; padding: 5px 7px; border-radius: 4px; border: 1px solid #1e293b; }
+        .prop-item span { color: #64748b; display: block; font-size: 9px; font-weight: 600; text-transform: uppercase; }
         .prop-item strong { color: #f8fafc; font-size: 10.5px; word-break: break-word; }
 
-        .legend-box { background: #1e293b; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 12px; }
+        .legend-box { background: #131d31; padding: 8px 10px; border-radius: 6px; border: 1px solid #1e293b; margin-bottom: 12px; }
         .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #cbd5e1; }
         .swatch { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
 
-        .download-btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-            width: 100%; padding: 9px; background: #0284c7; color: white; border: none;
-            border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer; text-decoration: none;
-            transition: background 0.2s;
+        /* AGT Footer Branding */
+        .sidebar-footer {
+            padding: 12px 20px; border-top: 1px solid #1e293b; background: #070c18;
+            font-size: 11px; color: #64748b; display: flex; justify-content: space-between; align-items: center;
         }
-        .download-btn:hover { background: #0369a1; }
+        .sidebar-footer a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+        .sidebar-footer a:hover { text-decoration: underline; }
+        .iso-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #475569; letter-spacing: 0.5px; }
 
         #map-container { flex: 1; height: 100%; position: relative; }
-        #map { width: 100%; height: 100%; background: #0b1120; }
+        #map { width: 100%; height: 100%; background: #070b14; }
         
+        /* Floating AGT Watermark */
+        .agt-watermark {
+            position: absolute; bottom: 12px; right: 12px; z-index: 999;
+            background: rgba(7, 12, 24, 0.92); border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px; padding: 6px 12px; backdrop-filter: blur(8px);
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .agt-watermark span { font-size: 11px; color: #94a3b8; font-weight: 500; }
+        .agt-watermark strong a { color: #38bdf8; text-decoration: none; font-weight: 700; font-size: 11px; }
+
         .mobile-toggle {
             display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             z-index: 2000; background: #0284c7; color: white; padding: 10px 20px; border-radius: 25px;
@@ -109,15 +154,31 @@
             .mobile-toggle { display: block; }
         }
 
-        .leaflet-popup-content-wrapper { background: #0f172a !important; color: #f8fafc !important; border: 1px solid #38bdf8; border-radius: 8px; }
-        .leaflet-popup-tip { background: #0f172a !important; }
+        .leaflet-popup-content-wrapper { background: #070c18 !important; color: #f8fafc !important; border: 1px solid #38bdf8; border-radius: 8px; }
+        .leaflet-popup-tip { background: #070c18 !important; }
     </style>
 </head>
 <body>
     <div id="sidebar">
-        <div class="header">
-            <h1>🏢 Maharashtra SEZ Plot Demarcation</h1>
-            <p>Plot-level geometries and demarcated allottees from IILB</p>
+        <!-- AGT Intelligence Brand Header -->
+        <div class="brand-header">
+            <div class="brand-left">
+                <div class="brand-logo-mark">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="brand-title-wrap">
+                    <h1>AGT INTELLIGENCE</h1>
+                    <p>Location Intelligence Layer</p>
+                </div>
+            </div>
+            <a href="https://www.agt-intelligence.com" target="_blank" class="brand-link-btn">agt-intelligence.com ↗</a>
+        </div>
+
+        <div class="sub-header">
+            <span>Maharashtra SEZ Cadastral Demarcation</span>
+            <span style="color:#38bdf8; font-weight:600;">Enterprise GIS</span>
         </div>
 
         <div class="content">
@@ -171,19 +232,28 @@
                     <div class="legend-item"><span class="swatch" style="background: #ef4444; border: 1px dashed white;"></span> Outer Boundary</div>
                 </div>
             </div>
-
-            <a id="downloadBtn" class="download-btn" href="seepz_mumbai_plots.geojson" download>
-                📥 Download Demarcated Plots GeoJSON
-            </a>
             
-            <button id="closeSidebarBtn" class="download-btn" style="background: #334155; margin-top: 8px; display: none;" onclick="toggleMobileDrawer()">
+            <button id="closeSidebarBtn" class="download-btn" style="background: #1e293b; border: 1px solid #334155; color: white; display: none; padding: 9px; width: 100%; border-radius: 6px; cursor: pointer;" onclick="toggleMobileDrawer()">
                 ✖ Close & View Map
             </button>
+        </div>
+
+        <!-- AGT Intelligence Footer Branding -->
+        <div class="sidebar-footer">
+            <div>Powered by <a href="https://www.agt-intelligence.com" target="_blank">AGT Intelligence</a></div>
+            <div class="iso-badge">ISO 27001 · CMMI L3</div>
         </div>
     </div>
 
     <div id="map-container">
         <div id="map"></div>
+        
+        <!-- Floating AGT Branding Watermark on Map -->
+        <div class="agt-watermark">
+            <span>Platform by</span>
+            <strong><a href="https://www.agt-intelligence.com" target="_blank">AGT Intelligence</a></strong>
+        </div>
+
         <button class="mobile-toggle" id="mobileToggleBtn" onclick="toggleMobileDrawer()">
             📋 View Plot Details & Directory
         </button>
@@ -81021,11 +81091,11 @@
         var map = L.map('map', { zoomControl: true }).setView([19.1235, 72.8755], 16);
 
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20, attribution: '© OpenStreetMap'
+            maxZoom: 20, attribution: '© OpenStreetMap | AGT Intelligence'
         }).addTo(map);
 
         var satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19, attribution: 'Esri World Imagery'
+            maxZoom: 19, attribution: 'Esri World Imagery | AGT Intelligence'
         });
 
         L.control.layers({'OpenStreetMap': osm, 'Satellite View': satellite}, null, { position: 'topright' }).addTo(map);
@@ -81070,7 +81140,6 @@
                 layer.openPopup();
             }
 
-            // If on mobile, close drawer to show map
             if (window.innerWidth <= 768) {
                 var sb = document.getElementById('sidebar');
                 if (sb.classList.contains('open')) toggleMobileDrawer();
@@ -81084,8 +81153,6 @@
 
             var plotsData = (distKey === 'mumbai_suburban') ? rawData.seepz_plots : rawData.pune_plots;
             var boundaryData = (distKey === 'mumbai_suburban') ? rawData.seepz_boundary : rawData.pune_boundary;
-            var btn = document.getElementById('downloadBtn');
-            btn.href = (distKey === 'mumbai_suburban') ? 'seepz_mumbai_plots.geojson' : 'pune_hinjewadi_plots.geojson';
 
             currentBoundaryLayer = L.geoJSON(boundaryData, {
                 style: {
@@ -81129,17 +81196,17 @@
                     var p = f.properties || {};
                     plotLayersMap[p.plotno] = layer;
 
-                    var popupHtml = '<div style="min-width: 200px;">' +
+                    var popupHtml = '<div style="min-width: 210px;">' +
                         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">' +
-                            '<strong style="font-size: 15px; color: #38bdf8;">Plot ' + (p.plotno || 'N/A') + '</strong>' +
+                            '<strong style="font-size: 15px; color: #38bdf8; font-family: Plus Jakarta Sans;">Plot ' + (p.plotno || 'N/A') + '</strong>' +
                             '<span class="badge-status ' + (p.plotstatus === 'Allotted' ? 'badge-allotted' : (p.plotstatus === 'Vacant' ? 'badge-vacant' : 'badge-reserved')) + '">' + (p.plotstatus || 'N/A') + '</span>' +
                         '</div>' +
-                        '<hr style="margin: 6px 0; border: none; border-top: 1px solid #334155;"/>' +
+                        '<hr style="margin: 6px 0; border: none; border-top: 1px solid #1e293b;"/>' +
                         '<b>Allottee:</b> <span style="color:#f8fafc;">' + (p.owner || 'Vacant / Not Allotted') + '</span><br/>' +
                         '<b>Plot Size:</b> ' + (p.plotsize ? (p.plotsize + ' sq.m (' + (p.plotsize * 0.000247105).toFixed(2) + ' acres)') : 'N/A') + '<br/>' +
                         '<b>Category:</b> ' + (p.plotcat || 'Industrial Plot') + '<br/>' +
                         (p.plotrate ? '<b>Tariff Rate:</b> ₹' + p.plotrate + '/sq.m<br/>' : '') +
-                        '<small style="color:#94a3b8; display:block; margin-top:4px;">Lat: ' + (p.lat ? parseFloat(p.lat).toFixed(5) : 'N/A') + ', Lon: ' + (p.lon ? parseFloat(p.lon).toFixed(5) : 'N/A') + '</small>' +
+                        '<small style="color:#64748b; display:block; margin-top:5px; font-family: monospace;">Lat: ' + (p.lat ? parseFloat(p.lat).toFixed(5) : 'N/A') + ', Lon: ' + (p.lon ? parseFloat(p.lon).toFixed(5) : 'N/A') + '</small>' +
                     '</div>';
                     
                     layer.bindPopup(popupHtml);
@@ -81258,7 +81325,7 @@
             document.getElementById('closeSidebarBtn').style.display = 'block';
         }
 
-        // Initialize directly on Mumbai Suburban
+        // Initialize on Mumbai Suburban
         switchDistrict('mumbai_suburban');
     </script>
 </body>
