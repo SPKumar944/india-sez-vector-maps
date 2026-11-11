@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  cloud-kitchen-api:
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+    container_name: cloud_kitchen_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_PATH=/app/data/560034_koramangala/koramangala_560034_cloud_kitchen.sqlite
+      - DATA_DIR=/app/data/560034_koramangala
+    volumes:
+      - ../data:/app/data
+    restart: unless-stopped
