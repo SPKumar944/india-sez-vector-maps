@@ -6,11 +6,11 @@ from typing import List, Dict, Any, Optional, Tuple
 
 DB_PATH = os.environ.get(
     "DB_PATH",
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "560034_koramangala", "koramangala_560034_cloud_kitchen.sqlite"))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "master_cloud_kitchen.sqlite"))
 )
-DATA_DIR = os.environ.get(
+DATA_BASE_DIR = os.environ.get(
     "DATA_DIR",
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "560034_koramangala"))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
 )
 
 TABLE_PRIMARY_KEYS = {
@@ -39,7 +39,7 @@ TABLE_METADATA = {
     },
     "fact_demand_generators": {
         "title": "Demand Generators (POIs)",
-        "description": "Tech parks, corporate offices, universities, coaching institutes, hospitals, transit hubs, and retail malls driving delivery demand.",
+        "description": "Tech parks, corporate offices, universities, coaching hubs, hospitals, transit hubs, and retail malls driving delivery demand.",
         "primary_key": "poi_id",
         "lat_col": "latitude",
         "lon_col": "longitude"
@@ -67,12 +67,73 @@ TABLE_METADATA = {
     }
 }
 
+PINCODE_REGISTRY = {
+    "560034": {
+        "name": "Koramangala",
+        "folder": "560034_koramangala",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "centroid": {"latitude": 12.9345, "longitude": 77.6245},
+        "bounding_box": {"min_latitude": 12.9120, "min_longitude": 77.6080, "max_latitude": 12.9520, "max_longitude": 77.6520},
+        "cloud_kitchen_feasibility_score": 9.2,
+        "recommended_hubs": [
+            {"hub_id": "HUB_560034_01", "name": "5th Block Industrial Layout", "lat": 12.9362, "lon": 77.6205},
+            {"hub_id": "HUB_560034_02", "name": "Ejipura / Sony World Dark Kitchen Strip", "lat": 12.9385, "lon": 77.6270},
+            {"hub_id": "HUB_560034_03", "name": "Jakkasandra Link Hub", "lat": 12.9225, "lon": 77.6395},
+            {"hub_id": "HUB_560034_04", "name": "8th Block / Adugodi Perimeter Hub", "lat": 12.9398, "lon": 77.6168}
+        ]
+    },
+    "560041": {
+        "name": "Jayanagar",
+        "folder": "560041_jayanagar",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "centroid": {"latitude": 12.9234, "longitude": 77.5924},
+        "bounding_box": {"min_latitude": 12.9100, "min_longitude": 77.5700, "max_latitude": 12.9450, "max_longitude": 77.6080},
+        "cloud_kitchen_feasibility_score": 9.1,
+        "recommended_hubs": [
+            {"hub_id": "HUB_560041_01", "name": "4th Block / 9th Block Commercial Border", "lat": 12.9265, "lon": 77.5930},
+            {"hub_id": "HUB_560041_02", "name": "South End Circle / RV Road Metro Hub", "lat": 12.9360, "lon": 77.5795},
+            {"hub_id": "HUB_560041_03", "name": "East End Main Road / 9th Block Extension", "lat": 12.9180, "lon": 77.5985},
+            {"hub_id": "HUB_560041_04", "name": "Tilaknagar / Bannerghatta Link Hub", "lat": 12.9285, "lon": 77.5995}
+        ]
+    },
+    "560038": {
+        "name": "Indiranagar",
+        "folder": "560038_indiranagar",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "centroid": {"latitude": 12.9797, "longitude": 77.6417},
+        "bounding_box": {"min_latitude": 12.9620, "min_longitude": 77.6250, "max_latitude": 12.9920, "max_longitude": 77.6580},
+        "cloud_kitchen_feasibility_score": 9.5,
+        "recommended_hubs": [
+            {"hub_id": "HUB_560038_01", "name": "Doopanahalli / 100ft Road Backstreet Pod", "lat": 12.9715, "lon": 77.6410},
+            {"hub_id": "HUB_560038_02", "name": "CMH Road / Metro Station Perimeter Hub", "lat": 12.9785, "lon": 77.6445},
+            {"hub_id": "HUB_560038_03", "name": "HAL 2nd Stage / 12th Main Cloud Cluster", "lat": 12.9740, "lon": 77.6465},
+            {"hub_id": "HUB_560038_04", "name": "Binnamangala / Old Madras Road North Hub", "lat": 12.9860, "lon": 77.6380}
+        ]
+    },
+    "560102": {
+        "name": "HSR Layout",
+        "folder": "560102_hsr_layout",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "centroid": {"latitude": 12.9151, "longitude": 77.6505},
+        "bounding_box": {"min_latitude": 12.8980, "min_longitude": 77.6300, "max_latitude": 12.9280, "max_longitude": 77.6680},
+        "cloud_kitchen_feasibility_score": 9.4,
+        "recommended_hubs": [
+            {"hub_id": "HUB_560102_01", "name": "27th Main / Sector 1 Commercial Strip", "lat": 12.9165, "lon": 77.6515},
+            {"hub_id": "HUB_560102_02", "name": "Sector 7 / Hosur Road - Silk Board Gateway Hub", "lat": 12.9090, "lon": 77.6375},
+            {"hub_id": "HUB_560102_03", "name": "Sector 3 / 19th Main Central Hub", "lat": 12.9125, "lon": 77.6450},
+            {"hub_id": "HUB_560102_04", "name": "Sector 2 / Haralur - Sarjapur Link Hub", "lat": 12.9065, "lon": 77.6580}
+        ]
+    }
+}
 
 def get_connection() -> sqlite3.Connection:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
-
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     R = 6371.0
@@ -82,33 +143,28 @@ def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
-
 def get_available_pincodes() -> List[Dict[str, Any]]:
-    # In production, queries a master pincodes registry; currently serves 560034
     conn = get_connection()
     cursor = conn.cursor()
-    
-    # Calculate summary metrics for 560034
-    stats = {}
-    for tbl, meta in TABLE_METADATA.items():
-        cursor.execute(f"SELECT COUNT(*) FROM {tbl}")
-        stats[tbl] = cursor.fetchone()[0]
-    conn.close()
+    pincode_list = []
 
-    return [
-        {
-            "pincode": "560034",
-            "name": "Koramangala",
-            "city": "Bengaluru",
-            "state": "Karnataka",
+    for pin, reg in PINCODE_REGISTRY.items():
+        stats = {}
+        for tbl in TABLE_METADATA.keys():
+            try:
+                cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE pincode = ?", (pin,))
+                stats[tbl] = cursor.fetchone()[0]
+            except Exception:
+                stats[tbl] = 0
+
+        pincode_list.append({
+            "pincode": pin,
+            "name": reg["name"],
+            "city": reg["city"],
+            "state": reg["state"],
             "country": "India",
-            "centroid": {"latitude": 12.9345, "longitude": 77.6245},
-            "bounding_box": {
-                "min_latitude": 12.9120,
-                "min_longitude": 77.6080,
-                "max_latitude": 12.9520,
-                "max_longitude": 77.6520
-            },
+            "centroid": reg["centroid"],
+            "bounding_box": reg["bounding_box"],
             "total_entities_extracted": sum(stats.values()),
             "datasets_count": len(TABLE_METADATA),
             "summary_breakdown": {
@@ -119,16 +175,11 @@ def get_available_pincodes() -> List[Dict[str, Any]]:
                 "mobility_routes": stats.get("log_mobility", 0),
                 "popular_times_profiles": stats.get("fact_popular_times", 0)
             },
-            "cloud_kitchen_feasibility_score": 9.2,
-            "recommended_hub_coordinates": [
-                {"hub_id": "HUB_560034_01", "name": "5th Block Industrial Layout", "lat": 12.9362, "lon": 77.6205},
-                {"hub_id": "HUB_560034_02", "name": "Ejipura / Sony World Strip", "lat": 12.9385, "lon": 77.6270},
-                {"hub_id": "HUB_560034_03", "name": "Jakkasandra Link Hub", "lat": 12.9225, "lon": 77.6395},
-                {"hub_id": "HUB_560034_04", "name": "8th Block Perimeter Hub", "lat": 12.9398, "lon": 77.6168}
-            ]
-        }
-    ]
-
+            "cloud_kitchen_feasibility_score": reg["cloud_kitchen_feasibility_score"],
+            "recommended_hub_coordinates": reg["recommended_hubs"]
+        })
+    conn.close()
+    return pincode_list
 
 def get_pincode_datasets(pincode: str) -> List[Dict[str, Any]]:
     conn = get_connection()
@@ -139,7 +190,7 @@ def get_pincode_datasets(pincode: str) -> List[Dict[str, Any]]:
         cursor.execute(f"PRAGMA table_info({tbl})")
         columns = [{"name": row["name"], "type": row["type"]} for row in cursor.fetchall()]
         
-        cursor.execute(f"SELECT COUNT(*) FROM {tbl}")
+        cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE pincode = ?", (pincode,))
         row_count = cursor.fetchone()[0]
         
         datasets.append({
@@ -159,7 +210,6 @@ def get_pincode_datasets(pincode: str) -> List[Dict[str, Any]]:
         })
     conn.close()
     return datasets
-
 
 def query_dataset(
     pincode: str,
@@ -188,24 +238,20 @@ def query_dataset(
     conn = get_connection()
     cursor = conn.cursor()
 
-    conditions = []
-    params: List[Any] = []
+    conditions = ["pincode = ?"]
+    params: List[Any] = [pincode]
 
-    # Text search
     if q:
-        # Search common name or title columns
+        cursor.execute(f"PRAGMA table_info({dataset_name})")
+        tbl_cols = [r["name"] for r in cursor.fetchall()]
         search_clauses = []
         for candidate_col in ["outlet_name", "poi_name", "complex_name", "sub_locality_block", "destination_name", "brand_name"]:
-            # Check if column exists in table
-            cursor.execute(f"PRAGMA table_info({dataset_name})")
-            tbl_cols = [r["name"] for r in cursor.fetchall()]
             if candidate_col in tbl_cols:
                 search_clauses.append(f"{candidate_col} LIKE ?")
                 params.append(f"%{q}%")
         if search_clauses:
             conditions.append(f"({' OR '.join(search_clauses)})")
 
-    # Category filter
     if category:
         cursor.execute(f"PRAGMA table_info({dataset_name})")
         tbl_cols = [r["name"] for r in cursor.fetchall()]
@@ -219,36 +265,30 @@ def query_dataset(
             conditions.append("housing_category LIKE ?")
             params.append(f"%{category}%")
 
-    # Rating filter
     if min_rating is not None and dataset_name == "fact_competitors":
         conditions.append("rating >= ?")
         params.append(min_rating)
 
-    # Cloud kitchen boolean filter
     if is_cloud_kitchen is not None and dataset_name == "fact_competitors":
         conditions.append("is_cloud_kitchen = ?")
         params.append(1 if is_cloud_kitchen else 0)
 
-    # Bounding box filter
     if all(v is not None for v in [min_lat, min_lon, max_lat, max_lon]):
         conditions.append(f"{lat_col} >= ? AND {lat_col} <= ? AND {lon_col} >= ? AND {lon_col} <= ?")
         params.extend([min_lat, max_lat, min_lon, max_lon])
 
-    where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
+    where_clause = " WHERE " + " AND ".join(conditions)
 
-    # Total count query
     count_sql = f"SELECT COUNT(*) FROM {dataset_name}{where_clause}"
     cursor.execute(count_sql, params)
     total_count = cursor.fetchone()[0]
 
-    # Select query
     select_sql = f"SELECT * FROM {dataset_name}{where_clause} LIMIT ? OFFSET ?"
     select_params = list(params) + [limit, offset]
     cursor.execute(select_sql, select_params)
     rows = [dict(row) for row in cursor.fetchall()]
     conn.close()
 
-    # Spatial radius post-filter if requested
     if near_lat is not None and near_lon is not None and radius_km is not None:
         filtered = []
         for r in rows:
@@ -264,31 +304,26 @@ def query_dataset(
 
     return rows, total_count
 
-
 def get_entity_by_id(pincode: str, dataset_name: str, entity_id: str) -> Optional[Dict[str, Any]]:
     if dataset_name not in TABLE_METADATA:
         raise ValueError(f"Unknown dataset '{dataset_name}'")
-    
     pk = TABLE_PRIMARY_KEYS[dataset_name]
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM {dataset_name} WHERE {pk} = ?", (entity_id,))
+    cursor.execute(f"SELECT * FROM {dataset_name} WHERE {pk} = ? AND pincode = ?", (entity_id, pincode))
     row = cursor.fetchone()
     conn.close()
     return dict(row) if row else None
 
-
 def insert_entity(pincode: str, dataset_name: str, payload: Dict[str, Any]) -> Dict[str, Any]:
     if dataset_name not in TABLE_METADATA:
         raise ValueError(f"Unknown dataset '{dataset_name}'")
-    
     pk = TABLE_PRIMARY_KEYS[dataset_name]
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Generate PK if missing
     if pk not in payload or not payload[pk]:
-        cursor.execute(f"SELECT COUNT(*) FROM {dataset_name}")
+        cursor.execute(f"SELECT COUNT(*) FROM {dataset_name} WHERE pincode = ?", (pincode,))
         next_idx = cursor.fetchone()[0] + 1
         prefix = {
             "dim_localities": "LOC_CUSTOM",
@@ -300,7 +335,7 @@ def insert_entity(pincode: str, dataset_name: str, payload: Dict[str, Any]) -> D
         }.get(dataset_name, "ENT")
         payload[pk] = f"{prefix}_{pincode}_{next_idx:04d}"
 
-    # Verify column existence in table
+    payload["pincode"] = pincode
     cursor.execute(f"PRAGMA table_info({dataset_name})")
     valid_cols = {r["name"] for r in cursor.fetchall()}
     data_to_insert = {k: v for k, v in payload.items() if k in valid_cols}
@@ -308,65 +343,62 @@ def insert_entity(pincode: str, dataset_name: str, payload: Dict[str, Any]) -> D
     cols = list(data_to_insert.keys())
     placeholders = [":" + c for c in cols]
     sql = f"INSERT INTO {dataset_name} ({', '.join(cols)}) VALUES ({', '.join(placeholders)})"
-    
     cursor.execute(sql, data_to_insert)
     conn.commit()
     conn.close()
-
     return get_entity_by_id(pincode, dataset_name, payload[pk])
-
 
 def update_entity(pincode: str, dataset_name: str, entity_id: str, payload: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     if dataset_name not in TABLE_METADATA:
         raise ValueError(f"Unknown dataset '{dataset_name}'")
-    
     pk = TABLE_PRIMARY_KEYS[dataset_name]
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(f"SELECT * FROM {dataset_name} WHERE {pk} = ?", (entity_id,))
+    cursor.execute(f"SELECT * FROM {dataset_name} WHERE {pk} = ? AND pincode = ?", (entity_id, pincode))
     if not cursor.fetchone():
         conn.close()
         return None
 
-    # Filter only valid table columns
     cursor.execute(f"PRAGMA table_info({dataset_name})")
     valid_cols = {r["name"] for r in cursor.fetchall()}
-    updates = {k: v for k, v in payload.items() if k in valid_cols and k != pk}
+    updates = {k: v for k, v in payload.items() if k in valid_cols and k not in [pk, "pincode"]}
 
     if not updates:
         conn.close()
         return get_entity_by_id(pincode, dataset_name, entity_id)
 
     set_clause = ", ".join([f"{k} = :{k}" for k in updates.keys()])
-    sql = f"UPDATE {dataset_name} SET {set_clause} WHERE {pk} = :entity_pk"
+    sql = f"UPDATE {dataset_name} SET {set_clause} WHERE {pk} = :entity_pk AND pincode = :entity_pin"
     params = dict(updates)
     params["entity_pk"] = entity_id
-
+    params["entity_pin"] = pincode
     cursor.execute(sql, params)
     conn.commit()
     conn.close()
-
     return get_entity_by_id(pincode, dataset_name, entity_id)
-
 
 def delete_entity(pincode: str, dataset_name: str, entity_id: str) -> bool:
     if dataset_name not in TABLE_METADATA:
         raise ValueError(f"Unknown dataset '{dataset_name}'")
-    
     pk = TABLE_PRIMARY_KEYS[dataset_name]
     conn = get_connection()
     cursor = conn.cursor()
-
-    cursor.execute(f"DELETE FROM {dataset_name} WHERE {pk} = ?", (entity_id,))
+    cursor.execute(f"DELETE FROM {dataset_name} WHERE {pk} = ? AND pincode = ?", (entity_id, pincode))
     deleted = cursor.rowcount > 0
     conn.commit()
     conn.close()
     return deleted
 
-
 def get_pincode_geojson(pincode: str) -> Dict[str, Any]:
-    geo_path = os.path.join(DATA_DIR, "koramangala_560034_spatial_layers.geojson")
+    reg = PINCODE_REGISTRY.get(pincode)
+    if not reg:
+        return {"type": "FeatureCollection", "features": []}
+    folder = reg["folder"]
+    name_clean = reg["name"].lower().replace(" ", "_")
+    geo_path = os.path.join(DATA_BASE_DIR, folder, f"{name_clean}_{pincode}_spatial_layers.geojson")
+    if not os.path.exists(geo_path):
+        geo_path = os.path.join(DATA_BASE_DIR, folder, f"koramangala_{pincode}_spatial_layers.geojson")
     if os.path.exists(geo_path):
         with open(geo_path, "r", encoding="utf-8") as f:
             return json.load(f)
