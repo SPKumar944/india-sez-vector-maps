@@ -1251,13 +1251,8 @@
             map.on('click', 'booths-catchment-fill', (e) => {
                 if (e.features.length > 0) {
                     const p = e.features[0].properties;
-                    if (typeof p.sections === 'string') {
-                        try { p.sections = JSON.parse(p.sections); } catch(err) { p.sections = [p.sections]; }
-                    }
-                    if (typeof p.bbox === 'string') {
-                        try { p.bbox = JSON.parse(p.bbox); } catch(err) {}
-                    }
-                    showBoothScorecard(p, true);
+                    const found = booths.find(b => b.part_no === parseInt(p.part_no)) || p;
+                    showBoothScorecard(found, true);
                 }
             });
 
@@ -1265,13 +1260,8 @@
             map.on('click', 'booths-points-core', (e) => {
                 if (e.features.length > 0) {
                     const p = e.features[0].properties;
-                    if (typeof p.sections === 'string') {
-                        try { p.sections = JSON.parse(p.sections); } catch(err) { p.sections = [p.sections]; }
-                    }
-                    if (typeof p.bbox === 'string') {
-                        try { p.bbox = JSON.parse(p.bbox); } catch(err) {}
-                    }
-                    showBoothScorecard(p, true);
+                    const found = booths.find(b => b.part_no === parseInt(p.part_no)) || p;
+                    showBoothScorecard(found, true);
                 }
             });
 
@@ -1364,9 +1354,9 @@
         function showBoothScorecard(b, fly = true) {
             currentSelectedBooth = b;
             document.getElementById('scorecardHUD').style.display = 'flex';
-            document.getElementById('scTag').textContent = `Booth Catchment Boundary • Part #${b.part_no}`;
-            document.getElementById('scTitle').textContent = b.building || b.booth_name;
-            document.getElementById('scSubtitle').textContent = `Ward ${b.ward_no} • ${b.ward_name}`;
+            document.getElementById('scTag').textContent = `Official Booth Boundary (ECI / KSRSAC) • Part #${b.part_no}`;
+            document.getElementById('scTitle').textContent = b.official_ps_name || b.building || b.booth_name;
+            document.getElementById('scSubtitle').textContent = `Ward ${b.ward_no} • ${b.ward_name} ${b.ps_code ? '• PS ' + b.ps_code : ''}`;
 
             document.getElementById('scElectors').textContent = Number(b.total_electors).toLocaleString();
             document.getElementById('scBooths').textContent = `Part #${b.part_no}`;
