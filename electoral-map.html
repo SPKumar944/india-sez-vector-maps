@@ -1061,12 +1061,19 @@
     <script>
         // Datasets
         const wardsGeoJSON = window.SHANTINAGAR_WARDS_GEOJSON || { type: 'FeatureCollection', features: [] };
-        const boothsGeoJSON = window.SHANTINAGAR_BOOTHS_GEOJSON || { type: 'FeatureCollection', features: [] };
+        const boothsGeoJSON = (window.BOOTH_BOUNDARIES_GEOJSON && window.BOOTH_BOUNDARIES_GEOJSON.features && window.BOOTH_BOUNDARIES_GEOJSON.features.length) 
+            ? window.BOOTH_BOUNDARIES_GEOJSON 
+            : (window.SHANTINAGAR_BOOTHS_GEOJSON || { type: 'FeatureCollection', features: [] });
         const electoralData = window.ELECTORAL_DATA || { booths: [] };
         const booths = electoralData.booths || [];
+        console.log('Electoral Map Data Loaded:', {
+            wards: wardsGeoJSON.features.length,
+            boothsBoundaries: boothsGeoJSON.features.length,
+            boothRecords: booths.length
+        });
 
         // State
-        let is3D = true;
+        let is3D = false;
         let choroplethMode = 'voters';
         let currentSelectedBooth = null;
         let currentBoothVoters = [];
@@ -1130,21 +1137,22 @@
                 data: boothsGeoJSON
             });
 
-            // 5. Add Booth Catchment Fill Layer
+            // 5. Add Booth Catchment Fill Layer (Distinct color per booth)
             map.addLayer({
                 id: 'booths-catchment-fill',
                 type: 'fill',
                 source: 'shantinagar-booths',
                 paint: {
                     'fill-color': [
-                        'interpolate', ['linear'], ['get', 'total_electors'],
-                        400, '#e0f2fe',
-                        600, '#bae6fd',
-                        800, '#7dd3fc',
-                        1000, '#38bdf8',
-                        1200, '#0284c7'
+                        'case',
+                        ['==', ['%', ['get', 'part_no'], 6], 0], '#0284c7',
+                        ['==', ['%', ['get', 'part_no'], 6], 1], '#8b5cf6',
+                        ['==', ['%', ['get', 'part_no'], 6], 2], '#059669',
+                        ['==', ['%', ['get', 'part_no'], 6], 3], '#d97706',
+                        ['==', ['%', ['get', 'part_no'], 6], 4], '#06b6d4',
+                        '#e11d48'
                     ],
-                    'fill-opacity': 0.45
+                    'fill-opacity': 0.22
                 }
             });
 
@@ -1154,9 +1162,9 @@
                 type: 'line',
                 source: 'shantinagar-booths',
                 paint: {
-                    'line-color': '#0369a1',
-                    'line-width': 1.6,
-                    'line-opacity': 0.95
+                    'line-color': '#0284c7',
+                    'line-width': 2.0,
+                    'line-opacity': 1.0
                 }
             });
 
@@ -1168,7 +1176,7 @@
                 filter: ['==', ['get', 'part_no'], -1],
                 paint: {
                     'line-color': '#e11d48',
-                    'line-width': 3.5,
+                    'line-width': 3.8,
                     'line-opacity': 1
                 }
             });
@@ -1178,9 +1186,9 @@
                 id: 'booths-labels',
                 type: 'symbol',
                 source: 'shantinagar-booths',
-                minzoom: 13,
+                minzoom: 12.0,
                 layout: {
-                    'text-field': ['concat', '#', ['to-string', ['get', 'part_no']]],
+                    'text-field': ['concat', 'Part ', ['to-string', ['get', 'part_no']]],
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                     'text-size': 11,
                     'text-anchor': 'center'
@@ -1188,7 +1196,7 @@
                 paint: {
                     'text-color': '#0f172a',
                     'text-halo-color': '#ffffff',
-                    'text-halo-width': 2
+                    'text-halo-width': 2.5
                 }
             });
 

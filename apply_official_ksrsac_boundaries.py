@@ -88,7 +88,9 @@ with open(out_geojson, 'w', encoding='utf-8') as f:
     json.dump(geojson_obj, f, indent=2)
 
 with open(out_js, 'w', encoding='utf-8') as f:
-    f.write('window.BOOTH_BOUNDARIES_GEOJSON = ' + json.dumps(geojson_obj, indent=2) + ';\n')
+    json_str = json.dumps(geojson_obj, indent=2)
+    f.write('window.BOOTH_BOUNDARIES_GEOJSON = ' + json_str + ';\n')
+    f.write('window.SHANTINAGAR_BOOTHS_GEOJSON = window.BOOTH_BOUNDARIES_GEOJSON;\n')
 
 # Save updated electoral data
 with open(geo_path, 'w', encoding='utf-8') as f:
