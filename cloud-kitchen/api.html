@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Kitchen Geospatial Intelligence — Public REST API Portal & Explorer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Cloud Kitchen Geospatial Intelligence — API Access Points & Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #090d16;
             --panel-bg: #0f172a;
             --card-bg: #1e293b;
             --border: #334155;
+            --border-light: #475569;
             --accent: #f97316;
             --blue: #38bdf8;
             --green: #10b981;
@@ -32,7 +33,7 @@
         header {
             background: var(--panel-bg);
             border-bottom: 1px solid var(--border);
-            padding: 14px 24px;
+            padding: 16px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -63,39 +64,22 @@
             color: #fff;
             letter-spacing: -0.3px;
         }
-        .nav-links {
+        .header-meta {
             display: flex;
-            gap: 8px;
             align-items: center;
-        }
-        .btn {
+            gap: 12px;
             font-size: 12px;
-            font-weight: 600;
-            padding: 7px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            transition: 0.2s;
-            cursor: pointer;
-            border: 1px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-outline {
-            background: #1e293b;
             color: var(--muted);
-            border-color: var(--border);
         }
-        .btn-outline:hover {
-            color: #fff;
-            background: #334155;
-        }
-        .btn-primary {
-            background: var(--accent);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #ea580c;
+        .status-pill {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--green);
+            border: 1px solid var(--green);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
         }
         .container {
             max-width: 1400px;
@@ -108,44 +92,72 @@
             gap: 24px;
         }
         .hero {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.95));
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 28px;
+            padding: 24px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 20px;
         }
-        .hero-text h1 {
-            font-size: 24px;
+        .hero-left h1 {
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
             color: #fff;
+            margin-bottom: 6px;
         }
-        .hero-text p {
+        .hero-left p {
             color: var(--muted);
-            font-size: 14px;
-            max-width: 780px;
+            font-size: 13px;
+            max-width: 720px;
         }
-        .stats-strip {
-            display: flex;
-            gap: 16px;
-        }
-        .stat-box {
-            background: rgba(15, 23, 42, 0.8);
+        .base-url-bar {
+            background: #0b1120;
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 12px 16px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            margin-top: 14px;
+            max-width: 780px;
+        }
+        .base-url-bar strong {
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+        .base-url-bar span {
+            color: var(--blue);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        .stat-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 18px;
             text-align: center;
-            min-width: 110px;
         }
         .stat-val {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             font-family: 'JetBrains Mono', monospace;
-            color: var(--blue);
+            color: #fff;
         }
         .stat-lbl {
             font-size: 10px;
@@ -153,40 +165,133 @@
             text-transform: uppercase;
             margin-top: 2px;
         }
-        .main-grid {
+
+        /* Two Column Layout */
+        .portal-grid {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 24px;
         }
-        @media (max-width: 1024px) {
-            .main-grid { grid-template-columns: 1fr; }
+        @media (max-width: 1100px) {
+            .portal-grid { grid-template-columns: 1fr; }
         }
+
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-        .card-header {
+        .card-title {
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: var(--blue);
-            margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        /* Endpoint Catalog */
+        .endpoint-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .group-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 6px;
+            margin-bottom: 2px;
+        }
+        .endpoint-row {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .endpoint-row:hover, .endpoint-row.selected {
+            border-color: var(--blue);
+            background: #111a2e;
+        }
+        .endpoint-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+        .method {
+            background: var(--green);
+            color: #000;
+            font-weight: 800;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #e2e8f0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .desc {
+            font-size: 11px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .action-link {
+            font-size: 11px;
+            color: var(--blue);
+            text-decoration: none;
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #1e293b;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .action-link:hover {
+            color: #fff;
+            border-color: var(--blue);
+        }
+
+        /* Live Tester Box */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
         }
         .form-group {
-            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
         label {
-            display: block;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             color: var(--muted);
-            margin-bottom: 6px;
         }
         select, input {
             width: 100%;
@@ -195,7 +300,7 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: border-color 0.2s;
@@ -203,165 +308,114 @@
         select:focus, input:focus {
             border-color: var(--blue);
         }
-        .endpoint-url-box {
-            background: #0b1120;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'JetBrains Mono', monospace;
+        .btn {
             font-size: 12px;
-            margin-top: 10px;
-            word-break: break-all;
-        }
-        .method-badge {
-            background: var(--green);
-            color: #000;
             font-weight: 700;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-        .url-text {
-            color: var(--blue);
-            flex: 1;
-        }
-        .copy-btn {
-            background: #1e293b;
-            color: var(--muted);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 11px;
+            padding: 9px 16px;
+            border-radius: 6px;
+            border: 1px solid transparent;
             cursor: pointer;
             transition: 0.2s;
-            white-space: nowrap;
-        }
-        .copy-btn:hover {
-            color: #fff;
-            background: #334155;
-        }
-        .tab-bar {
-            display: flex;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             gap: 8px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 16px;
-            padding-bottom: 8px;
+            text-decoration: none;
         }
-        .tab-btn {
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
-            background: transparent;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
+        .btn-primary {
+            background: var(--accent);
             color: #fff;
+        }
+        .btn-primary:hover {
+            background: #ea580c;
+        }
+        .btn-outline {
             background: #0f172a;
-            border: 1px solid var(--border);
+            color: var(--muted);
+            border-color: var(--border);
         }
-        .snippet-box {
-            background: #0b1120;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 14px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: #e2e8f0;
-            overflow-x: auto;
-            position: relative;
-            max-height: 280px;
+        .btn-outline:hover {
+            color: #fff;
+            border-color: var(--border-light);
         }
-        .response-viewer {
+
+        /* Response Viewer */
+        .response-container {
             background: #0b1120;
             border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 480px;
+            min-height: 440px;
         }
-        .response-header {
+        .response-bar {
             background: #0f172a;
             border-bottom: 1px solid var(--border);
-            padding: 10px 16px;
+            padding: 8px 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
-        }
-        .status-pill {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--green);
-            border: 1px solid var(--green);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
         }
-        .json-content {
+        .response-body {
             padding: 16px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
-            color: #94a3b8;
+            color: #cbd5e1;
             overflow: auto;
-            max-height: 600px;
+            max-height: 520px;
             line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
         }
-        .table-view-container {
-            overflow: auto;
-            max-height: 600px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
-        th {
-            background: #0f172a;
-            color: var(--muted);
-            text-align: left;
-            padding: 10px 12px;
-            font-size: 10px;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            white-space: nowrap;
-        }
-        td {
-            padding: 9px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            white-space: nowrap;
-        }
-        tr:hover td {
-            background: rgba(255,255,255,0.02);
-        }
-        .download-pill {
-            display: inline-flex;
-            align-items: center;
+
+        /* Code Snippets Box */
+        .tabs {
+            display: flex;
             gap: 6px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .tab-btn {
             font-size: 11px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background: #0f172a;
-            border: 1px solid var(--border);
+            font-weight: 600;
+            padding: 5px 12px;
+            background: transparent;
             color: var(--muted);
-            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             transition: 0.2s;
         }
-        .download-pill:hover {
+        .tab-btn.active {
+            background: #0f172a;
             color: #fff;
-            border-color: var(--accent);
-            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid var(--border);
+        }
+        .snippet-pre {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #e2e8f0;
+            overflow-x: auto;
+            line-height: 1.5;
+        }
+        footer {
+            background: #0b1120;
+            border-top: 1px solid var(--border);
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--muted);
+            flex-wrap: wrap;
+            gap: 10px;
         }
     </style>
 </head>
@@ -370,386 +424,424 @@
 <header>
     <div class="header-brand">
         <span class="badge">REST API v2.0</span>
-        <span class="logo-title">Cloud Kitchen Market Geospatial Intelligence — API Portal</span>
+        <span class="logo-title">Cloud Kitchen Market Geospatial Intelligence — API Access Points</span>
     </div>
-    <div class="nav-links">
-        <a href="index.html" class="btn btn-outline">🗺️ 560034 Koramangala</a>
-        <a href="560041.html" class="btn btn-outline">🗺️ 560041 Jayanagar</a>
-        <a href="560038.html" class="btn btn-outline">🗺️ 560038 Indiranagar</a>
-        <a href="560102.html" class="btn btn-outline">🗺️ 560102 HSR Layout</a>
-        <a href="https://github.com/SPKumar944/india-sez-vector-maps" target="_blank" class="btn btn-primary">⭐ GitHub Repo</a>
+    <div class="header-meta">
+        <span class="status-pill">HTTP 200 • CORS PUBLIC</span>
+        <span>Output: JSON / GeoJSON</span>
+        <a href="https://github.com/SPKumar944/india-sez-vector-maps" target="_blank" class="action-link">GitHub Repository ↗</a>
     </div>
 </header>
 
 <div class="container">
     <div class="hero">
-        <div class="hero-text">
-            <h1>Public REST API & Live Browser Client Console</h1>
-            <p>Access high-density geospatial points of interest, F&B competitor directories, housing unit densities, voter demographic cohorts, and OSRM dispatch mobility matrices across Bengaluru's prime food delivery markets. Fully CORS-enabled for zero-friction HTTP integrations.</p>
+        <div class="hero-left">
+            <h1>Zero-Latency Public API Access Points</h1>
+            <p>Access pre-compiled, verified geospatial entities across Bangalore prime delivery markets. Hosted directly on GitHub Pages with Cross-Origin Resource Sharing (CORS) enabled so web browsers (Chrome), cURL, Python, and frontend clients can make immediate HTTP GET calls.</p>
+            <div class="base-url-bar">
+                <strong>Base URL:</strong>
+                <span id="txtBaseUrl">https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1</span>
+                <button class="action-link" onclick="copyBaseUrl()">Copy</button>
+            </div>
         </div>
-        <div class="stats-strip">
-            <div class="stat-box">
-                <div class="stat-val">4</div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val" style="color:var(--accent);">4</div>
                 <div class="stat-lbl">Markets</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val">5,610</div>
+            <div class="stat-card">
+                <div class="stat-val" style="color:var(--blue);">5,610</div>
                 <div class="stat-lbl">Total Entities</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val">100%</div>
-                <div class="stat-lbl">Geocoded</div>
+            <div class="stat-card">
+                <div class="stat-val" style="color:var(--green);">34</div>
+                <div class="stat-lbl">API Endpoints</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-val" style="color:var(--green)">CORS</div>
-                <div class="stat-lbl">Public Access</div>
+            <div class="stat-card">
+                <div class="stat-val" style="color:var(--purple);">100%</div>
+                <div class="stat-lbl">Geocoded</div>
             </div>
         </div>
     </div>
 
-    <div class="main-grid">
-        <!-- Sidebar API Control Panel -->
-        <div class="sidebar-controls" style="display: flex; flex-direction: column; gap: 16px;">
-            <div class="card">
-                <div class="card-header">
-                    <span>1. Query Parameters</span>
-                    <span style="color:var(--accent)">Live Endpoint</span>
-                </div>
-
-                <div class="form-group">
-                    <label>Target Pincode</label>
-                    <select id="selPincode" onchange="onPincodeChange()">
-                        <option value="560034">560034 — Koramangala (1,485 Entities)</option>
-                        <option value="560041">560041 — Jayanagar (1,602 Entities)</option>
-                        <option value="560038">560038 — Indiranagar (1,268 Entities)</option>
-                        <option value="560102">560102 — HSR Layout (1,255 Entities)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Target Dataset</label>
-                    <select id="selDataset" onchange="updateEndpointUrl()">
-                        <option value="fact_competitors">fact_competitors (F&B Outlets & Dark Kitchens)</option>
-                        <option value="fact_demand_generators">fact_demand_generators (POIs, IT Parks, Colleges, Hospitals)</option>
-                        <option value="dim_housing_density_proxies">dim_housing_density_proxies (Apartments, PGs, Gated Societies)</option>
-                        <option value="dim_localities">dim_localities (Sub-Localities & Electoral Sections)</option>
-                        <option value="fact_popular_times">fact_popular_times (24h Busyness & Midnight Surge)</option>
-                        <option value="log_mobility">log_mobility (OSRM Road Routing & Delivery SLAs)</option>
-                        <option value="geojson">geojson (Master Vector GeoJSON FeatureCollection)</option>
-                        <option value="datasets">datasets (Schema & Endpoint Discovery)</option>
-                        <option value="pincodes">pincodes (Global Pincode Registry & Meta)</option>
-                        <option value="summary">summary (Cross-Market GMV & Volume Summary)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Search Keyword Filter (Client-side)</label>
-                    <input type="text" id="txtSearch" placeholder="e.g. EatFit, Burger, Hospital, PG..." oninput="applyFilters()">
-                </div>
-
-                <div class="form-group">
-                    <label>Category Filter</label>
-                    <select id="selCategory" onchange="applyFilters()">
-                        <option value="">All Categories</option>
-                    </select>
-                </div>
-
-                <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;" onclick="executeApiCall()">
-                    ⚡ Execute Live API Request
-                </button>
+    <div class="portal-grid">
+        <!-- Column 1: API Access Points Catalog -->
+        <div class="card">
+            <div class="card-title">
+                <span>1. Available API Access Points</span>
+                <span style="font-size:11px; color:var(--muted);">Click to load in inspector</span>
             </div>
 
-            <!-- Direct URL & Copy Box -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Direct API Endpoint URL</span>
-                    <button class="copy-btn" onclick="copyCurrentUrl()">Copy URL</button>
+            <!-- Global Endpoints -->
+            <div class="endpoint-group">
+                <div class="group-header">Global Catalog Endpoints</div>
+                
+                <div class="endpoint-row selected" onclick="selectEndpoint('pincodes.json', 'All Markets Directory')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path">/pincodes.json</span>
+                    </div>
+                    <span class="desc">All 4 Pincodes Metadata & Feasibility</span>
+                    <a href="https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/pincodes.json" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
                 </div>
-                <div class="endpoint-url-box">
-                    <span class="method-badge">GET</span>
-                    <span class="url-text" id="lblEndpointUrl">...</span>
+
+                <div class="endpoint-row" onclick="selectEndpoint('summary.json', 'Cross-Market Summary')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path">/summary.json</span>
+                    </div>
+                    <span class="desc">Aggregated GMV, Volume & Saturation</span>
+                    <a href="https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/summary.json" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
                 </div>
-                <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;">
-                    <a id="btnDownloadJson" class="download-pill" href="#" target="_blank">📥 Open Raw JSON</a>
-                    <a id="btnDownloadCsv" class="download-pill" href="#" target="_blank">📊 Raw CSV</a>
-                    <a id="btnDownloadXlsx" class="download-pill" href="#" target="_blank">📗 Master Excel</a>
+
+                <div class="endpoint-row" onclick="selectEndpoint('openapi.json', 'OpenAPI 3.0 Specification')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path">/openapi.json</span>
+                    </div>
+                    <span class="desc">Swagger / OpenAPI 3.0 Contract</span>
+                    <a href="https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/openapi.json" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
                 </div>
             </div>
 
-            <!-- Code Snippets Card -->
-            <div class="card">
-                <div class="card-header">
-                    <span>Code Snippets</span>
-                    <button class="copy-btn" onclick="copySnippet()">Copy Snippet</button>
+            <!-- Market Specific Endpoints -->
+            <div class="endpoint-group">
+                <div class="group-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Market Pincode Endpoints</span>
+                    <select id="selFilterPin" style="width:160px; padding:3px 8px; font-size:11px;" onchange="onMarketSelectorChange()">
+                        <option value="560034">560034 (Koramangala)</option>
+                        <option value="560041">560041 (Jayanagar)</option>
+                        <option value="560038">560038 (Indiranagar)</option>
+                        <option value="560102">560102 (HSR Layout)</option>
+                    </select>
                 </div>
-                <div class="tab-bar">
-                    <button class="tab-btn active" onclick="switchSnippet('curl')">cURL</button>
-                    <button class="tab-btn" onclick="switchSnippet('js')">JavaScript</button>
-                    <button class="tab-btn" onclick="switchSnippet('python')">Python</button>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('datasets.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathDatasets">/{pincode}/datasets.json</span>
+                    </div>
+                    <span class="desc">Schema & Table Discovery</span>
+                    <a id="lnkDatasets" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
                 </div>
-                <div class="snippet-box" id="snippetContainer"></div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('fact_competitors.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathCompetitors">/{pincode}/fact_competitors.json</span>
+                    </div>
+                    <span class="desc">F&B Competitors & Dark Kitchens</span>
+                    <a id="lnkCompetitors" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('fact_demand_generators.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathDemand">/{pincode}/fact_demand_generators.json</span>
+                    </div>
+                    <span class="desc">POIs (IT Parks, Colleges, Hospitals)</span>
+                    <a id="lnkDemand" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('dim_housing_density_proxies.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathHousing">/{pincode}/dim_housing_density_proxies.json</span>
+                    </div>
+                    <span class="desc">Apartments, Gated Societies, PGs</span>
+                    <a id="lnkHousing" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('dim_localities.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathLocalities">/{pincode}/dim_localities.json</span>
+                    </div>
+                    <span class="desc">Localities & Electoral Sections</span>
+                    <a id="lnkLocalities" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('fact_popular_times.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathPopular">/{pincode}/fact_popular_times.json</span>
+                    </div>
+                    <span class="desc">24-Hour Weekday vs Weekend Curves</span>
+                    <a id="lnkPopular" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('log_mobility.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathMobility">/{pincode}/log_mobility.json</span>
+                    </div>
+                    <span class="desc">OSRM Road Routing & Delivery SLAs</span>
+                    <a id="lnkMobility" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+
+                <div class="endpoint-row" onclick="selectPincodeEndpoint('geojson.json')">
+                    <div class="endpoint-left">
+                        <span class="method">GET</span>
+                        <span class="path" id="lblPathGeojson">/{pincode}/geojson.json</span>
+                    </div>
+                    <span class="desc">Master GeoJSON FeatureCollection</span>
+                    <a id="lnkGeojson" href="#" target="_blank" class="action-link" onclick="event.stopPropagation()">Open ↗</a>
+                </div>
+            </div>
+
+            <!-- Direct Data File Downloads -->
+            <div class="endpoint-group">
+                <div class="group-header">Master File Downloads (Excel & SQLite)</div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <a id="lnkDownloadXlsx" href="#" class="action-link" target="_blank">📗 Master Excel (.xlsx)</a>
+                    <a id="lnkDownloadCsvDir" href="#" class="action-link" target="_blank">📊 Raw CSVs Directory</a>
+                    <a href="https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/master_cloud_kitchen.sqlite" class="action-link" target="_blank">💾 Master SQLite DB (5,610 Rows)</a>
+                </div>
             </div>
         </div>
 
-        <!-- Main Content Area: Response Viewer -->
-        <div class="response-viewer">
-            <div class="response-header">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span class="status-pill" id="lblStatus">HTTP 200 OK</span>
-                    <span style="color: var(--muted);" id="lblTime">Latency: -- ms</span>
-                    <span style="color: var(--muted);" id="lblCount">Records: --</span>
+        <!-- Column 2: Live API Inspector & Code Generator -->
+        <div class="card">
+            <div class="card-title">
+                <span>2. Live API Inspector & Response Console</span>
+                <span id="lblActiveTarget" style="font-size:11px; color:var(--accent);">/pincodes.json</span>
+            </div>
+
+            <!-- Request Configuration -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>HTTP Method</label>
+                    <input type="text" value="GET" readonly style="font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--green);">
                 </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="setViewMode('table')">📊 Table View</button>
-                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="setViewMode('json')">{ } JSON View</button>
-                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="copyRawResponse()">📋 Copy JSON</button>
+                <div class="form-group">
+                    <label>CORS Origin Header</label>
+                    <input type="text" value="*" readonly style="font-family:'JetBrains Mono', monospace; color:var(--muted);">
                 </div>
             </div>
 
-            <!-- Table View Container -->
-            <div class="table-view-container" id="tableContainer">
-                <table>
-                    <thead id="tableHead"></thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+            <div class="form-group">
+                <label>Active Request URL</label>
+                <input type="text" id="txtActiveUrl" readonly style="font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--blue);">
             </div>
 
-            <!-- JSON View Container -->
-            <pre class="json-content" id="jsonContainer" style="display: none;"></pre>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-primary" style="flex:1;" onclick="fetchActiveEndpoint()">
+                    ⚡ Send Live HTTP Request
+                </button>
+                <button class="btn btn-outline" onclick="copyActiveUrl()">
+                    📋 Copy URL
+                </button>
+            </div>
+
+            <!-- Code Integration Snippets -->
+            <div class="form-group">
+                <label>Client Code Integration</label>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('curl')">cURL</button>
+                    <button class="tab-btn" onclick="switchTab('js')">JavaScript (Fetch)</button>
+                    <button class="tab-btn" onclick="switchTab('py')">Python (Requests)</button>
+                </div>
+                <pre class="snippet-pre" id="snippetBox"></pre>
+            </div>
+
+            <!-- Live Response Viewer -->
+            <div class="response-container">
+                <div class="response-bar">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span id="respStatus" class="status-pill">HTTP 200 OK</span>
+                        <span id="respLatency" style="color:var(--muted);">Latency: -- ms</span>
+                        <span id="respSize" style="color:var(--muted);">Size: -- KB</span>
+                    </div>
+                    <button class="action-link" style="padding:2px 8px; font-size:10px;" onclick="copyResponseBody()">Copy Response</button>
+                </div>
+                <pre class="response-body" id="respBody">Loading endpoint...</pre>
+            </div>
         </div>
     </div>
 </div>
 
+<footer>
+    <div>
+        <strong>Cloud Kitchen Market Geospatial Intelligence API</strong> • Bengaluru Region (560034, 560041, 560038, 560102)
+    </div>
+    <div>
+        Hosted on GitHub Pages • Zero-Infrastructure Serverless REST Endpoints
+    </div>
+</footer>
+
 <script>
-    const GITHUB_PAGES_BASE = "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1";
-    let currentRawData = null;
-    let currentFilteredRecords = [];
-    let currentViewMode = "table";
-    let activeSnippetType = "curl";
+    const GITHUB_BASE = "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1";
+    let activeEndpointPath = "pincodes.json";
+    let activeSnippetLang = "curl";
+    let lastResponseText = "";
 
-    const PINCODE_NAMES = {
-        "560034": "560034_koramangala",
-        "560041": "560041_jayanagar",
-        "560038": "560038_indiranagar",
-        "560102": "560102_hsr_layout"
+    const PINCODE_METADATA = {
+        "560034": {
+            "name": "Koramangala",
+            "folder": "560034_koramangala",
+            "excel": "Koramangala_560034_Cloud_Kitchen_Master_Dataset.xlsx"
+        },
+        "560041": {
+            "name": "Jayanagar",
+            "folder": "560041_jayanagar",
+            "excel": "Jayanagar_560041_Cloud_Kitchen_Master_Dataset.xlsx"
+        },
+        "560038": {
+            "name": "Indiranagar",
+            "folder": "560038_indiranagar",
+            "excel": "Indiranagar_560038_Cloud_Kitchen_Master_Dataset.xlsx"
+        },
+        "560102": {
+            "name": "HSR Layout",
+            "folder": "560102_hsr_layout",
+            "excel": "HSR_Layout_560102_Cloud_Kitchen_Master_Dataset.xlsx"
+        }
     };
 
-    const PINCODE_EXCEL_NAMES = {
-        "560034": "Koramangala_560034_Cloud_Kitchen_Master_Dataset.xlsx",
-        "560041": "Jayanagar_560041_Cloud_Kitchen_Master_Dataset.xlsx",
-        "560038": "Indiranagar_560038_Cloud_Kitchen_Master_Dataset.xlsx",
-        "560102": "HSR_Layout_560102_Cloud_Kitchen_Master_Dataset.xlsx"
-    };
+    function onMarketSelectorChange() {
+        const pin = document.getElementById("selFilterPin").value;
+        const meta = PINCODE_METADATA[pin];
 
-    function getCurrentEndpointUrl() {
-        const pin = document.getElementById("selPincode").value;
-        const dataset = document.getElementById("selDataset").value;
+        document.getElementById("lblPathDatasets").innerText = `/${pin}/datasets.json`;
+        document.getElementById("lnkDatasets").href = `${GITHUB_BASE}/${pin}/datasets.json`;
 
-        if (dataset === "pincodes") {
-            return `${GITHUB_PAGES_BASE}/pincodes.json`;
-        } else if (dataset === "summary") {
-            return `${GITHUB_PAGES_BASE}/summary.json`;
-        } else {
-            return `${GITHUB_PAGES_BASE}/${pin}/${dataset}.json`;
+        document.getElementById("lblPathCompetitors").innerText = `/${pin}/fact_competitors.json`;
+        document.getElementById("lnkCompetitors").href = `${GITHUB_BASE}/${pin}/fact_competitors.json`;
+
+        document.getElementById("lblPathDemand").innerText = `/${pin}/fact_demand_generators.json`;
+        document.getElementById("lnkDemand").href = `${GITHUB_BASE}/${pin}/fact_demand_generators.json`;
+
+        document.getElementById("lblPathHousing").innerText = `/${pin}/dim_housing_density_proxies.json`;
+        document.getElementById("lnkHousing").href = `${GITHUB_BASE}/${pin}/dim_housing_density_proxies.json`;
+
+        document.getElementById("lblPathLocalities").innerText = `/${pin}/dim_localities.json`;
+        document.getElementById("lnkLocalities").href = `${GITHUB_BASE}/${pin}/dim_localities.json`;
+
+        document.getElementById("lblPathPopular").innerText = `/${pin}/fact_popular_times.json`;
+        document.getElementById("lnkPopular").href = `${GITHUB_BASE}/${pin}/fact_popular_times.json`;
+
+        document.getElementById("lblPathMobility").innerText = `/${pin}/log_mobility.json`;
+        document.getElementById("lnkMobility").href = `${GITHUB_BASE}/${pin}/log_mobility.json`;
+
+        document.getElementById("lblPathGeojson").innerText = `/${pin}/geojson.json`;
+        document.getElementById("lnkGeojson").href = `${GITHUB_BASE}/${pin}/geojson.json`;
+
+        document.getElementById("lnkDownloadXlsx").href = `https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/${meta.folder}/${meta.excel}`;
+        document.getElementById("lnkDownloadCsvDir").href = `https://github.com/SPKumar944/india-sez-vector-maps/tree/main/data/${meta.folder}`;
+
+        // If currently viewing a market endpoint, refresh it with new pincode
+        if (activeEndpointPath.includes("/")) {
+            const resource = activeEndpointPath.split("/")[1];
+            selectPincodeEndpoint(resource);
         }
     }
 
-    function updateEndpointUrl() {
-        const url = getCurrentEndpointUrl();
-        document.getElementById("lblEndpointUrl").innerText = url;
-        document.getElementById("btnDownloadJson").href = url;
+    function selectEndpoint(path, label) {
+        document.querySelectorAll(".endpoint-row").forEach(r => r.classList.remove("selected"));
+        if (event && event.currentTarget) event.currentTarget.classList.add("selected");
 
-        const pin = document.getElementById("selPincode").value;
-        const dataset = document.getElementById("selDataset").value;
-        const folder = PINCODE_NAMES[pin];
-
-        document.getElementById("btnDownloadCsv").href = `https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/${folder}/${dataset}.csv`;
-        document.getElementById("btnDownloadXlsx").href = `https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/${folder}/${PINCODE_EXCEL_NAMES[pin]}`;
-
-        updateSnippet();
+        activeEndpointPath = path;
+        document.getElementById("lblActiveTarget").innerText = `/${path}`;
+        updateActiveUrl();
+        fetchActiveEndpoint();
     }
 
-    function onPincodeChange() {
-        updateEndpointUrl();
-        executeApiCall();
+    function selectPincodeEndpoint(resource) {
+        const pin = document.getElementById("selFilterPin").value;
+        document.querySelectorAll(".endpoint-row").forEach(r => r.classList.remove("selected"));
+        if (event && event.currentTarget) event.currentTarget.classList.add("selected");
+
+        activeEndpointPath = `${pin}/${resource}`;
+        document.getElementById("lblActiveTarget").innerText = `/${activeEndpointPath}`;
+        updateActiveUrl();
+        fetchActiveEndpoint();
     }
 
-    async function executeApiCall() {
-        const url = getCurrentEndpointUrl();
-        document.getElementById("lblStatus").innerText = "FETCHING...";
-        document.getElementById("lblStatus").style.color = "var(--yellow)";
+    function updateActiveUrl() {
+        const fullUrl = `${GITHUB_BASE}/${activeEndpointPath}`;
+        document.getElementById("txtActiveUrl").value = fullUrl;
+        updateCodeSnippet();
+    }
+
+    async function fetchActiveEndpoint() {
+        const url = document.getElementById("txtActiveUrl").value;
+        const statusEl = document.getElementById("respStatus");
+        const latencyEl = document.getElementById("respLatency");
+        const sizeEl = document.getElementById("respSize");
+        const bodyEl = document.getElementById("respBody");
+
+        statusEl.innerText = "FETCHING...";
+        statusEl.style.color = "var(--yellow)";
+        bodyEl.innerText = `Sending HTTP GET request to:\n${url}\n\nPlease wait...`;
+
         const t0 = performance.now();
-
         try {
             const resp = await fetch(url);
             const t1 = performance.now();
             const latency = Math.round(t1 - t0);
 
-            if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+            const text = await resp.text();
+            lastResponseText = text;
+            const sizeKb = (new Blob([text]).size / 1024).toFixed(1);
 
-            currentRawData = await resp.json();
-            document.getElementById("lblStatus").innerText = `HTTP ${resp.status} OK`;
-            document.getElementById("lblStatus").style.color = "var(--green)";
-            document.getElementById("lblTime").innerText = `Latency: ${latency} ms`;
+            statusEl.innerText = `HTTP ${resp.status} ${resp.statusText || "OK"}`;
+            statusEl.style.color = resp.ok ? "var(--green)" : "var(--accent)";
+            latencyEl.innerText = `Latency: ${latency} ms`;
+            sizeEl.innerText = `Size: ${sizeKb} KB`;
 
-            populateCategoryFilter();
-            applyFilters();
+            try {
+                const jsonObj = JSON.parse(text);
+                bodyEl.innerText = JSON.stringify(jsonObj, null, 2);
+            } catch (e) {
+                bodyEl.innerText = text;
+            }
         } catch (err) {
-            document.getElementById("lblStatus").innerText = "ERROR";
-            document.getElementById("lblStatus").style.color = "var(--accent)";
-            document.getElementById("jsonContainer").innerText = JSON.stringify({ error: err.message, url }, null, 2);
-            document.getElementById("tableBody").innerHTML = `<tr><td colspan="5" style="color:var(--accent);">Failed to load: ${err.message}</td></tr>`;
+            statusEl.innerText = "NETWORK ERROR";
+            statusEl.style.color = "var(--accent)";
+            bodyEl.innerText = `Fetch failed: ${err.message}\n\nPlease check network or URL.`;
         }
     }
 
-    function populateCategoryFilter() {
-        const catSelect = document.getElementById("selCategory");
-        catSelect.innerHTML = '<option value="">All Categories</option>';
-        if (!currentRawData) return;
+    function updateCodeSnippet() {
+        const url = document.getElementById("txtActiveUrl").value;
+        const box = document.getElementById("snippetBox");
 
-        let records = currentRawData.records || (Array.isArray(currentRawData) ? currentRawData : currentRawData.features || []);
-        const cats = new Set();
-        records.forEach(r => {
-            const c = r.primary_category || r.category || (r.properties && r.properties.category) || r.housing_category;
-            if (c) cats.add(c);
-        });
-
-        Array.from(cats).sort().forEach(c => {
-            const opt = document.createElement("option");
-            opt.value = c;
-            opt.innerText = c;
-            catSelect.appendChild(opt);
-        });
-    }
-
-    function applyFilters() {
-        if (!currentRawData) return;
-        const q = document.getElementById("txtSearch").value.toLowerCase().trim();
-        const cat = document.getElementById("selCategory").value;
-
-        let records = currentRawData.records;
-        if (!records) {
-            if (currentRawData.pincodes) records = currentRawData.pincodes;
-            else if (currentRawData.markets) records = currentRawData.markets;
-            else if (currentRawData.datasets) records = currentRawData.datasets;
-            else if (currentRawData.features) records = currentRawData.features.map(f => f.properties);
-            else if (Array.isArray(currentRawData)) records = currentRawData;
-            else records = [currentRawData];
-        }
-
-        currentFilteredRecords = records.filter(item => {
-            if (cat) {
-                const itemCat = item.primary_category || item.category || item.housing_category;
-                if (itemCat !== cat) return false;
-            }
-            if (q) {
-                const str = JSON.stringify(item).toLowerCase();
-                if (!str.includes(q)) return false;
-            }
-            return true;
-        });
-
-        document.getElementById("lblCount").innerText = `Records: ${currentFilteredRecords.length} / ${records.length}`;
-        renderTableView();
-        renderJsonView();
-    }
-
-    function renderTableView() {
-        const thead = document.getElementById("tableHead");
-        const tbody = document.getElementById("tableBody");
-        thead.innerHTML = "";
-        tbody.innerHTML = "";
-
-        if (!currentFilteredRecords || currentFilteredRecords.length === 0) {
-            tbody.innerHTML = '<tr><td style="padding:20px; color:var(--muted);">No matching records found.</td></tr>';
-            return;
-        }
-
-        // Get top 8 columns
-        const allKeys = Object.keys(currentFilteredRecords[0]);
-        const keys = allKeys.slice(0, 8);
-
-        const trHead = document.createElement("tr");
-        keys.forEach(k => {
-            const th = document.createElement("th");
-            th.innerText = k.replace(/_/g, " ");
-            trHead.appendChild(th);
-        });
-        thead.appendChild(trHead);
-
-        currentFilteredRecords.slice(0, 100).forEach(row => {
-            const tr = document.createElement("tr");
-            keys.forEach(k => {
-                const td = document.createElement("td");
-                let val = row[k];
-                if (typeof val === "object" && val !== null) val = JSON.stringify(val);
-                td.innerText = val !== null && val !== undefined ? String(val).slice(0, 50) : "-";
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-        });
-    }
-
-    function renderJsonView() {
-        const preview = {
-            query_endpoint: getCurrentEndpointUrl(),
-            total_matching_records: currentFilteredRecords.length,
-            records_preview: currentFilteredRecords.slice(0, 25)
-        };
-        document.getElementById("jsonContainer").innerText = JSON.stringify(preview, null, 2);
-    }
-
-    function setViewMode(mode) {
-        currentViewMode = mode;
-        if (mode === "table") {
-            document.getElementById("tableContainer").style.display = "block";
-            document.getElementById("jsonContainer").style.display = "none";
-        } else {
-            document.getElementById("tableContainer").style.display = "none";
-            document.getElementById("jsonContainer").style.display = "block";
+        if (activeSnippetLang === "curl") {
+            box.innerText = `curl -X GET "${url}" \\\n     -H "Accept: application/json"`;
+        } else if (activeSnippetLang === "js") {
+            box.innerText = `// JavaScript (Fetch in Chrome / Node.js 18+)\nconst response = await fetch("${url}");\nconst data = await response.json();\nconsole.log(data);`;
+        } else if (activeSnippetLang === "py") {
+            box.innerText = `# Python 3 (Requests)\nimport requests\n\nresponse = requests.get("${url}")\ndata = response.json()\nprint(data)`;
         }
     }
 
-    function switchSnippet(type) {
-        activeSnippetType = type;
+    function switchTab(lang) {
+        activeSnippetLang = lang;
         document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        event.target.classList.add("active");
-        updateSnippet();
+        if (event && event.target) event.target.classList.add("active");
+        updateCodeSnippet();
     }
 
-    function updateSnippet() {
-        const url = getCurrentEndpointUrl();
-        const container = document.getElementById("snippetContainer");
-
-        if (activeSnippetType === "curl") {
-            container.innerText = `curl -X GET "${url}" \\\n     -H "Accept: application/json"`;
-        } else if (activeSnippetType === "js") {
-            container.innerText = `// Modern JavaScript (Fetch API)\nconst response = await fetch("${url}");\nconst data = await response.json();\nconsole.log(data.records);`;
-        } else if (activeSnippetType === "python") {
-            container.innerText = `# Python 3 (Requests)\nimport requests\n\nr = requests.get("${url}")\ndata = r.json()\nprint(f"Total: {data['total_records']}, Sample: {data['records'][0]}")`;
-        }
+    function copyBaseUrl() {
+        navigator.clipboard.writeText(document.getElementById("txtBaseUrl").innerText);
+        alert("Base URL copied to clipboard!");
     }
 
-    function copyCurrentUrl() {
-        navigator.clipboard.writeText(getCurrentEndpointUrl());
-        alert("Endpoint URL copied to clipboard!");
+    function copyActiveUrl() {
+        navigator.clipboard.writeText(document.getElementById("txtActiveUrl").value);
+        alert("Active endpoint URL copied to clipboard!");
     }
 
-    function copySnippet() {
-        navigator.clipboard.writeText(document.getElementById("snippetContainer").innerText);
-        alert("Code snippet copied to clipboard!");
+    function copyResponseBody() {
+        if (!lastResponseText) return;
+        navigator.clipboard.writeText(lastResponseText);
+        alert("Response body copied to clipboard!");
     }
 
-    function copyRawResponse() {
-        if (!currentRawData) return;
-        navigator.clipboard.writeText(JSON.stringify(currentRawData, null, 2));
-        alert("Full JSON response copied to clipboard!");
-    }
-
-    // Initialize on page load
     window.onload = () => {
-        updateEndpointUrl();
-        executeApiCall();
+        onMarketSelectorChange();
+        updateActiveUrl();
+        fetchActiveEndpoint();
     };
 </script>
 
