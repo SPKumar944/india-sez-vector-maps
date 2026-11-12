@@ -1,0 +1,222 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Cloud Kitchen Market Geospatial Intelligence REST API",
+    "version": "2.0.0",
+    "description": "High-density geospatial, F&B competitor, housing proxy, and OSRM mobility intelligence across Bangalore prime commercial pincodes (560034, 560041, 560038, 560102). Hosted publicly via GitHub Pages with CORS enabled.",
+    "contact": {
+      "name": "Cloud Kitchen Geospatial Engineering Team",
+      "url": "https://github.com/SPKumar944/india-sez-vector-maps"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1",
+      "description": "Public Static REST API (GitHub Pages - CORS Enabled)"
+    },
+    {
+      "url": "http://localhost:8000/api/v1",
+      "description": "Local Dynamic FastAPI Server (with SQL Filtering & CRUD Write)"
+    }
+  ],
+  "paths": {
+    "/pincodes.json": {
+      "get": {
+        "summary": "List All Analyzed Pincodes",
+        "description": "Returns all 4 analyzed market corridors with centroids, bounding boxes, entity counts, feasibility scores, and recommended kitchen hub coordinates.",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/summary.json": {
+      "get": {
+        "summary": "Cross-Market Overview & GMV Analytics",
+        "description": "Aggregated market saturation, order counts, and estimated GMV across all analyzed pincodes.",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/datasets.json": {
+      "get": {
+        "summary": "Discover Datasets for a Specific Pincode",
+        "description": "Returns metadata, schema definitions, column data types, row counts, and endpoint URLs for all 6 tables.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/fact_competitors.json": {
+      "get": {
+        "summary": "F&B Competitor Landscape",
+        "description": "Detailed directory of restaurants, cafes, cloud kitchens, and QSRs with ratings, pricing, order estimates, and flags.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/fact_demand_generators.json": {
+      "get": {
+        "summary": "Demand Generators (POIs)",
+        "description": "Corporate tech parks, universities, coaching centers, hospitals, and transit hubs driving delivery order surges.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/dim_housing_density_proxies.json": {
+      "get": {
+        "summary": "Residential & Housing Density Proxies",
+        "description": "Gated communities, apartments, PGs, and settlements with unit counts, resident estimates, and gate drop friction.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/dim_localities.json": {
+      "get": {
+        "summary": "Localities & Electoral Micro-Zones",
+        "description": "Macro sub-localities and official electoral polling sections with voter age cohorts and affluence index.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/fact_popular_times.json": {
+      "get": {
+        "summary": "Popular Times & 24h Busyness Curves",
+        "description": "Hourly weekday vs weekend footfall curves and midnight delivery surge opportunities.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/log_mobility.json": {
+      "get": {
+        "summary": "OSRM Mobility & Origin-Destination Matrix",
+        "description": "Real road distance, peak lunch/dinner travel times, congestion multipliers, and delivery SLA compliance.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/{pincode}/geojson.json": {
+      "get": {
+        "summary": "Master GeoJSON Spatial Layers",
+        "description": "Complete FeatureCollection of all POIs, housing complexes, competitors, and dispatch route linestrings.",
+        "parameters": [
+          {
+            "name": "pincode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "560034"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    }
+  }
+}

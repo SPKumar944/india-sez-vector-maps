@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Kitchen Geospatial Intelligence — Public REST API Portal & Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --panel-bg: #0f172a;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --accent: #f97316;
+            --blue: #38bdf8;
+            --green: #10b981;
+            --purple: #a855f7;
+            --yellow: #eab308;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .logo-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-outline {
+            background: #1e293b;
+            color: var(--muted);
+            border-color: var(--border);
+        }
+        .btn-outline:hover {
+            color: #fff;
+            background: #334155;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #ea580c;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .hero {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .hero-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .hero-text p {
+            color: var(--muted);
+            font-size: 14px;
+            max-width: 780px;
+        }
+        .stats-strip {
+            display: flex;
+            gap: 16px;
+        }
+        .stat-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            min-width: 110px;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--blue);
+        }
+        .stat-lbl {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .card-header {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--blue);
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        select, input {
+            width: 100%;
+            padding: 9px 12px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        select:focus, input:focus {
+            border-color: var(--blue);
+        }
+        .endpoint-url-box {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+        .method-badge {
+            background: var(--green);
+            color: #000;
+            font-weight: 700;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .url-text {
+            color: var(--blue);
+            flex: 1;
+        }
+        .copy-btn {
+            background: #1e293b;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            color: #fff;
+            background: #334155;
+        }
+        .tab-bar {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+        }
+        .tab-btn {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            color: #fff;
+            background: #0f172a;
+            border: 1px solid var(--border);
+        }
+        .snippet-box {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #e2e8f0;
+            overflow-x: auto;
+            position: relative;
+            max-height: 280px;
+        }
+        .response-viewer {
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 480px;
+        }
+        .response-header {
+            background: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .status-pill {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--green);
+            border: 1px solid var(--green);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+        }
+        .json-content {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #94a3b8;
+            overflow: auto;
+            max-height: 600px;
+            line-height: 1.6;
+        }
+        .table-view-container {
+            overflow: auto;
+            max-height: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        th {
+            background: #0f172a;
+            color: var(--muted);
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        td {
+            padding: 9px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            white-space: nowrap;
+        }
+        tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+        .download-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .download-pill:hover {
+            color: #fff;
+            border-color: var(--accent);
+            background: rgba(249, 115, 22, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-brand">
+        <span class="badge">REST API v2.0</span>
+        <span class="logo-title">Cloud Kitchen Market Geospatial Intelligence — API Portal</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="btn btn-outline">🗺️ 560034 Koramangala</a>
+        <a href="560041.html" class="btn btn-outline">🗺️ 560041 Jayanagar</a>
+        <a href="560038.html" class="btn btn-outline">🗺️ 560038 Indiranagar</a>
+        <a href="560102.html" class="btn btn-outline">🗺️ 560102 HSR Layout</a>
+        <a href="https://github.com/SPKumar944/india-sez-vector-maps" target="_blank" class="btn btn-primary">⭐ GitHub Repo</a>
+    </div>
+</header>
+
+<div class="container">
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Public REST API & Live Browser Client Console</h1>
+            <p>Access high-density geospatial points of interest, F&B competitor directories, housing unit densities, voter demographic cohorts, and OSRM dispatch mobility matrices across Bengaluru's prime food delivery markets. Fully CORS-enabled for zero-friction HTTP integrations.</p>
+        </div>
+        <div class="stats-strip">
+            <div class="stat-box">
+                <div class="stat-val">4</div>
+                <div class="stat-lbl">Markets</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">5,610</div>
+                <div class="stat-lbl">Total Entities</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val">100%</div>
+                <div class="stat-lbl">Geocoded</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-val" style="color:var(--green)">CORS</div>
+                <div class="stat-lbl">Public Access</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Sidebar API Control Panel -->
+        <div class="sidebar-controls" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="card">
+                <div class="card-header">
+                    <span>1. Query Parameters</span>
+                    <span style="color:var(--accent)">Live Endpoint</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Pincode</label>
+                    <select id="selPincode" onchange="onPincodeChange()">
+                        <option value="560034">560034 — Koramangala (1,485 Entities)</option>
+                        <option value="560041">560041 — Jayanagar (1,602 Entities)</option>
+                        <option value="560038">560038 — Indiranagar (1,268 Entities)</option>
+                        <option value="560102">560102 — HSR Layout (1,255 Entities)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Dataset</label>
+                    <select id="selDataset" onchange="updateEndpointUrl()">
+                        <option value="fact_competitors">fact_competitors (F&B Outlets & Dark Kitchens)</option>
+                        <option value="fact_demand_generators">fact_demand_generators (POIs, IT Parks, Colleges, Hospitals)</option>
+                        <option value="dim_housing_density_proxies">dim_housing_density_proxies (Apartments, PGs, Gated Societies)</option>
+                        <option value="dim_localities">dim_localities (Sub-Localities & Electoral Sections)</option>
+                        <option value="fact_popular_times">fact_popular_times (24h Busyness & Midnight Surge)</option>
+                        <option value="log_mobility">log_mobility (OSRM Road Routing & Delivery SLAs)</option>
+                        <option value="geojson">geojson (Master Vector GeoJSON FeatureCollection)</option>
+                        <option value="datasets">datasets (Schema & Endpoint Discovery)</option>
+                        <option value="pincodes">pincodes (Global Pincode Registry & Meta)</option>
+                        <option value="summary">summary (Cross-Market GMV & Volume Summary)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Search Keyword Filter (Client-side)</label>
+                    <input type="text" id="txtSearch" placeholder="e.g. EatFit, Burger, Hospital, PG..." oninput="applyFilters()">
+                </div>
+
+                <div class="form-group">
+                    <label>Category Filter</label>
+                    <select id="selCategory" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 10px;" onclick="executeApiCall()">
+                    ⚡ Execute Live API Request
+                </button>
+            </div>
+
+            <!-- Direct URL & Copy Box -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Direct API Endpoint URL</span>
+                    <button class="copy-btn" onclick="copyCurrentUrl()">Copy URL</button>
+                </div>
+                <div class="endpoint-url-box">
+                    <span class="method-badge">GET</span>
+                    <span class="url-text" id="lblEndpointUrl">...</span>
+                </div>
+                <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;">
+                    <a id="btnDownloadJson" class="download-pill" href="#" target="_blank">📥 Open Raw JSON</a>
+                    <a id="btnDownloadCsv" class="download-pill" href="#" target="_blank">📊 Raw CSV</a>
+                    <a id="btnDownloadXlsx" class="download-pill" href="#" target="_blank">📗 Master Excel</a>
+                </div>
+            </div>
+
+            <!-- Code Snippets Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Code Snippets</span>
+                    <button class="copy-btn" onclick="copySnippet()">Copy Snippet</button>
+                </div>
+                <div class="tab-bar">
+                    <button class="tab-btn active" onclick="switchSnippet('curl')">cURL</button>
+                    <button class="tab-btn" onclick="switchSnippet('js')">JavaScript</button>
+                    <button class="tab-btn" onclick="switchSnippet('python')">Python</button>
+                </div>
+                <div class="snippet-box" id="snippetContainer"></div>
+            </div>
+        </div>
+
+        <!-- Main Content Area: Response Viewer -->
+        <div class="response-viewer">
+            <div class="response-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="status-pill" id="lblStatus">HTTP 200 OK</span>
+                    <span style="color: var(--muted);" id="lblTime">Latency: -- ms</span>
+                    <span style="color: var(--muted);" id="lblCount">Records: --</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="setViewMode('table')">📊 Table View</button>
+                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="setViewMode('json')">{ } JSON View</button>
+                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;" onclick="copyRawResponse()">📋 Copy JSON</button>
+                </div>
+            </div>
+
+            <!-- Table View Container -->
+            <div class="table-view-container" id="tableContainer">
+                <table>
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- JSON View Container -->
+            <pre class="json-content" id="jsonContainer" style="display: none;"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    const GITHUB_PAGES_BASE = "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1";
+    let currentRawData = null;
+    let currentFilteredRecords = [];
+    let currentViewMode = "table";
+    let activeSnippetType = "curl";
+
+    const PINCODE_NAMES = {
+        "560034": "560034_koramangala",
+        "560041": "560041_jayanagar",
+        "560038": "560038_indiranagar",
+        "560102": "560102_hsr_layout"
+    };
+
+    const PINCODE_EXCEL_NAMES = {
+        "560034": "Koramangala_560034_Cloud_Kitchen_Master_Dataset.xlsx",
+        "560041": "Jayanagar_560041_Cloud_Kitchen_Master_Dataset.xlsx",
+        "560038": "Indiranagar_560038_Cloud_Kitchen_Master_Dataset.xlsx",
+        "560102": "HSR_Layout_560102_Cloud_Kitchen_Master_Dataset.xlsx"
+    };
+
+    function getCurrentEndpointUrl() {
+        const pin = document.getElementById("selPincode").value;
+        const dataset = document.getElementById("selDataset").value;
+
+        if (dataset === "pincodes") {
+            return `${GITHUB_PAGES_BASE}/pincodes.json`;
+        } else if (dataset === "summary") {
+            return `${GITHUB_PAGES_BASE}/summary.json`;
+        } else {
+            return `${GITHUB_PAGES_BASE}/${pin}/${dataset}.json`;
+        }
+    }
+
+    function updateEndpointUrl() {
+        const url = getCurrentEndpointUrl();
+        document.getElementById("lblEndpointUrl").innerText = url;
+        document.getElementById("btnDownloadJson").href = url;
+
+        const pin = document.getElementById("selPincode").value;
+        const dataset = document.getElementById("selDataset").value;
+        const folder = PINCODE_NAMES[pin];
+
+        document.getElementById("btnDownloadCsv").href = `https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/${folder}/${dataset}.csv`;
+        document.getElementById("btnDownloadXlsx").href = `https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/${folder}/${PINCODE_EXCEL_NAMES[pin]}`;
+
+        updateSnippet();
+    }
+
+    function onPincodeChange() {
+        updateEndpointUrl();
+        executeApiCall();
+    }
+
+    async function executeApiCall() {
+        const url = getCurrentEndpointUrl();
+        document.getElementById("lblStatus").innerText = "FETCHING...";
+        document.getElementById("lblStatus").style.color = "var(--yellow)";
+        const t0 = performance.now();
+
+        try {
+            const resp = await fetch(url);
+            const t1 = performance.now();
+            const latency = Math.round(t1 - t0);
+
+            if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+
+            currentRawData = await resp.json();
+            document.getElementById("lblStatus").innerText = `HTTP ${resp.status} OK`;
+            document.getElementById("lblStatus").style.color = "var(--green)";
+            document.getElementById("lblTime").innerText = `Latency: ${latency} ms`;
+
+            populateCategoryFilter();
+            applyFilters();
+        } catch (err) {
+            document.getElementById("lblStatus").innerText = "ERROR";
+            document.getElementById("lblStatus").style.color = "var(--accent)";
+            document.getElementById("jsonContainer").innerText = JSON.stringify({ error: err.message, url }, null, 2);
+            document.getElementById("tableBody").innerHTML = `<tr><td colspan="5" style="color:var(--accent);">Failed to load: ${err.message}</td></tr>`;
+        }
+    }
+
+    function populateCategoryFilter() {
+        const catSelect = document.getElementById("selCategory");
+        catSelect.innerHTML = '<option value="">All Categories</option>';
+        if (!currentRawData) return;
+
+        let records = currentRawData.records || (Array.isArray(currentRawData) ? currentRawData : currentRawData.features || []);
+        const cats = new Set();
+        records.forEach(r => {
+            const c = r.primary_category || r.category || (r.properties && r.properties.category) || r.housing_category;
+            if (c) cats.add(c);
+        });
+
+        Array.from(cats).sort().forEach(c => {
+            const opt = document.createElement("option");
+            opt.value = c;
+            opt.innerText = c;
+            catSelect.appendChild(opt);
+        });
+    }
+
+    function applyFilters() {
+        if (!currentRawData) return;
+        const q = document.getElementById("txtSearch").value.toLowerCase().trim();
+        const cat = document.getElementById("selCategory").value;
+
+        let records = currentRawData.records;
+        if (!records) {
+            if (currentRawData.pincodes) records = currentRawData.pincodes;
+            else if (currentRawData.markets) records = currentRawData.markets;
+            else if (currentRawData.datasets) records = currentRawData.datasets;
+            else if (currentRawData.features) records = currentRawData.features.map(f => f.properties);
+            else if (Array.isArray(currentRawData)) records = currentRawData;
+            else records = [currentRawData];
+        }
+
+        currentFilteredRecords = records.filter(item => {
+            if (cat) {
+                const itemCat = item.primary_category || item.category || item.housing_category;
+                if (itemCat !== cat) return false;
+            }
+            if (q) {
+                const str = JSON.stringify(item).toLowerCase();
+                if (!str.includes(q)) return false;
+            }
+            return true;
+        });
+
+        document.getElementById("lblCount").innerText = `Records: ${currentFilteredRecords.length} / ${records.length}`;
+        renderTableView();
+        renderJsonView();
+    }
+
+    function renderTableView() {
+        const thead = document.getElementById("tableHead");
+        const tbody = document.getElementById("tableBody");
+        thead.innerHTML = "";
+        tbody.innerHTML = "";
+
+        if (!currentFilteredRecords || currentFilteredRecords.length === 0) {
+            tbody.innerHTML = '<tr><td style="padding:20px; color:var(--muted);">No matching records found.</td></tr>';
+            return;
+        }
+
+        // Get top 8 columns
+        const allKeys = Object.keys(currentFilteredRecords[0]);
+        const keys = allKeys.slice(0, 8);
+
+        const trHead = document.createElement("tr");
+        keys.forEach(k => {
+            const th = document.createElement("th");
+            th.innerText = k.replace(/_/g, " ");
+            trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+
+        currentFilteredRecords.slice(0, 100).forEach(row => {
+            const tr = document.createElement("tr");
+            keys.forEach(k => {
+                const td = document.createElement("td");
+                let val = row[k];
+                if (typeof val === "object" && val !== null) val = JSON.stringify(val);
+                td.innerText = val !== null && val !== undefined ? String(val).slice(0, 50) : "-";
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderJsonView() {
+        const preview = {
+            query_endpoint: getCurrentEndpointUrl(),
+            total_matching_records: currentFilteredRecords.length,
+            records_preview: currentFilteredRecords.slice(0, 25)
+        };
+        document.getElementById("jsonContainer").innerText = JSON.stringify(preview, null, 2);
+    }
+
+    function setViewMode(mode) {
+        currentViewMode = mode;
+        if (mode === "table") {
+            document.getElementById("tableContainer").style.display = "block";
+            document.getElementById("jsonContainer").style.display = "none";
+        } else {
+            document.getElementById("tableContainer").style.display = "none";
+            document.getElementById("jsonContainer").style.display = "block";
+        }
+    }
+
+    function switchSnippet(type) {
+        activeSnippetType = type;
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        event.target.classList.add("active");
+        updateSnippet();
+    }
+
+    function updateSnippet() {
+        const url = getCurrentEndpointUrl();
+        const container = document.getElementById("snippetContainer");
+
+        if (activeSnippetType === "curl") {
+            container.innerText = `curl -X GET "${url}" \\\n     -H "Accept: application/json"`;
+        } else if (activeSnippetType === "js") {
+            container.innerText = `// Modern JavaScript (Fetch API)\nconst response = await fetch("${url}");\nconst data = await response.json();\nconsole.log(data.records);`;
+        } else if (activeSnippetType === "python") {
+            container.innerText = `# Python 3 (Requests)\nimport requests\n\nr = requests.get("${url}")\ndata = r.json()\nprint(f"Total: {data['total_records']}, Sample: {data['records'][0]}")`;
+        }
+    }
+
+    function copyCurrentUrl() {
+        navigator.clipboard.writeText(getCurrentEndpointUrl());
+        alert("Endpoint URL copied to clipboard!");
+    }
+
+    function copySnippet() {
+        navigator.clipboard.writeText(document.getElementById("snippetContainer").innerText);
+        alert("Code snippet copied to clipboard!");
+    }
+
+    function copyRawResponse() {
+        if (!currentRawData) return;
+        navigator.clipboard.writeText(JSON.stringify(currentRawData, null, 2));
+        alert("Full JSON response copied to clipboard!");
+    }
+
+    // Initialize on page load
+    window.onload = () => {
+        updateEndpointUrl();
+        executeApiCall();
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "status": "success",
+  "api_version": "2.0.0",
+  "total_markets_analyzed": 4,
+  "markets": [
+    {
+      "pincode": "560034",
+      "total_fnb_outlets": 473,
+      "total_cloud_kitchens": 17,
+      "avg_rating": 4.12,
+      "avg_aov_inr": 422.0,
+      "total_monthly_orders": 1621670,
+      "total_monthly_gmv_inr": 661999573
+    },
+    {
+      "pincode": "560038",
+      "total_fnb_outlets": 474,
+      "total_cloud_kitchens": 14,
+      "avg_rating": 4.32,
+      "avg_aov_inr": 456.0,
+      "total_monthly_orders": 1293036,
+      "total_monthly_gmv_inr": 597461857
+    },
+    {
+      "pincode": "560041",
+      "total_fnb_outlets": 543,
+      "total_cloud_kitchens": 11,
+      "avg_rating": 4.28,
+      "avg_aov_inr": 434.0,
+      "total_monthly_orders": 1423175,
+      "total_monthly_gmv_inr": 608647410
+    },
+    {
+      "pincode": "560102",
+      "total_fnb_outlets": 371,
+      "total_cloud_kitchens": 8,
+      "avg_rating": 4.29,
+      "avg_aov_inr": 419.0,
+      "total_monthly_orders": 1041067,
+      "total_monthly_gmv_inr": 431292107
+    }
+  ]
+}

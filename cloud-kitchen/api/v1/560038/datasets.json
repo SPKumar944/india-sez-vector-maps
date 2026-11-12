@@ -1,0 +1,1022 @@
+{
+  "status": "success",
+  "pincode": "560038",
+  "name": "Indiranagar",
+  "total_datasets": 6,
+  "datasets": [
+    {
+      "dataset_name": "dim_localities",
+      "title": "Localities & Electoral Micro-Zones",
+      "description": "Geospatial boundary centroids, zoning (Commercial, Industrial, Residential), population estimates, and electoral voter age cohorts (Gen Z, Millennial).",
+      "primary_key": "locality_id",
+      "row_count": 57,
+      "column_count": 43,
+      "spatial_columns": {
+        "lat": "center_lat",
+        "lon": "center_lon"
+      },
+      "columns": [
+        {
+          "name": "locality_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "granularity_level",
+          "type": "TEXT"
+        },
+        {
+          "name": "pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "is_core_560034_catchment",
+          "type": "INTEGER"
+        },
+        {
+          "name": "ward_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "locality_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_locality_block",
+          "type": "TEXT"
+        },
+        {
+          "name": "micro_zone_section",
+          "type": "TEXT"
+        },
+        {
+          "name": "zoning_classification",
+          "type": "TEXT"
+        },
+        {
+          "name": "center_lat",
+          "type": "REAL"
+        },
+        {
+          "name": "center_lon",
+          "type": "REAL"
+        },
+        {
+          "name": "lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "bbox_min_lat",
+          "type": "REAL"
+        },
+        {
+          "name": "bbox_max_lat",
+          "type": "REAL"
+        },
+        {
+          "name": "bbox_min_lon",
+          "type": "REAL"
+        },
+        {
+          "name": "bbox_max_lon",
+          "type": "REAL"
+        },
+        {
+          "name": "area_sq_km",
+          "type": "REAL"
+        },
+        {
+          "name": "polygon_wkt",
+          "type": "TEXT"
+        },
+        {
+          "name": "electoral_part_nos",
+          "type": "TEXT"
+        },
+        {
+          "name": "registered_voters_electoral_roll",
+          "type": "INTEGER"
+        },
+        {
+          "name": "verified_households_electoral_roll",
+          "type": "INTEGER"
+        },
+        {
+          "name": "floating_student_tech_population_est",
+          "type": "INTEGER"
+        },
+        {
+          "name": "total_effective_population",
+          "type": "INTEGER"
+        },
+        {
+          "name": "age_18_29_genz_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "age_30_44_millennial_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "age_45_59_genx_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "age_60_plus_senior_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "mean_voter_age_years",
+          "type": "REAL"
+        },
+        {
+          "name": "male_voter_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "female_voter_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "household_density_per_sqkm",
+          "type": "INTEGER"
+        },
+        {
+          "name": "population_density_per_sqkm",
+          "type": "INTEGER"
+        },
+        {
+          "name": "avg_household_income_inr_lakhs",
+          "type": "REAL"
+        },
+        {
+          "name": "affluence_index_1_10",
+          "type": "REAL"
+        },
+        {
+          "name": "avg_residential_rent_2bhk_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "avg_commercial_kitchen_rent_per_sqft_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "proptech_capital_value_per_sqft_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "daytime_to_nighttime_pop_ratio",
+          "type": "REAL"
+        },
+        {
+          "name": "online_food_order_propensity_score_1_10",
+          "type": "REAL"
+        },
+        {
+          "name": "dominant_meal_daypart",
+          "type": "TEXT"
+        },
+        {
+          "name": "cloud_kitchen_strategic_role",
+          "type": "TEXT"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        },
+        {
+          "name": "is_core_target_catchment",
+          "type": "INTEGER"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/dim_localities",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/dim_localities/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/dim_localities.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/dim_localities.csv"
+    },
+    {
+      "dataset_name": "dim_housing_density_proxies",
+      "title": "Housing & Residential Density Proxies",
+      "description": "Gated communities, high-rise apartments, student PGs, and low-income settlements with dwelling unit counts, resident estimates, and gate drop friction.",
+      "primary_key": "housing_id",
+      "row_count": 91,
+      "column_count": 21,
+      "spatial_columns": {
+        "lat": "latitude",
+        "lon": "longitude"
+      },
+      "columns": [
+        {
+          "name": "housing_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "osm_place_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "complex_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "housing_category",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "exact_address",
+          "type": "TEXT"
+        },
+        {
+          "name": "latitude",
+          "type": "REAL"
+        },
+        {
+          "name": "longitude",
+          "type": "REAL"
+        },
+        {
+          "name": "lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "google_rating",
+          "type": "REAL"
+        },
+        {
+          "name": "total_reviews_density_proxy",
+          "type": "INTEGER"
+        },
+        {
+          "name": "estimated_dwelling_units",
+          "type": "INTEGER"
+        },
+        {
+          "name": "estimated_residents",
+          "type": "INTEGER"
+        },
+        {
+          "name": "occupancy_rate_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "income_segment",
+          "type": "TEXT"
+        },
+        {
+          "name": "avg_monthly_food_delivery_spend_per_hh_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "security_gate_drop_friction",
+          "type": "TEXT"
+        },
+        {
+          "name": "distance_from_5th_block_hub_km",
+          "type": "REAL"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        },
+        {
+          "name": "distance_from_primary_hub_km",
+          "type": "REAL"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/dim_housing_density_proxies",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/dim_housing_density_proxies/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/dim_housing_density_proxies.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/dim_housing_density_proxies.csv"
+    },
+    {
+      "dataset_name": "fact_demand_generators",
+      "title": "Demand Generators (POIs)",
+      "description": "Tech parks, corporate offices, universities, coaching hubs, hospitals, transit hubs, and retail malls driving delivery demand.",
+      "primary_key": "poi_id",
+      "row_count": 384,
+      "column_count": 23,
+      "spatial_columns": {
+        "lat": "latitude",
+        "lon": "longitude"
+      },
+      "columns": [
+        {
+          "name": "poi_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "osm_place_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "osm_type_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "poi_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "category",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_category",
+          "type": "TEXT"
+        },
+        {
+          "name": "protocol_query_matched",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "address",
+          "type": "TEXT"
+        },
+        {
+          "name": "latitude",
+          "type": "REAL"
+        },
+        {
+          "name": "longitude",
+          "type": "REAL"
+        },
+        {
+          "name": "lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "operating_hours",
+          "type": "TEXT"
+        },
+        {
+          "name": "is_24_hours",
+          "type": "INTEGER"
+        },
+        {
+          "name": "estimated_daily_footfall",
+          "type": "INTEGER"
+        },
+        {
+          "name": "google_reviews_proxy",
+          "type": "INTEGER"
+        },
+        {
+          "name": "delivery_demand_weight_1_10",
+          "type": "REAL"
+        },
+        {
+          "name": "peak_demand_window",
+          "type": "TEXT"
+        },
+        {
+          "name": "typical_order_persona",
+          "type": "TEXT"
+        },
+        {
+          "name": "distance_to_5th_block_hub_km",
+          "type": "REAL"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        },
+        {
+          "name": "distance_to_primary_hub_km",
+          "type": "REAL"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/fact_demand_generators",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/fact_demand_generators/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_demand_generators.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/fact_demand_generators.csv"
+    },
+    {
+      "dataset_name": "fact_competitors",
+      "title": "F&B Competitor Landscape",
+      "description": "Commercial restaurants, cafes, cloud kitchens, and QSR chains with cuisine mix, price band, Google ratings, reviews, order estimates, and dining flags.",
+      "primary_key": "competitor_id",
+      "row_count": 474,
+      "column_count": 36,
+      "spatial_columns": {
+        "lat": "latitude",
+        "lon": "longitude"
+      },
+      "columns": [
+        {
+          "name": "competitor_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "osm_place_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "brand_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "outlet_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "parent_group",
+          "type": "TEXT"
+        },
+        {
+          "name": "is_protocol_target_brand",
+          "type": "INTEGER"
+        },
+        {
+          "name": "primary_category",
+          "type": "TEXT"
+        },
+        {
+          "name": "cuisine_type",
+          "type": "TEXT"
+        },
+        {
+          "name": "dietary_tags",
+          "type": "TEXT"
+        },
+        {
+          "name": "house_number",
+          "type": "TEXT"
+        },
+        {
+          "name": "street_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "exact_address",
+          "type": "TEXT"
+        },
+        {
+          "name": "latitude",
+          "type": "REAL"
+        },
+        {
+          "name": "longitude",
+          "type": "REAL"
+        },
+        {
+          "name": "lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "rating",
+          "type": "REAL"
+        },
+        {
+          "name": "total_reviews",
+          "type": "INTEGER"
+        },
+        {
+          "name": "review_velocity_monthly",
+          "type": "INTEGER"
+        },
+        {
+          "name": "price_level",
+          "type": "TEXT"
+        },
+        {
+          "name": "avg_order_value_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "dine_in_flag",
+          "type": "TEXT"
+        },
+        {
+          "name": "takeaway_flag",
+          "type": "TEXT"
+        },
+        {
+          "name": "delivery_flag",
+          "type": "TEXT"
+        },
+        {
+          "name": "dine_in_takeaway_delivery_flags",
+          "type": "TEXT"
+        },
+        {
+          "name": "is_cloud_kitchen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "operating_hours",
+          "type": "TEXT"
+        },
+        {
+          "name": "open_late_night_past_11pm",
+          "type": "INTEGER"
+        },
+        {
+          "name": "aggregator_platforms",
+          "type": "TEXT"
+        },
+        {
+          "name": "estimated_daily_orders",
+          "type": "INTEGER"
+        },
+        {
+          "name": "estimated_monthly_orders",
+          "type": "INTEGER"
+        },
+        {
+          "name": "estimated_monthly_gmv_inr",
+          "type": "INTEGER"
+        },
+        {
+          "name": "distance_from_5th_block_hub_km",
+          "type": "REAL"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        },
+        {
+          "name": "distance_from_primary_hub_km",
+          "type": "REAL"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/fact_competitors",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/fact_competitors/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_competitors.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/fact_competitors.csv"
+    },
+    {
+      "dataset_name": "fact_popular_times",
+      "title": "Footfall & Popular Times Curves",
+      "description": "Hourly 24-hour busyness distributions (00:00 - 23:00) comparing weekday vs weekend footfall and midnight cloud kitchen delivery surges.",
+      "primary_key": "popular_time_id",
+      "row_count": 120,
+      "column_count": 45,
+      "spatial_columns": {
+        "lat": "latitude",
+        "lon": "longitude"
+      },
+      "columns": [
+        {
+          "name": "popular_time_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "target_entity_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "entity_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "entity_category",
+          "type": "TEXT"
+        },
+        {
+          "name": "archetype_profile",
+          "type": "TEXT"
+        },
+        {
+          "name": "sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "latitude",
+          "type": "REAL"
+        },
+        {
+          "name": "longitude",
+          "type": "REAL"
+        },
+        {
+          "name": "lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "day_type",
+          "type": "TEXT"
+        },
+        {
+          "name": "h00_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h01_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h02_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h03_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h04_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h05_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h06_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h07_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h08_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h09_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h10_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h11_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h12_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h13_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h14_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h15_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h16_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h17_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h18_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h19_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h20_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h21_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h22_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "h23_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "peak_hour_24h",
+          "type": "TEXT"
+        },
+        {
+          "name": "peak_busyness_pct",
+          "type": "INTEGER"
+        },
+        {
+          "name": "daytime_avg_busyness_08_18_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "nighttime_avg_busyness_18_03_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "daytime_to_nighttime_surge_ratio",
+          "type": "REAL"
+        },
+        {
+          "name": "evening_peak_18_22_avg_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "late_night_22_03_avg_pct",
+          "type": "REAL"
+        },
+        {
+          "name": "evening_to_latenight_split_ratio",
+          "type": "REAL"
+        },
+        {
+          "name": "cloud_kitchen_capture_opportunity",
+          "type": "TEXT"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/fact_popular_times",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/fact_popular_times/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_popular_times.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/fact_popular_times.csv"
+    },
+    {
+      "dataset_name": "log_mobility",
+      "title": "OSRM Mobility & Origin-Destination Matrix",
+      "description": "Actual road distances, free-flow vs. 1 PM lunch & 8 PM dinner peak travel times, congestion multipliers, and total order-to-door delivery SLAs.",
+      "primary_key": "route_id",
+      "row_count": 144,
+      "column_count": 45,
+      "spatial_columns": {
+        "lat": "dest_lat",
+        "lon": "dest_lon"
+      },
+      "columns": [
+        {
+          "name": "route_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "origin_hub_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "origin_hub_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "origin_sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "origin_pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "origin_lat",
+          "type": "REAL"
+        },
+        {
+          "name": "origin_lon",
+          "type": "REAL"
+        },
+        {
+          "name": "origin_lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "destination_node_id",
+          "type": "TEXT"
+        },
+        {
+          "name": "destination_name",
+          "type": "TEXT"
+        },
+        {
+          "name": "destination_type",
+          "type": "TEXT"
+        },
+        {
+          "name": "destination_sub_locality",
+          "type": "TEXT"
+        },
+        {
+          "name": "destination_pincode",
+          "type": "INTEGER"
+        },
+        {
+          "name": "dest_lat",
+          "type": "REAL"
+        },
+        {
+          "name": "dest_lon",
+          "type": "REAL"
+        },
+        {
+          "name": "dest_lat_long",
+          "type": "TEXT"
+        },
+        {
+          "name": "straight_line_distance_km",
+          "type": "REAL"
+        },
+        {
+          "name": "actual_road_distance_km",
+          "type": "REAL"
+        },
+        {
+          "name": "circuitousness_index",
+          "type": "REAL"
+        },
+        {
+          "name": "delivery_radius_band",
+          "type": "TEXT"
+        },
+        {
+          "name": "road_connectivity_class",
+          "type": "TEXT"
+        },
+        {
+          "name": "bottleneck_junctions_crossed",
+          "type": "TEXT"
+        },
+        {
+          "name": "traffic_signal_count_est",
+          "type": "INTEGER"
+        },
+        {
+          "name": "free_flow_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "morning_9am_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "lunch_peak_1pm_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "evening_6pm_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "dinner_peak_8pm_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "late_night_11pm_speed_kmph",
+          "type": "REAL"
+        },
+        {
+          "name": "free_flow_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "morning_9am_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "lunch_peak_1pm_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "evening_6pm_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "dinner_peak_8pm_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "late_night_11pm_drive_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "kitchen_prep_and_gate_buffer_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "total_order_to_door_lunch_sla_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "total_order_to_door_dinner_sla_mins",
+          "type": "REAL"
+        },
+        {
+          "name": "lunch_congestion_multiplier",
+          "type": "REAL"
+        },
+        {
+          "name": "dinner_congestion_multiplier",
+          "type": "REAL"
+        },
+        {
+          "name": "congestion_severity_band",
+          "type": "TEXT"
+        },
+        {
+          "name": "sla_30min_compliant_dinner",
+          "type": "TEXT"
+        },
+        {
+          "name": "sla_22min_express_compliant",
+          "type": "TEXT"
+        },
+        {
+          "name": "route_feasibility_score_1_10",
+          "type": "REAL"
+        },
+        {
+          "name": "target_pincode_zone",
+          "type": "TEXT"
+        }
+      ],
+      "supported_operations": [
+        "GET (List)",
+        "GET (Detail by ID)",
+        "POST (Create)",
+        "PATCH (Update)",
+        "DELETE (Delete)"
+      ],
+      "endpoints": {
+        "list_and_filter": "/api/v1/pincodes/560038/datasets/log_mobility",
+        "detail_or_edit": "/api/v1/pincodes/560038/datasets/log_mobility/{id}"
+      },
+      "static_api_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/log_mobility.json",
+      "raw_csv_url": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/log_mobility.csv"
+    }
+  ]
+}

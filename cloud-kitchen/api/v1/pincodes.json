@@ -1,0 +1,269 @@
+{
+  "status": "success",
+  "api_version": "2.0.0",
+  "provider": "Cloud Kitchen Market Geospatial Intelligence API",
+  "base_url": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1",
+  "total_pincodes": 4,
+  "pincodes": [
+    {
+      "pincode": "560034",
+      "name": "Koramangala",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "country": "India",
+      "centroid": {
+        "latitude": 12.9345,
+        "longitude": 77.6245
+      },
+      "bounding_box": {
+        "min_latitude": 12.912,
+        "min_longitude": 77.608,
+        "max_latitude": 12.952,
+        "max_longitude": 77.652
+      },
+      "total_entities_extracted": 1634,
+      "datasets_count": 6,
+      "summary_breakdown": {
+        "competitors": 518,
+        "demand_generators": 582,
+        "housing_proxies": 145,
+        "localities_micro_zones": 69,
+        "mobility_routes": 160,
+        "popular_times_profiles": 160
+      },
+      "cloud_kitchen_feasibility_score": 9.2,
+      "recommended_hub_coordinates": [
+        {
+          "hub_id": "HUB_560034_01",
+          "name": "5th Block Industrial Layout",
+          "lat": 12.9362,
+          "lon": 77.6205
+        },
+        {
+          "hub_id": "HUB_560034_02",
+          "name": "Ejipura / Sony World Dark Kitchen Strip",
+          "lat": 12.9385,
+          "lon": 77.627
+        },
+        {
+          "hub_id": "HUB_560034_03",
+          "name": "Jakkasandra Link Hub",
+          "lat": 12.9225,
+          "lon": 77.6395
+        },
+        {
+          "hub_id": "HUB_560034_04",
+          "name": "8th Block / Adugodi Perimeter Hub",
+          "lat": 12.9398,
+          "lon": 77.6168
+        }
+      ],
+      "api_urls": {
+        "datasets_discovery": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/datasets.json",
+        "geojson": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/geojson.json",
+        "competitors": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/fact_competitors.json",
+        "demand_generators": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/fact_demand_generators.json",
+        "housing_proxies": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/dim_housing_density_proxies.json",
+        "localities": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/dim_localities.json",
+        "popular_times": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/fact_popular_times.json",
+        "mobility": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560034/log_mobility.json",
+        "excel_workbook": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560034_koramangala/Koramangala_560034_Cloud_Kitchen_Master_Dataset.xlsx"
+      }
+    },
+    {
+      "pincode": "560041",
+      "name": "Jayanagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "country": "India",
+      "centroid": {
+        "latitude": 12.9234,
+        "longitude": 77.5924
+      },
+      "bounding_box": {
+        "min_latitude": 12.91,
+        "min_longitude": 77.57,
+        "max_latitude": 12.945,
+        "max_longitude": 77.608
+      },
+      "total_entities_extracted": 1602,
+      "datasets_count": 6,
+      "summary_breakdown": {
+        "competitors": 543,
+        "demand_generators": 578,
+        "housing_proxies": 158,
+        "localities_micro_zones": 59,
+        "mobility_routes": 144,
+        "popular_times_profiles": 120
+      },
+      "cloud_kitchen_feasibility_score": 9.1,
+      "recommended_hub_coordinates": [
+        {
+          "hub_id": "HUB_560041_01",
+          "name": "4th Block / 9th Block Commercial Border",
+          "lat": 12.9265,
+          "lon": 77.593
+        },
+        {
+          "hub_id": "HUB_560041_02",
+          "name": "South End Circle / RV Road Metro Hub",
+          "lat": 12.936,
+          "lon": 77.5795
+        },
+        {
+          "hub_id": "HUB_560041_03",
+          "name": "East End Main Road / 9th Block Extension",
+          "lat": 12.918,
+          "lon": 77.5985
+        },
+        {
+          "hub_id": "HUB_560041_04",
+          "name": "Tilaknagar / Bannerghatta Link Hub",
+          "lat": 12.9285,
+          "lon": 77.5995
+        }
+      ],
+      "api_urls": {
+        "datasets_discovery": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/datasets.json",
+        "geojson": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/geojson.json",
+        "competitors": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/fact_competitors.json",
+        "demand_generators": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/fact_demand_generators.json",
+        "housing_proxies": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/dim_housing_density_proxies.json",
+        "localities": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/dim_localities.json",
+        "popular_times": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/fact_popular_times.json",
+        "mobility": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560041/log_mobility.json",
+        "excel_workbook": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560041_jayanagar/Jayanagar_560041_Cloud_Kitchen_Master_Dataset.xlsx"
+      }
+    },
+    {
+      "pincode": "560038",
+      "name": "Indiranagar",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "country": "India",
+      "centroid": {
+        "latitude": 12.9797,
+        "longitude": 77.6417
+      },
+      "bounding_box": {
+        "min_latitude": 12.962,
+        "min_longitude": 77.625,
+        "max_latitude": 12.992,
+        "max_longitude": 77.658
+      },
+      "total_entities_extracted": 1270,
+      "datasets_count": 6,
+      "summary_breakdown": {
+        "competitors": 474,
+        "demand_generators": 384,
+        "housing_proxies": 91,
+        "localities_micro_zones": 57,
+        "mobility_routes": 144,
+        "popular_times_profiles": 120
+      },
+      "cloud_kitchen_feasibility_score": 9.5,
+      "recommended_hub_coordinates": [
+        {
+          "hub_id": "HUB_560038_01",
+          "name": "Doopanahalli / 100ft Road Backstreet Pod",
+          "lat": 12.9715,
+          "lon": 77.641
+        },
+        {
+          "hub_id": "HUB_560038_02",
+          "name": "CMH Road / Metro Station Perimeter Hub",
+          "lat": 12.9785,
+          "lon": 77.6445
+        },
+        {
+          "hub_id": "HUB_560038_03",
+          "name": "HAL 2nd Stage / 12th Main Cloud Cluster",
+          "lat": 12.974,
+          "lon": 77.6465
+        },
+        {
+          "hub_id": "HUB_560038_04",
+          "name": "Binnamangala / Old Madras Road North Hub",
+          "lat": 12.986,
+          "lon": 77.638
+        }
+      ],
+      "api_urls": {
+        "datasets_discovery": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/datasets.json",
+        "geojson": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/geojson.json",
+        "competitors": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_competitors.json",
+        "demand_generators": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_demand_generators.json",
+        "housing_proxies": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/dim_housing_density_proxies.json",
+        "localities": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/dim_localities.json",
+        "popular_times": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/fact_popular_times.json",
+        "mobility": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560038/log_mobility.json",
+        "excel_workbook": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560038_indiranagar/Indiranagar_560038_Cloud_Kitchen_Master_Dataset.xlsx"
+      }
+    },
+    {
+      "pincode": "560102",
+      "name": "HSR Layout",
+      "city": "Bengaluru",
+      "state": "Karnataka",
+      "country": "India",
+      "centroid": {
+        "latitude": 12.9151,
+        "longitude": 77.6505
+      },
+      "bounding_box": {
+        "min_latitude": 12.898,
+        "min_longitude": 77.63,
+        "max_latitude": 12.928,
+        "max_longitude": 77.668
+      },
+      "total_entities_extracted": 1433,
+      "datasets_count": 6,
+      "summary_breakdown": {
+        "competitors": 459,
+        "demand_generators": 485,
+        "housing_proxies": 168,
+        "localities_micro_zones": 57,
+        "mobility_routes": 144,
+        "popular_times_profiles": 120
+      },
+      "cloud_kitchen_feasibility_score": 9.4,
+      "recommended_hub_coordinates": [
+        {
+          "hub_id": "HUB_560102_01",
+          "name": "27th Main / Sector 1 Commercial Strip",
+          "lat": 12.9165,
+          "lon": 77.6515
+        },
+        {
+          "hub_id": "HUB_560102_02",
+          "name": "Sector 7 / Hosur Road - Silk Board Gateway Hub",
+          "lat": 12.909,
+          "lon": 77.6375
+        },
+        {
+          "hub_id": "HUB_560102_03",
+          "name": "Sector 3 / 19th Main Central Hub",
+          "lat": 12.9125,
+          "lon": 77.645
+        },
+        {
+          "hub_id": "HUB_560102_04",
+          "name": "Sector 2 / Haralur - Sarjapur Link Hub",
+          "lat": 12.9065,
+          "lon": 77.658
+        }
+      ],
+      "api_urls": {
+        "datasets_discovery": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/datasets.json",
+        "geojson": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/geojson.json",
+        "competitors": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/fact_competitors.json",
+        "demand_generators": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/fact_demand_generators.json",
+        "housing_proxies": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/dim_housing_density_proxies.json",
+        "localities": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/dim_localities.json",
+        "popular_times": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/fact_popular_times.json",
+        "mobility": "https://spkumar944.github.io/india-sez-vector-maps/cloud-kitchen/api/v1/560102/log_mobility.json",
+        "excel_workbook": "https://github.com/SPKumar944/india-sez-vector-maps/raw/main/data/560102_hsr_layout/HSR_Layout_560102_Cloud_Kitchen_Master_Dataset.xlsx"
+      }
+    }
+  ]
+}
