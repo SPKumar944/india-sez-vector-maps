@@ -152,7 +152,8 @@ def get_available_pincodes() -> List[Dict[str, Any]]:
         stats = {}
         for tbl in TABLE_METADATA.keys():
             try:
-                cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE pincode = ?", (pin,))
+                pin_col = "origin_pincode" if tbl == "log_mobility" else "pincode"
+                cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE ({pin_col} = ? OR target_pincode_zone = ?)", (pin, pin))
                 stats[tbl] = cursor.fetchone()[0]
             except Exception:
                 stats[tbl] = 0
@@ -190,7 +191,8 @@ def get_pincode_datasets(pincode: str) -> List[Dict[str, Any]]:
         cursor.execute(f"PRAGMA table_info({tbl})")
         columns = [{"name": row["name"], "type": row["type"]} for row in cursor.fetchall()]
         
-        cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE pincode = ?", (pincode,))
+        pin_col = "origin_pincode" if tbl == "log_mobility" else "pincode"
+        cursor.execute(f"SELECT COUNT(*) FROM {tbl} WHERE ({pin_col} = ? OR target_pincode_zone = ?)", (pincode, pincode))
         row_count = cursor.fetchone()[0]
         
         datasets.append({
@@ -238,8 +240,9 @@ def query_dataset(
     conn = get_connection()
     cursor = conn.cursor()
 
-    conditions = ["pincode = ?"]
-    params: List[Any] = [pincode]
+    pin_col = "origin_pincode" if dataset_name == "log_mobility" else "pincode"
+    conditions = [f"({pin_col} = ? OR target_pincode_zone = ?)"]
+    params: List[Any] = [pincode, pincode]
 
     if q:
         cursor.execute(f"PRAGMA table_info({dataset_name})")
