@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>AGT Intelligence | Bengaluru Electoral Intelligence Layer</title>
+    <title>AGT Intelligence | Bengaluru Electoral & Polling Booth Intelligence Layer</title>
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="icon" type="image/png" href="brand/icon.png" />
     <link rel="apple-touch-icon" href="brand/icon.png" />
@@ -19,6 +19,7 @@
     
     <!-- Embedded Datasets -->
     <script src="data/shantinagar_wards.js"></script>
+    <script src="data/shantinagar_booth_boundaries.js"></script>
     <script src="data/electoral_data.js"></script>
 
     <style>
@@ -486,12 +487,12 @@
             color: var(--ink-950);
         }
 
-        /* Floating Right Scorecard - Modeled after SiteScorecard.jsx in ICE */
+        /* Floating Right Scorecard & Voter Table HUD */
         .scorecard-hud {
             position: absolute;
             top: 72px;
             right: 20px;
-            width: 380px;
+            width: 450px;
             max-height: calc(100dvh - 100px);
             background: var(--bg-card);
             backdrop-filter: blur(20px);
@@ -543,7 +544,7 @@
 
         .scorecard-title {
             font-family: var(--font-display);
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 900;
             color: var(--ink-950);
             line-height: 1.2;
@@ -566,11 +567,11 @@
             background: #f8fafc;
             border: 1px solid rgba(15, 23, 42, 0.07);
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 9px 12px;
         }
 
         .scorecard-box-lbl {
-            font-size: 9.5px;
+            font-size: 9px;
             font-family: var(--font-mono);
             color: var(--ink-500);
             text-transform: uppercase;
@@ -578,11 +579,35 @@
         }
 
         .scorecard-box-val {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             font-family: var(--font-mono);
             color: var(--ink-950);
             margin-top: 2px;
+        }
+
+        /* Tab Switcher inside Scorecard */
+        .sc-tabs-bar {
+            display: flex;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+            margin-bottom: 4px;
+        }
+
+        .sc-tab-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--ink-500);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .sc-tab-btn.active {
+            color: var(--azure-600);
+            border-bottom-color: var(--azure-600);
         }
 
         /* Demographics Bar */
@@ -634,6 +659,77 @@
             line-height: 1.25;
         }
 
+        /* Responsive Corresponding Voters Table */
+        .voter-search-mini {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11.5px;
+            color: var(--ink-950);
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .voter-search-mini:focus {
+            border-color: var(--azure-600);
+            background: #ffffff;
+        }
+
+        .voter-table-container {
+            max-height: 240px;
+            overflow: auto;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            border-radius: 8px;
+            background: #ffffff;
+            font-size: 11px;
+        }
+
+        .voter-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .voter-table thead {
+            position: sticky;
+            top: 0;
+            background: #f8fafc;
+            z-index: 2;
+        }
+
+        .voter-table th {
+            padding: 6px 8px;
+            font-size: 9px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            color: var(--ink-500);
+            text-align: left;
+            white-space: nowrap;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+        }
+
+        .voter-table td {
+            padding: 5px 8px;
+            color: var(--ink-950);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            white-space: nowrap;
+        }
+
+        .voter-table tr:hover td {
+            background: #f1f5f9;
+        }
+
+        .epic-badge {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--azure-600);
+            background: rgba(2, 132, 199, 0.08);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
         .hud-btn-primary {
             display: flex;
             align-items: center;
@@ -645,7 +741,7 @@
             text-decoration: none;
             font-size: 12px;
             font-weight: 700;
-            padding: 10px;
+            padding: 9px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
             transition: all 0.2s;
@@ -712,14 +808,14 @@
             .floating-kpi-row { display: none; }
             .dock-left {
                 width: calc(100% - 20px);
-                height: 42%;
+                height: 40%;
                 top: auto;
                 bottom: 10px;
                 left: 10px;
             }
             .scorecard-hud {
                 width: calc(100% - 20px);
-                max-height: 50%;
+                max-height: 52%;
                 top: auto;
                 bottom: 10px;
                 right: 10px;
@@ -744,7 +840,7 @@
                 </div>
                 <div class="brand-title-wrap">
                     <div class="brand-title">AGT<span>Intelligence</span></div>
-                    <div class="brand-sub">Electoral & Ward Intelligence Layer • AC-160 Shantinagar</div>
+                    <div class="brand-sub">Electoral & Booth Catchment GIS • AC-160 Shantinagar</div>
                 </div>
             </a>
 
@@ -762,7 +858,7 @@
                 <div class="select-pill-container">
                     <span class="select-pill-label">Booth:</span>
                     <select id="headerBoothSelect" class="header-select" style="max-width: 240px;">
-                        <option value="">Jump to Polling Booth (193 Booths)...</option>
+                        <option value="">Select Polling Booth (193 Booths)...</option>
                     </select>
                 </div>
 
@@ -784,8 +880,8 @@
             <span class="kpi-chip-val" id="kpiElectorate">135,159</span>
         </div>
         <div class="kpi-chip">
-            <span class="kpi-chip-title">Polling Stations</span>
-            <span class="kpi-chip-val">193 Booths</span>
+            <span class="kpi-chip-title">Booth Boundaries</span>
+            <span class="kpi-chip-val">193 Catchments</span>
         </div>
         <div class="kpi-chip">
             <span class="kpi-chip-title">Gender Ratio</span>
@@ -809,28 +905,29 @@
                 <svg viewBox="0 0 24 24">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
-                <input type="text" id="universalSearch" class="search-input" placeholder="Search street, school, booth (e.g. Richmond, 79)..." />
+                <input type="text" id="universalSearch" class="search-input" placeholder="Search booth, street, voter (e.g. Richmond, 79)..." />
             </div>
 
             <!-- Autocomplete Suggestions Overlay -->
             <div class="search-results-overlay" id="searchOverlay"></div>
         </div>
 
-        <!-- 3D Map Perspective Controls -->
+        <!-- 3D Map Perspective & Layer Controls -->
         <div class="dock-controls">
+            <div class="control-row">
+                <span>Map Layers:</span>
+                <div class="btn-toggle-group">
+                    <button class="btn-toggle-chip active" id="layerBoth">Wards & Booths</button>
+                    <button class="btn-toggle-chip" id="layerBooths">Booths Only</button>
+                    <button class="btn-toggle-chip" id="layerWards">Wards Only</button>
+                </div>
+            </div>
+
             <div class="control-row">
                 <span>3D Camera Tilt:</span>
                 <div class="btn-toggle-group">
                     <button class="btn-toggle-chip active" id="btnTilt3D">3D (48°)</button>
                     <button class="btn-toggle-chip" id="btnTilt2D">2D Flat</button>
-                </div>
-            </div>
-
-            <div class="control-row">
-                <span>3D Ward Extrusion:</span>
-                <div class="btn-toggle-group">
-                    <button class="btn-toggle-chip active" id="btnExtrudeOn">Elevated</button>
-                    <button class="btn-toggle-chip" id="btnExtrudeOff">Flat</button>
                 </div>
             </div>
 
@@ -851,7 +948,7 @@
         </div>
     </aside>
 
-    <!-- Floating Right Scorecard - Modeled after SiteScorecard.jsx -->
+    <!-- Floating Right Scorecard & Voter Table HUD -->
     <div class="scorecard-hud" id="scorecardHUD">
         <button class="scorecard-close" id="scorecardClose">&times;</button>
         <div>
@@ -860,47 +957,85 @@
             <div class="scorecard-subtitle" id="scSubtitle">AC-160 Shantinagar • Special Intensive Revision 2026</div>
         </div>
 
-        <div class="scorecard-kpi-grid">
-            <div class="scorecard-box">
-                <div class="scorecard-box-lbl">Total Electors</div>
-                <div class="scorecard-box-val" id="scElectors">43,914</div>
+        <!-- Scorecard Tab Switcher (Overview vs Corresponding Voters) -->
+        <div class="sc-tabs-bar">
+            <button class="sc-tab-btn active" id="scTabOverview">Demographics & Catchment</button>
+            <button class="sc-tab-btn" id="scTabVoters">Corresponding Electors (<span id="scVotersBadge">0</span>)</button>
+        </div>
+
+        <!-- Tab 1: Overview Panel -->
+        <div id="scOverviewPanel" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="scorecard-kpi-grid">
+                <div class="scorecard-box">
+                    <div class="scorecard-box-lbl">Total Electors</div>
+                    <div class="scorecard-box-val" id="scElectors">43,914</div>
+                </div>
+                <div class="scorecard-box">
+                    <div class="scorecard-box-lbl">Polling Booths</div>
+                    <div class="scorecard-box-val" id="scBooths">57 Booths</div>
+                </div>
+                <div class="scorecard-box">
+                    <div class="scorecard-box-lbl">Gender Ratio</div>
+                    <div class="scorecard-box-val" id="scRatio" style="color: var(--azure-600);">1,080.7</div>
+                </div>
+                <div class="scorecard-box">
+                    <div class="scorecard-box-lbl">Avg Voter Age</div>
+                    <div class="scorecard-box-val" id="scAge" style="color: var(--emerald-600);">43.1 yrs</div>
+                </div>
             </div>
-            <div class="scorecard-box">
-                <div class="scorecard-box-lbl">Polling Booths</div>
-                <div class="scorecard-box-val" id="scBooths">57 Booths</div>
+
+            <!-- Demographic Split Bar -->
+            <div class="progress-bar-wrap">
+                <div class="demographics-legend">
+                    <span id="scMaleLbl">Male: 21,105 (48%)</span>
+                    <span id="scFemaleLbl">Female: 22,809 (52%)</span>
+                </div>
+                <div class="demographics-bar">
+                    <div class="demographics-bar-male" id="scBarMale" style="width: 48%;"></div>
+                    <div class="demographics-bar-female" id="scBarFemale" style="width: 52%;"></div>
+                </div>
             </div>
-            <div class="scorecard-box">
-                <div class="scorecard-box-lbl">Gender Ratio</div>
-                <div class="scorecard-box-val" id="scRatio" style="color: var(--azure-600);">1,080.7</div>
+
+            <!-- Major Localities / Streets -->
+            <div>
+                <div class="list-section-title" style="margin: 0 0 6px 0;">Catchment Streets & Door Numbers</div>
+                <div class="hud-chips-wrap" id="scStreets"></div>
             </div>
-            <div class="scorecard-box">
-                <div class="scorecard-box-lbl">Avg Voter Age</div>
-                <div class="scorecard-box-val" id="scAge" style="color: var(--emerald-600);">43.1 yrs</div>
+
+            <!-- Major Schools / Polling Institutions -->
+            <div>
+                <div class="list-section-title" style="margin: 0 0 6px 0;">Polling Station Campus</div>
+                <div class="hud-chips-wrap" id="scSchools"></div>
             </div>
         </div>
 
-        <!-- Demographic Split Bar -->
-        <div class="progress-bar-wrap">
-            <div class="demographics-legend">
-                <span id="scMaleLbl">Male: 21,105 (48%)</span>
-                <span id="scFemaleLbl">Female: 22,809 (52%)</span>
+        <!-- Tab 2: Corresponding Voters Table Panel -->
+        <div id="scVotersPanel" style="display: none; flex-direction: column; gap: 8px;">
+            <input type="text" class="voter-search-mini" id="voterTableSearch" placeholder="Filter voters by name, EPIC ID, house #..." />
+            
+            <div class="voter-table-container">
+                <table class="voter-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Voter Name</th>
+                            <th>Relation</th>
+                            <th>House</th>
+                            <th>Street / Section</th>
+                            <th>EPIC ID</th>
+                            <th>Age</th>
+                            <th>Gen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="voterTableBody">
+                        <tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--ink-500);">Select a polling booth on the map to inspect voters.</td></tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="demographics-bar">
-                <div class="demographics-bar-male" id="scBarMale" style="width: 48%;"></div>
-                <div class="demographics-bar-female" id="scBarFemale" style="width: 52%;"></div>
+            <div style="font-size: 10px; color: var(--ink-500); display: flex; justify-content: space-between; align-items: center;">
+                <span id="voterTableCount">Showing 0 voters</span>
+                <span style="font-family: var(--font-mono);">Source: ECI SIR 2026</span>
             </div>
-        </div>
-
-        <!-- Major Localities / Streets -->
-        <div>
-            <div class="list-section-title" style="margin: 0 0 6px 0;">Catchment Streets & Localities</div>
-            <div class="hud-chips-wrap" id="scStreets"></div>
-        </div>
-
-        <!-- Major Schools / Polling Institutions -->
-        <div>
-            <div class="list-section-title" style="margin: 0 0 6px 0;">Key Polling Institutions</div>
-            <div class="hud-chips-wrap" id="scSchools"></div>
         </div>
 
         <!-- One-Click Google Sheet Link -->
@@ -926,14 +1061,18 @@
     <script>
         // Datasets
         const wardsGeoJSON = window.SHANTINAGAR_WARDS_GEOJSON || { type: 'FeatureCollection', features: [] };
+        const boothsGeoJSON = window.SHANTINAGAR_BOOTHS_GEOJSON || { type: 'FeatureCollection', features: [] };
         const electoralData = window.ELECTORAL_DATA || { booths: [] };
         const booths = electoralData.booths || [];
 
+        // State
         let is3D = true;
-        let isExtruded = true;
-        let choroplethMode = 'voters'; // 'voters', 'ratio', 'age'
+        let choroplethMode = 'voters';
+        let currentSelectedBooth = null;
+        let currentBoothVoters = [];
+        const votersCache = {};
 
-        // Initialize MapLibre GL with Carto Positron (High-contrast clean light basemap matching bengaluru-footfall-intelligence)
+        // Initialize MapLibre GL with Carto Positron vector map
         const map = new maplibregl.Map({
             container: 'map',
             style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
@@ -947,13 +1086,13 @@
         map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
 
         map.on('load', () => {
-            // 1. Add Wards Source
+            // 1. Add Wards GeoJSON Source
             map.addSource('shantinagar-wards', {
                 type: 'geojson',
                 data: wardsGeoJSON
             });
 
-            // 2. Add 3D Extruded Wards Layer
+            // 2. Add Wards 3D Extrusion Layer
             map.addLayer({
                 id: 'wards-extrusion',
                 type: 'fill-extrusion',
@@ -971,11 +1110,11 @@
                     ],
                     'fill-extrusion-height': [
                         'interpolate', ['linear'], ['get', 'total_electors'],
-                        0, 60,
-                        50000, 480
+                        0, 50,
+                        50000, 420
                     ],
                     'fill-extrusion-base': 0,
-                    'fill-extrusion-opacity': 0.58
+                    'fill-extrusion-opacity': 0.45
                 }
             });
 
@@ -987,11 +1126,86 @@
                 paint: {
                     'line-color': '#0284c7',
                     'line-width': 2.5,
-                    'line-opacity': 0.9
+                    'line-opacity': 0.95
                 }
             });
 
-            // 4. Add Ward 3D Floating Centroid Labels
+            // 4. Add Booth Catchment Boundaries Source
+            map.addSource('shantinagar-booths', {
+                type: 'geojson',
+                data: boothsGeoJSON
+            });
+
+            // 5. Add Booth Catchment Fill Layer
+            map.addLayer({
+                id: 'booths-catchment-fill',
+                type: 'fill',
+                source: 'shantinagar-booths',
+                paint: {
+                    'fill-color': [
+                        'interpolate', ['linear'], ['get', 'total_electors'],
+                        400, '#38bdf8',
+                        700, '#0284c7',
+                        900, '#f59e0b',
+                        1200, '#f43f5e'
+                    ],
+                    'fill-opacity': 0.28
+                }
+            });
+
+            // 6. Add Booth Catchment Dotted Boundary Lines
+            map.addLayer({
+                id: 'booths-catchment-line',
+                type: 'line',
+                source: 'shantinagar-booths',
+                paint: {
+                    'line-color': '#0369a1',
+                    'line-width': 1.4,
+                    'line-dasharray': [3, 2],
+                    'line-opacity': 0.75
+                }
+            });
+
+            // 7. Add Booth Core Points
+            const boothsPointGeoJSON = {
+                type: 'FeatureCollection',
+                features: booths.map(b => ({
+                    type: 'Feature',
+                    geometry: { type: 'Point', coordinates: [b.lng, b.lat] },
+                    properties: b
+                }))
+            };
+
+            map.addSource('booths-points', {
+                type: 'geojson',
+                data: boothsPointGeoJSON
+            });
+
+            map.addLayer({
+                id: 'booths-points-glow',
+                type: 'circle',
+                source: 'booths-points',
+                paint: {
+                    'circle-radius': 7.5,
+                    'circle-color': '#0284c7',
+                    'circle-opacity': 0.25,
+                    'circle-blur': 0.4
+                }
+            });
+
+            map.addLayer({
+                id: 'booths-points-core',
+                type: 'circle',
+                source: 'booths-points',
+                paint: {
+                    'circle-radius': 4.5,
+                    'circle-color': '#0284c7',
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#ffffff'
+                }
+            });
+
+            // 8. Add Floating Ward Labels
             map.addLayer({
                 id: 'wards-labels',
                 type: 'symbol',
@@ -1000,7 +1214,6 @@
                     'text-field': ['concat', 'Ward ', ['to-string', ['get', 'WARD_NO']], '\n', ['get', 'WARD_NAME']],
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                     'text-size': 12,
-                    'text-offset': [0, 0],
                     'text-anchor': 'center'
                 },
                 paint: {
@@ -1010,124 +1223,83 @@
                 }
             });
 
-            // 5. Add Polling Booths GeoJSON
-            const boothsGeoJSON = {
-                type: 'FeatureCollection',
-                features: booths.map(b => ({
-                    type: 'Feature',
-                    geometry: { type: 'Point', coordinates: [b.lng, b.lat] },
-                    properties: b
-                }))
-            };
-
-            map.addSource('polling-booths', {
-                type: 'geojson',
-                data: boothsGeoJSON
-            });
-
-            // Polling Booth Glow
-            map.addLayer({
-                id: 'booths-glow',
-                type: 'circle',
-                source: 'polling-booths',
-                paint: {
-                    'circle-radius': 8,
-                    'circle-color': '#0284c7',
-                    'circle-opacity': 0.25,
-                    'circle-blur': 0.4
-                }
-            });
-
-            // Polling Booth Core Pin
-            map.addLayer({
-                id: 'booths-core',
-                type: 'circle',
-                source: 'polling-booths',
-                paint: {
-                    'circle-radius': 4.5,
-                    'circle-color': '#0284c7',
-                    'circle-stroke-width': 2,
-                    'circle-stroke-color': '#ffffff'
-                }
-            });
-
-            initInteractivity();
+            initMapInteractivity();
         });
 
-        // Initialize Interactivity
-        function initInteractivity() {
+        // Interactivity
+        function initMapInteractivity() {
             const tooltip = document.getElementById('mapTooltip');
 
-            // Ward Hover
-            map.on('mousemove', 'wards-extrusion', (e) => {
+            // Hover on Booth Catchment
+            map.on('mousemove', 'booths-catchment-fill', (e) => {
                 map.getCanvas().style.cursor = 'pointer';
                 if (e.features.length > 0) {
-                    const props = e.features[0].properties;
+                    const p = e.features[0].properties;
                     tooltip.style.display = 'block';
                     tooltip.style.left = e.point.x + 'px';
                     tooltip.style.top = e.point.y + 'px';
-                    tooltip.innerHTML = `<strong>Ward ${props.WARD_NO} • ${props.WARD_NAME}</strong><br/>Electors: <strong>${Number(props.total_electors).toLocaleString()}</strong> | Booths: <strong>${props.booths_count}</strong>`;
+                    tooltip.innerHTML = `<strong>📍 Booth Catchment • Part #${p.part_no}</strong><br/>${p.building}<br/>Electors: <strong>${p.total_electors}</strong> (Ward ${p.ward_no})`;
                 }
             });
 
-            map.on('mouseleave', 'wards-extrusion', () => {
+            map.on('mouseleave', 'booths-catchment-fill', () => {
                 map.getCanvas().style.cursor = '';
                 tooltip.style.display = 'none';
             });
 
-            // Ward Click
+            // Click on Booth Catchment Boundary
+            map.on('click', 'booths-catchment-fill', (e) => {
+                if (e.features.length > 0) {
+                    const p = e.features[0].properties;
+                    if (typeof p.sections === 'string') {
+                        try { p.sections = JSON.parse(p.sections); } catch(err) { p.sections = [p.sections]; }
+                    }
+                    if (typeof p.bbox === 'string') {
+                        try { p.bbox = JSON.parse(p.bbox); } catch(err) {}
+                    }
+                    showBoothScorecard(p, true);
+                }
+            });
+
+            // Click on Booth Point
+            map.on('click', 'booths-points-core', (e) => {
+                if (e.features.length > 0) {
+                    const p = e.features[0].properties;
+                    if (typeof p.sections === 'string') {
+                        try { p.sections = JSON.parse(p.sections); } catch(err) { p.sections = [p.sections]; }
+                    }
+                    if (typeof p.bbox === 'string') {
+                        try { p.bbox = JSON.parse(p.bbox); } catch(err) {}
+                    }
+                    showBoothScorecard(p, true);
+                }
+            });
+
+            // Click on Ward Extrusion
             map.on('click', 'wards-extrusion', (e) => {
                 if (e.features.length > 0) {
                     selectWard(e.features[0].properties.WARD_NO, true);
                 }
             });
-
-            // Booth Hover
-            map.on('mousemove', 'booths-core', (e) => {
-                map.getCanvas().style.cursor = 'pointer';
-                if (e.features.length > 0) {
-                    const props = e.features[0].properties;
-                    tooltip.style.display = 'block';
-                    tooltip.style.left = e.point.x + 'px';
-                    tooltip.style.top = e.point.y + 'px';
-                    tooltip.innerHTML = `<strong>Part #${props.part_no}: ${props.building}</strong><br/>Electors: <strong>${props.total_electors}</strong> | Gender Ratio: <strong>${props.gender_ratio}</strong>`;
-                }
-            });
-
-            map.on('mouseleave', 'booths-core', () => {
-                map.getCanvas().style.cursor = '';
-                tooltip.style.display = 'none';
-            });
-
-            // Booth Click
-            map.on('click', 'booths-core', (e) => {
-                if (e.features.length > 0) {
-                    const b = e.features[0].properties;
-                    if (typeof b.sections === 'string') {
-                        try { b.sections = JSON.parse(b.sections); } catch(err) { b.sections = [b.sections]; }
-                    }
-                    showBoothScorecard(b);
-                }
-            });
         }
 
-        // Accurate Ward Selection & Zoom using Pre-calculated Centroids & Bounding Boxes
+        // Ward Selection
         function selectWard(wardNo, fly = true) {
             const feat = wardsGeoJSON.features.find(f => f.properties.WARD_NO == wardNo);
             if (!feat) return;
 
             const props = feat.properties;
 
-            // Update Scorecard HUD
             document.getElementById('scorecardHUD').style.display = 'flex';
             document.getElementById('scTag').textContent = `BBMP Ward #${props.WARD_NO}`;
             document.getElementById('scTitle').textContent = `${props.WARD_NAME} Ward`;
-            document.getElementById('scSubtitle').textContent = `AC-160 Shantinagar • ${props.booths_count} Polling Stations`;
+            document.getElementById('scSubtitle').textContent = `AC-160 Shantinagar • ${props.booths_count} Polling Booth Boundaries`;
 
             document.getElementById('scElectors').textContent = Number(props.total_electors).toLocaleString();
             document.getElementById('scBooths').textContent = `${props.booths_count} Booths`;
             document.getElementById('scRatio').textContent = props.gender_ratio;
             document.getElementById('scAge').textContent = `${props.avg_age} yrs`;
+            document.getElementById('scVotersBadge').textContent = props.booths_count + ' Booths';
 
             const male = props.male || 0;
             const female = props.female || 0;
@@ -1164,7 +1336,10 @@
 
             document.getElementById('scActionBtn').textContent = `Open Ward ${props.WARD_NO} in Google Spreadsheet`;
 
-            // Highlight in left list
+            // Switch to overview tab
+            document.getElementById('scTabOverview').click();
+
+            // Highlight in drawer
             document.querySelectorAll('.ward-card-box').forEach(el => {
                 if (el.getAttribute('data-ward') == wardNo) {
                     el.classList.add('active');
@@ -1174,24 +1349,22 @@
                 }
             });
 
-            // Sync Header Dropdown
-            document.getElementById('headerWardSelect').value = wardNo;
-
-            // Fly Map using pre-calculated Bounding Box
+            // Fly Camera
             if (fly && props.bbox) {
                 map.fitBounds(props.bbox, {
-                    padding: { top: 80, bottom: 40, left: 380, right: 400 },
+                    padding: { top: 80, bottom: 40, left: 380, right: 460 },
                     pitch: is3D ? 48 : 0,
                     bearing: is3D ? -15 : 0,
-                    duration: 1600
+                    duration: 1500
                 });
             }
         }
 
-        // Show Individual Polling Booth in Scorecard
-        function showBoothScorecard(b) {
+        // Show Booth Scorecard & Load Corresponding Voters
+        function showBoothScorecard(b, fly = true) {
+            currentSelectedBooth = b;
             document.getElementById('scorecardHUD').style.display = 'flex';
-            document.getElementById('scTag').textContent = `Polling Booth • Part #${b.part_no}`;
+            document.getElementById('scTag').textContent = `Booth Catchment Boundary • Part #${b.part_no}`;
             document.getElementById('scTitle').textContent = b.building || b.booth_name;
             document.getElementById('scSubtitle').textContent = `Ward ${b.ward_no} • ${b.ward_name}`;
 
@@ -1199,6 +1372,7 @@
             document.getElementById('scBooths').textContent = `Part #${b.part_no}`;
             document.getElementById('scRatio').textContent = b.gender_ratio;
             document.getElementById('scAge').textContent = `${b.avg_age} yrs`;
+            document.getElementById('scVotersBadge').textContent = b.total_electors;
 
             const male = b.male || 0;
             const female = b.female || 0;
@@ -1227,15 +1401,104 @@
 
             document.getElementById('scActionBtn').textContent = `Open Part #${b.part_no} in Google Spreadsheet`;
 
-            // Fly camera right onto the booth
-            map.flyTo({
-                center: [b.lng, b.lat],
-                zoom: 16.5,
-                pitch: 52,
-                bearing: -10,
-                duration: 1500
+            // Load Corresponding Voters for this Booth
+            loadBoothVoters(b.part_no);
+
+            // Fly camera to booth boundary
+            if (fly) {
+                if (b.bbox && Array.isArray(b.bbox)) {
+                    map.fitBounds(b.bbox, {
+                        padding: { top: 90, bottom: 40, left: 380, right: 460 },
+                        pitch: 52,
+                        bearing: -10,
+                        duration: 1400,
+                        maxZoom: 17
+                    });
+                } else {
+                    map.flyTo({ center: [b.lng, b.lat], zoom: 16.5, pitch: 52, bearing: -10, duration: 1400 });
+                }
+            }
+        }
+
+        // Fetch & Render Corresponding Voters
+        async function loadBoothVoters(partNo) {
+            const tableBody = document.getElementById('voterTableBody');
+            const countEl = document.getElementById('voterTableCount');
+            tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--azure-600);">Loading corresponding electors from Part #${partNo}...</td></tr>`;
+
+            try {
+                if (!votersCache[partNo]) {
+                    const resp = await fetch(`data/booth_voters/part_${partNo}.json`);
+                    if (!resp.ok) throw new Error('Voters file not found');
+                    votersCache[partNo] = await resp.json();
+                }
+                currentBoothVoters = votersCache[partNo] || [];
+                renderVoterRows(currentBoothVoters);
+            } catch (err) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--ink-500);">Voter details available in Google Spreadsheet.</td></tr>`;
+                countEl.textContent = 'Error loading local voter file.';
+            }
+        }
+
+        // Render Voter Table Rows
+        function renderVoterRows(votersList) {
+            const tableBody = document.getElementById('voterTableBody');
+            const countEl = document.getElementById('voterTableCount');
+            tableBody.innerHTML = '';
+            countEl.textContent = `Showing ${votersList.length} of ${currentBoothVoters.length} electors`;
+
+            if (votersList.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 20px; color: var(--ink-500);">No matching electors in this booth.</td></tr>`;
+                return;
+            }
+
+            votersList.slice(0, 100).forEach(v => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family: var(--font-mono); color: var(--ink-500);">${v.s}</td>
+                    <td style="font-weight: 700; color: var(--ink-950);">${v.n}</td>
+                    <td style="color: var(--ink-600);">${v.rt}: ${v.rn}</td>
+                    <td style="font-family: var(--font-mono);">${v.h}</td>
+                    <td style="color: var(--ink-600);">${v.sec}</td>
+                    <td><span class="epic-badge">${v.id}</span></td>
+                    <td style="font-family: var(--font-mono);">${v.a}</td>
+                    <td>${v.g === 'Male' ? 'M' : 'F'}</td>
+                `;
+                tableBody.appendChild(tr);
             });
         }
+
+        // Live Filter in Voter Table
+        document.getElementById('voterTableSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            if (!term) {
+                renderVoterRows(currentBoothVoters);
+                return;
+            }
+            const filtered = currentBoothVoters.filter(v => 
+                v.n.toLowerCase().includes(term) ||
+                v.id.toLowerCase().includes(term) ||
+                v.rn.toLowerCase().includes(term) ||
+                String(v.h).toLowerCase().includes(term) ||
+                String(v.s).includes(term)
+            );
+            renderVoterRows(filtered);
+        });
+
+        // Tabs in Scorecard
+        document.getElementById('scTabOverview').addEventListener('click', () => {
+            document.getElementById('scTabOverview').classList.add('active');
+            document.getElementById('scTabVoters').classList.remove('active');
+            document.getElementById('scOverviewPanel').style.display = 'flex';
+            document.getElementById('scVotersPanel').style.display = 'none';
+        });
+
+        document.getElementById('scTabVoters').addEventListener('click', () => {
+            document.getElementById('scTabVoters').classList.add('active');
+            document.getElementById('scTabOverview').classList.remove('active');
+            document.getElementById('scOverviewPanel').style.display = 'none';
+            document.getElementById('scVotersPanel').style.display = 'flex';
+        });
 
         // Populate Left Wards List
         function populateWardsList() {
@@ -1244,8 +1507,6 @@
 
             wardsGeoJSON.features.forEach(f => {
                 const props = f.properties;
-
-                // 1. Add Card to left dock
                 const card = document.createElement('div');
                 card.className = 'ward-card-box';
                 card.setAttribute('data-ward', props.WARD_NO);
@@ -1266,7 +1527,6 @@
                 card.addEventListener('click', () => selectWard(props.WARD_NO, true));
                 container.appendChild(card);
 
-                // 2. Add Option to Header Dropdown
                 const opt = document.createElement('option');
                 opt.value = props.WARD_NO;
                 opt.textContent = `Ward ${props.WARD_NO} - ${props.WARD_NAME} (${(props.total_electors / 1000).toFixed(1)}k Voters)`;
@@ -1283,7 +1543,7 @@
             });
         }
 
-        // Header Select Event Listeners
+        // Header Selects
         document.getElementById('headerWardSelect').addEventListener('change', (e) => {
             const val = e.target.value;
             if (val === 'ALL') {
@@ -1297,10 +1557,38 @@
         document.getElementById('headerBoothSelect').addEventListener('change', (e) => {
             const val = parseInt(e.target.value);
             const found = booths.find(b => b.part_no === val);
-            if (found) showBoothScorecard(found);
+            if (found) showBoothScorecard(found, true);
         });
 
-        // Universal Electoral Search Engine
+        // Layer Mode Toggles
+        document.getElementById('layerBoth').addEventListener('click', () => {
+            ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
+            document.getElementById('layerBoth').classList.add('active');
+            map.setLayoutProperty('wards-extrusion', 'visibility', 'visible');
+            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
+            map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
+            map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
+        });
+
+        document.getElementById('layerBooths').addEventListener('click', () => {
+            ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
+            document.getElementById('layerBooths').classList.add('active');
+            map.setLayoutProperty('wards-extrusion', 'visibility', 'none');
+            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
+            map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
+            map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
+        });
+
+        document.getElementById('layerWards').addEventListener('click', () => {
+            ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
+            document.getElementById('layerWards').classList.add('active');
+            map.setLayoutProperty('wards-extrusion', 'visibility', 'visible');
+            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'none');
+            map.setLayoutProperty('booths-catchment-line', 'visibility', 'none');
+            map.setLayoutProperty('booths-points-core', 'visibility', 'none');
+        });
+
+        // Universal Search
         const searchInput = document.getElementById('universalSearch');
         const searchOverlay = document.getElementById('searchOverlay');
 
@@ -1320,42 +1608,41 @@
                     results.push({
                         type: 'WARD',
                         label: `Ward ${p.WARD_NO} - ${p.WARD_NAME}`,
-                        sub: `${Number(p.total_electors).toLocaleString()} voters • ${p.booths_count} booths`,
+                        sub: `${Number(p.total_electors).toLocaleString()} voters • ${p.booths_count} booth boundaries`,
                         action: () => selectWard(p.WARD_NO, true)
                     });
                 }
             });
 
-            // 2. Search Polling Booths & Buildings
+            // 2. Search Booths
             booths.forEach(b => {
                 if (String(b.part_no) === q || b.booth_name.toLowerCase().includes(q) || b.building.toLowerCase().includes(q)) {
                     results.push({
                         type: 'BOOTH',
                         label: `Part #${b.part_no}: ${b.building}`,
                         sub: `Ward ${b.ward_no} • ${b.total_electors} electors`,
-                        action: () => showBoothScorecard(b)
+                        action: () => showBoothScorecard(b, true)
                     });
                 }
             });
 
             // 3. Search Streets
             booths.forEach(b => {
-                b.sections.forEach(s => {
+                (b.sections || []).forEach(s => {
                     if (s.toLowerCase().includes(q)) {
                         results.push({
                             type: 'STREET',
                             label: s,
                             sub: `Part #${b.part_no} (${b.building}) • Ward ${b.ward_no}`,
-                            action: () => showBoothScorecard(b)
+                            action: () => showBoothScorecard(b, true)
                         });
                     }
                 });
             });
 
-            // Render Results
             searchOverlay.innerHTML = '';
             if (results.length === 0) {
-                searchOverlay.innerHTML = `<div style="padding: 10px; font-size: 11px; color: var(--ink-500); text-align: center;">No matches found for "${q}".</div>`;
+                searchOverlay.innerHTML = `<div style="padding: 10px; font-size: 11px; color: var(--ink-500); text-align: center;">No matches for "${q}".</div>`;
             } else {
                 results.slice(0, 10).forEach(r => {
                     const row = document.createElement('div');
@@ -1378,14 +1665,14 @@
             searchOverlay.style.display = 'block';
         });
 
-        // Hide search overlay on blur
+        // Hide overlay on outside click
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !searchOverlay.contains(e.target)) {
                 searchOverlay.style.display = 'none';
             }
         });
 
-        // Toggle Controls
+        // 3D Perspective Controls
         document.getElementById('btnTilt3D').addEventListener('click', () => {
             is3D = true;
             document.getElementById('btnTilt3D').classList.add('active');
@@ -1400,20 +1687,18 @@
             map.easeTo({ pitch: 0, bearing: 0, duration: 900 });
         });
 
-        document.getElementById('btnExtrudeOn').addEventListener('click', () => {
-            document.getElementById('btnExtrudeOn').classList.add('active');
-            document.getElementById('btnExtrudeOff').classList.remove('active');
-            map.setPaintProperty('wards-extrusion', 'fill-extrusion-height', [
-                'interpolate', ['linear'], ['get', 'total_electors'],
-                0, 60,
-                50000, 480
-            ]);
+        document.getElementById('hudTilt').addEventListener('click', () => {
+            is3D = !is3D;
+            map.easeTo({ pitch: is3D ? 48 : 0, bearing: is3D ? -15 : 0, duration: 900 });
+            document.getElementById('btnTilt3D').classList.toggle('active', is3D);
+            document.getElementById('btnTilt2D').classList.toggle('active', !is3D);
         });
 
-        document.getElementById('btnExtrudeOff').addEventListener('click', () => {
-            document.getElementById('btnExtrudeOff').classList.add('active');
-            document.getElementById('btnExtrudeOn').classList.remove('active');
-            map.setPaintProperty('wards-extrusion', 'fill-extrusion-height', 0);
+        document.getElementById('hudNorth').addEventListener('click', () => map.easeTo({ bearing: 0, pitch: 0, duration: 800 }));
+        document.getElementById('hudPlus').addEventListener('click', () => map.zoomIn());
+        document.getElementById('hudMinus').addEventListener('click', () => map.zoomOut());
+        document.getElementById('scorecardClose').addEventListener('click', () => {
+            document.getElementById('scorecardHUD').style.display = 'none';
         });
 
         // Choropleth Modes
@@ -1453,21 +1738,6 @@
         document.getElementById('modeVoters').addEventListener('click', () => setChoropleth('voters'));
         document.getElementById('modeRatio').addEventListener('click', () => setChoropleth('ratio'));
         document.getElementById('modeAge').addEventListener('click', () => setChoropleth('age'));
-
-        // Map HUD Controls
-        document.getElementById('hudTilt').addEventListener('click', () => {
-            is3D = !is3D;
-            map.easeTo({ pitch: is3D ? 48 : 0, bearing: is3D ? -15 : 0, duration: 900 });
-            document.getElementById('btnTilt3D').classList.toggle('active', is3D);
-            document.getElementById('btnTilt2D').classList.toggle('active', !is3D);
-        });
-
-        document.getElementById('hudNorth').addEventListener('click', () => map.easeTo({ bearing: 0, pitch: 0, duration: 800 }));
-        document.getElementById('hudPlus').addEventListener('click', () => map.zoomIn());
-        document.getElementById('hudMinus').addEventListener('click', () => map.zoomOut());
-        document.getElementById('scorecardClose').addEventListener('click', () => {
-            document.getElementById('scorecardHUD').style.display = 'none';
-        });
 
         // Initialize
         populateWardsList();
