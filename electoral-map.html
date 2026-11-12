@@ -1299,12 +1299,19 @@
                 }
             });
 
-            // Click on Ward Extrusion
-            map.on('click', 'wards-extrusion', (e) => {
+            // Click on Ward 2D Fill
+            map.on('click', 'wards-fill', (e) => {
                 if (e.features.length > 0) {
                     selectWard(e.features[0].properties.WARD_NO, true);
                 }
             });
+        }
+
+        function getResponsivePadding(isScorecard = false) {
+            const w = window.innerWidth;
+            const leftPad = w > 1200 ? 360 : (w > 768 ? 240 : 20);
+            const rightPad = isScorecard && w > 1200 ? 420 : 40;
+            return { top: 75, bottom: 35, left: leftPad, right: rightPad };
         }
 
         // Ward Selection
@@ -1313,14 +1320,16 @@
             if (!feat) return;
 
             const props = feat.properties;
+            document.getElementById('headerWardSelect').value = wardNo;
 
+            // Update Scorecard HUD for Ward
             document.getElementById('scorecardHUD').style.display = 'flex';
-            document.getElementById('scTag').textContent = `BBMP Ward #${props.WARD_NO}`;
-            document.getElementById('scTitle').textContent = `${props.WARD_NAME} Ward`;
-            document.getElementById('scSubtitle').textContent = `AC-160 Shantinagar • ${props.booths_count} Polling Booth Boundaries`;
+            document.getElementById('scTag').textContent = `BBMP Ward Boundary • Ward #${props.WARD_NO}`;
+            document.getElementById('scTitle').textContent = `Ward ${props.WARD_NO} - ${props.WARD_NAME}`;
+            document.getElementById('scSubtitle').textContent = `Shantinagar AC-160 • ${props.booths_count} Polling Booths`;
 
             document.getElementById('scElectors').textContent = Number(props.total_electors).toLocaleString();
-            document.getElementById('scBooths').textContent = `${props.booths_count} Booths`;
+            document.getElementById('scBooths').textContent = props.booths_count;
             document.getElementById('scRatio').textContent = props.gender_ratio;
             document.getElementById('scAge').textContent = `${props.avg_age} yrs`;
             document.getElementById('scVotersBadge').textContent = props.booths_count + ' Booths';
@@ -1379,7 +1388,7 @@
                     map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
                 }
                 map.fitBounds(props.bbox, {
-                    padding: { top: 80, bottom: 40, left: 380, right: 460 },
+                    padding: getResponsivePadding(true),
                     pitch: 0,
                     bearing: 0,
                     duration: 1200
@@ -1440,7 +1449,7 @@
             if (fly) {
                 if (b.bbox && Array.isArray(b.bbox)) {
                     map.fitBounds(b.bbox, {
-                        padding: { top: 90, bottom: 40, left: 380, right: 460 },
+                        padding: getResponsivePadding(true),
                         pitch: 0,
                         bearing: 0,
                         duration: 1200,
