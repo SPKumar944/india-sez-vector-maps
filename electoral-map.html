@@ -924,10 +924,10 @@
             </div>
 
             <div class="control-row">
-                <span>3D Camera Tilt:</span>
+                <span>Map Projection:</span>
                 <div class="btn-toggle-group">
-                    <button class="btn-toggle-chip active" id="btnTilt3D">3D (48°)</button>
-                    <button class="btn-toggle-chip" id="btnTilt2D">2D Flat</button>
+                    <button class="btn-toggle-chip active" id="btnTilt2D">2D Flat Map</button>
+                    <button class="btn-toggle-chip" id="btnResetView">Fit Entire AC</button>
                 </div>
             </div>
 
@@ -1049,7 +1049,7 @@
 
     <!-- Map Floating HUD Navigation Controls -->
     <div class="map-hud-controls">
-        <button class="map-hud-btn" id="hudTilt" title="Toggle 3D View">3D</button>
+        <button class="map-hud-btn" id="hudReset" title="Fit Entire Constituency (2D View)">⛶</button>
         <button class="map-hud-btn" id="hudNorth" title="Reset North">N</button>
         <button class="map-hud-btn" id="hudPlus" title="Zoom In">+</button>
         <button class="map-hud-btn" id="hudMinus" title="Zoom Out">&minus;</button>
@@ -1072,14 +1072,14 @@
         let currentBoothVoters = [];
         const votersCache = {};
 
-        // Initialize MapLibre GL with Carto Positron vector map
+        // Initialize MapLibre GL with Carto Positron vector map (2D Top-Down View)
         const map = new maplibregl.Map({
             container: 'map',
             style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-            center: [77.6180, 12.9600],
-            zoom: 13.5,
-            pitch: 48,
-            bearing: -15,
+            center: [77.6250, 12.9520],
+            zoom: 13.0,
+            pitch: 0,
+            bearing: 0,
             attributionControl: false
         });
 
@@ -1092,13 +1092,13 @@
                 data: wardsGeoJSON
             });
 
-            // 2. Add Wards 3D Extrusion Layer
+            // 2. Add Wards 2D Base Fill Layer
             map.addLayer({
-                id: 'wards-extrusion',
-                type: 'fill-extrusion',
+                id: 'wards-fill',
+                type: 'fill',
                 source: 'shantinagar-wards',
                 paint: {
-                    'fill-extrusion-color': [
+                    'fill-color': [
                         'case',
                         ['==', ['get', 'WARD_NO'], 116], '#f43f5e',
                         ['==', ['get', 'WARD_NO'], 112], '#f59e0b',
@@ -1108,13 +1108,7 @@
                         ['==', ['get', 'WARD_NO'], 117], '#059669',
                         '#38bdf8'
                     ],
-                    'fill-extrusion-height': [
-                        'interpolate', ['linear'], ['get', 'total_electors'],
-                        0, 50,
-                        50000, 420
-                    ],
-                    'fill-extrusion-base': 0,
-                    'fill-extrusion-opacity': 0.45
+                    'fill-opacity': 0.08
                 }
             });
 
@@ -1124,9 +1118,9 @@
                 type: 'line',
                 source: 'shantinagar-wards',
                 paint: {
-                    'line-color': '#0284c7',
-                    'line-width': 2.5,
-                    'line-opacity': 0.95
+                    'line-color': '#334155',
+                    'line-width': 2.8,
+                    'line-opacity': 0.85
                 }
             });
 
@@ -1144,25 +1138,57 @@
                 paint: {
                     'fill-color': [
                         'interpolate', ['linear'], ['get', 'total_electors'],
-                        400, '#38bdf8',
-                        700, '#0284c7',
-                        900, '#f59e0b',
-                        1200, '#f43f5e'
+                        400, '#e0f2fe',
+                        600, '#bae6fd',
+                        800, '#7dd3fc',
+                        1000, '#38bdf8',
+                        1200, '#0284c7'
                     ],
-                    'fill-opacity': 0.28
+                    'fill-opacity': 0.45
                 }
             });
 
-            // 6. Add Booth Catchment Dotted Boundary Lines
+            // 6. Add Official Booth Boundary Lines (Solid, distinct, prominent!)
             map.addLayer({
                 id: 'booths-catchment-line',
                 type: 'line',
                 source: 'shantinagar-booths',
                 paint: {
                     'line-color': '#0369a1',
-                    'line-width': 1.4,
-                    'line-dasharray': [3, 2],
-                    'line-opacity': 0.75
+                    'line-width': 1.6,
+                    'line-opacity': 0.95
+                }
+            });
+
+            // 6b. Add Highlight Layer for Selected/Hovered Booth
+            map.addLayer({
+                id: 'booth-highlight-line',
+                type: 'line',
+                source: 'shantinagar-booths',
+                filter: ['==', ['get', 'part_no'], -1],
+                paint: {
+                    'line-color': '#e11d48',
+                    'line-width': 3.5,
+                    'line-opacity': 1
+                }
+            });
+
+            // 6c. Add Booth Boundary Number Labels
+            map.addLayer({
+                id: 'booths-labels',
+                type: 'symbol',
+                source: 'shantinagar-booths',
+                minzoom: 13,
+                layout: {
+                    'text-field': ['concat', '#', ['to-string', ['get', 'part_no']]],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 11,
+                    'text-anchor': 'center'
+                },
+                paint: {
+                    'text-color': '#0f172a',
+                    'text-halo-color': '#ffffff',
+                    'text-halo-width': 2
                 }
             });
 
@@ -1341,11 +1367,14 @@
 
             // Fly Camera
             if (fly && props.bbox) {
+                if (map.getLayer('booth-highlight-line')) {
+                    map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
+                }
                 map.fitBounds(props.bbox, {
                     padding: { top: 80, bottom: 40, left: 380, right: 460 },
-                    pitch: is3D ? 48 : 0,
-                    bearing: is3D ? -15 : 0,
-                    duration: 1500
+                    pitch: 0,
+                    bearing: 0,
+                    duration: 1200
                 });
             }
         }
@@ -1391,21 +1420,26 @@
 
             document.getElementById('scActionBtn').textContent = `Open Part #${b.part_no} in Google Spreadsheet`;
 
+            // Highlight this booth's boundary polygon
+            if (map.getLayer('booth-highlight-line')) {
+                map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], b.part_no]);
+            }
+
             // Load Corresponding Voters for this Booth
             loadBoothVoters(b.part_no);
 
-            // Fly camera to booth boundary
+            // Fly camera to booth boundary (Pure 2D top-down view)
             if (fly) {
                 if (b.bbox && Array.isArray(b.bbox)) {
                     map.fitBounds(b.bbox, {
                         padding: { top: 90, bottom: 40, left: 380, right: 460 },
-                        pitch: 52,
-                        bearing: -10,
-                        duration: 1400,
-                        maxZoom: 17
+                        pitch: 0,
+                        bearing: 0,
+                        duration: 1200,
+                        maxZoom: 16.5
                     });
                 } else {
-                    map.flyTo({ center: [b.lng, b.lat], zoom: 16.5, pitch: 52, bearing: -10, duration: 1400 });
+                    map.flyTo({ center: [b.lng, b.lat], zoom: 16, pitch: 0, bearing: 0, duration: 1200 });
                 }
             }
         }
@@ -1537,8 +1571,16 @@
         document.getElementById('headerWardSelect').addEventListener('change', (e) => {
             const val = e.target.value;
             if (val === 'ALL') {
-                map.flyTo({ center: [77.6180, 12.9600], zoom: 13.5, pitch: 48, bearing: -15, duration: 1500 });
+                map.fitBounds([[77.5922, 12.9163], [77.6628, 12.9807]], {
+                    padding: { top: 80, bottom: 40, left: 380, right: 40 },
+                    pitch: 0,
+                    bearing: 0,
+                    duration: 1200
+                });
                 document.getElementById('scorecardHUD').style.display = 'none';
+                if (map.getLayer('booth-highlight-line')) {
+                    map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
+                }
             } else {
                 selectWard(parseInt(val), true);
             }
@@ -1554,28 +1596,34 @@
         document.getElementById('layerBoth').addEventListener('click', () => {
             ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
             document.getElementById('layerBoth').classList.add('active');
-            map.setLayoutProperty('wards-extrusion', 'visibility', 'visible');
-            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
-            map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
-            map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
+            if (map.getLayer('wards-fill')) map.setLayoutProperty('wards-fill', 'visibility', 'visible');
+            if (map.getLayer('wards-outline')) map.setLayoutProperty('wards-outline', 'visibility', 'visible');
+            if (map.getLayer('booths-catchment-fill')) map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
+            if (map.getLayer('booths-catchment-line')) map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
+            if (map.getLayer('booths-labels')) map.setLayoutProperty('booths-labels', 'visibility', 'visible');
+            if (map.getLayer('booths-points-core')) map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
         });
 
         document.getElementById('layerBooths').addEventListener('click', () => {
             ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
             document.getElementById('layerBooths').classList.add('active');
-            map.setLayoutProperty('wards-extrusion', 'visibility', 'none');
-            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
-            map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
-            map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
+            if (map.getLayer('wards-fill')) map.setLayoutProperty('wards-fill', 'visibility', 'none');
+            if (map.getLayer('wards-outline')) map.setLayoutProperty('wards-outline', 'visibility', 'none');
+            if (map.getLayer('booths-catchment-fill')) map.setLayoutProperty('booths-catchment-fill', 'visibility', 'visible');
+            if (map.getLayer('booths-catchment-line')) map.setLayoutProperty('booths-catchment-line', 'visibility', 'visible');
+            if (map.getLayer('booths-labels')) map.setLayoutProperty('booths-labels', 'visibility', 'visible');
+            if (map.getLayer('booths-points-core')) map.setLayoutProperty('booths-points-core', 'visibility', 'visible');
         });
 
         document.getElementById('layerWards').addEventListener('click', () => {
             ['layerBoth', 'layerBooths', 'layerWards'].forEach(id => document.getElementById(id).classList.remove('active'));
             document.getElementById('layerWards').classList.add('active');
-            map.setLayoutProperty('wards-extrusion', 'visibility', 'visible');
-            map.setLayoutProperty('booths-catchment-fill', 'visibility', 'none');
-            map.setLayoutProperty('booths-catchment-line', 'visibility', 'none');
-            map.setLayoutProperty('booths-points-core', 'visibility', 'none');
+            if (map.getLayer('wards-fill')) map.setLayoutProperty('wards-fill', 'visibility', 'visible');
+            if (map.getLayer('wards-outline')) map.setLayoutProperty('wards-outline', 'visibility', 'visible');
+            if (map.getLayer('booths-catchment-fill')) map.setLayoutProperty('booths-catchment-fill', 'visibility', 'none');
+            if (map.getLayer('booths-catchment-line')) map.setLayoutProperty('booths-catchment-line', 'visibility', 'none');
+            if (map.getLayer('booths-labels')) map.setLayoutProperty('booths-labels', 'visibility', 'none');
+            if (map.getLayer('booths-points-core')) map.setLayoutProperty('booths-points-core', 'visibility', 'none');
         });
 
         // Universal Search
@@ -1662,26 +1710,35 @@
             }
         });
 
-        // 3D Perspective Controls
-        document.getElementById('btnTilt3D').addEventListener('click', () => {
-            is3D = true;
-            document.getElementById('btnTilt3D').classList.add('active');
-            document.getElementById('btnTilt2D').classList.remove('active');
-            map.easeTo({ pitch: 48, bearing: -15, duration: 900 });
+        // 2D Projection & Reset Controls
+        document.getElementById('btnResetView').addEventListener('click', () => {
+            map.fitBounds([[77.5922, 12.9163], [77.6628, 12.9807]], {
+                padding: { top: 80, bottom: 40, left: 380, right: 40 },
+                pitch: 0,
+                bearing: 0,
+                duration: 1000
+            });
+            document.getElementById('scorecardHUD').style.display = 'none';
+            if (map.getLayer('booth-highlight-line')) {
+                map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
+            }
         });
 
         document.getElementById('btnTilt2D').addEventListener('click', () => {
-            is3D = false;
-            document.getElementById('btnTilt2D').classList.add('active');
-            document.getElementById('btnTilt3D').classList.remove('active');
-            map.easeTo({ pitch: 0, bearing: 0, duration: 900 });
+            map.easeTo({ pitch: 0, bearing: 0, duration: 600 });
         });
 
-        document.getElementById('hudTilt').addEventListener('click', () => {
-            is3D = !is3D;
-            map.easeTo({ pitch: is3D ? 48 : 0, bearing: is3D ? -15 : 0, duration: 900 });
-            document.getElementById('btnTilt3D').classList.toggle('active', is3D);
-            document.getElementById('btnTilt2D').classList.toggle('active', !is3D);
+        document.getElementById('hudReset').addEventListener('click', () => {
+            map.fitBounds([[77.5922, 12.9163], [77.6628, 12.9807]], {
+                padding: { top: 80, bottom: 40, left: 380, right: 40 },
+                pitch: 0,
+                bearing: 0,
+                duration: 1000
+            });
+            document.getElementById('scorecardHUD').style.display = 'none';
+            if (map.getLayer('booth-highlight-line')) {
+                map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
+            }
         });
 
         document.getElementById('hudNorth').addEventListener('click', () => map.easeTo({ bearing: 0, pitch: 0, duration: 800 }));
@@ -1689,6 +1746,9 @@
         document.getElementById('hudMinus').addEventListener('click', () => map.zoomOut());
         document.getElementById('scorecardClose').addEventListener('click', () => {
             document.getElementById('scorecardHUD').style.display = 'none';
+            if (map.getLayer('booth-highlight-line')) {
+                map.setFilter('booth-highlight-line', ['==', ['get', 'part_no'], -1]);
+            }
         });
 
         // Choropleth Modes
@@ -1696,7 +1756,7 @@
             ['modeVoters', 'modeRatio', 'modeAge'].forEach(id => document.getElementById(id).classList.remove('active'));
             if (mode === 'voters') {
                 document.getElementById('modeVoters').classList.add('active');
-                map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
+                map.setPaintProperty('wards-fill', 'fill-color', [
                     'interpolate', ['linear'], ['get', 'total_electors'],
                     0, '#38bdf8',
                     15000, '#0284c7',
@@ -1706,7 +1766,7 @@
                 ]);
             } else if (mode === 'ratio') {
                 document.getElementById('modeRatio').classList.add('active');
-                map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
+                map.setPaintProperty('wards-fill', 'fill-color', [
                     'interpolate', ['linear'], ['get', 'gender_ratio'],
                     1050, '#0284c7',
                     1100, '#8b5cf6',
@@ -1715,7 +1775,7 @@
                 ]);
             } else if (mode === 'age') {
                 document.getElementById('modeAge').classList.add('active');
-                map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
+                map.setPaintProperty('wards-fill', 'fill-color', [
                     'interpolate', ['linear'], ['get', 'avg_age'],
                     42, '#059669',
                     45, '#0284c7',
@@ -1731,7 +1791,14 @@
 
         // Initialize
         populateWardsList();
-        setTimeout(() => selectWard(116, false), 800);
+        setTimeout(() => {
+            map.fitBounds([[77.5922, 12.9163], [77.6628, 12.9807]], {
+                padding: { top: 80, bottom: 40, left: 380, right: 40 },
+                pitch: 0,
+                bearing: 0,
+                duration: 1000
+            });
+        }, 500);
     </script>
 </body>
 </html>
