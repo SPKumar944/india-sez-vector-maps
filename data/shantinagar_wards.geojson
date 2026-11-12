@@ -38,7 +38,21 @@
           "Andra Colony Slum",
           "police qtrs., part no. : 193"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.65218,
+          12.95465
+        ],
+        "bbox": [
+          [
+            77.64077,
+            12.946
+          ],
+          [
+            77.66359,
+            12.96329
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -1571,7 +1585,21 @@
           "Residency Road",
           "Hayes Road"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.60724,
+          12.97036
+        ],
+        "bbox": [
+          [
+            77.59399,
+            12.95977
+          ],
+          [
+            77.62049,
+            12.98095
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -2272,7 +2300,21 @@
           "Jogupalya 1st Cross,",
           "Cambrige Road, 1st Cross,"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.63638,
+          12.96213
+        ],
+        "bbox": [
+          [
+            77.62893,
+            12.9516
+          ],
+          [
+            77.64382,
+            12.97266
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -2849,7 +2891,21 @@
           "Main Channel Road, Jogupalya Ulsoor, North Side",
           "1st Main Road, Shamanna Gowda Layout, Jogupalya Ulsoor"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.63786,
+          12.9458
+        ],
+        "bbox": [
+          [
+            77.61213,
+            12.91653
+          ],
+          [
+            77.66359,
+            12.97507
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -4822,7 +4878,21 @@
           "G Street South Side Shanthinagar",
           "H Street, Shanthinagar"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.61929,
+          12.95357
+        ],
+        "bbox": [
+          [
+            77.61131,
+            12.94871
+          ],
+          [
+            77.62727,
+            12.95844
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -5631,7 +5701,21 @@
           "dommalur village, no.27 to 67 part no. : 72",
           "dommaluru vilage, no.1 to 27 part no. : 72"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.61291,
+          12.95124
+        ],
+        "bbox": [
+          [
+            77.6058,
+            12.94743
+          ],
+          [
+            77.62001,
+            12.95505
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",
@@ -6284,7 +6368,21 @@
           "2nd Cross,Gowthampura North Side",
           "3nd Cross, Gowthampura"
         ],
-        "density_rank": 0
+        "density_rank": 0,
+        "centroid": [
+          77.60241,
+          12.95819
+        ],
+        "bbox": [
+          [
+            77.59228,
+            12.94975
+          ],
+          [
+            77.61255,
+            12.96663
+          ]
+        ]
       },
       "geometry": {
         "type": "MultiPolygon",

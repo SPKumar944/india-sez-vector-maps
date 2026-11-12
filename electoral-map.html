@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>AGT Intelligence | Bengaluru Electoral Intelligence Layer (AC-160 Shantinagar)</title>
+    <title>AGT Intelligence | Bengaluru Electoral Intelligence Layer</title>
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="icon" type="image/png" href="brand/icon.png" />
     <link rel="apple-touch-icon" href="brand/icon.png" />
     
-    <!-- Google Fonts: Figtree, Inter & JetBrains Mono -->
+    <!-- Google Fonts: Figtree, Inter & JetBrains Mono (Matches Bengaluru Footfall Intelligence) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,22 +23,21 @@
 
     <style>
         :root {
-            --bg-base: #060913;
-            --bg-surface: #0a0f1d;
-            --bg-card: rgba(15, 23, 42, 0.75);
-            --bg-card-solid: #0f172a;
-            --bg-card-hover: rgba(30, 41, 59, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(56, 189, 248, 0.35);
-            --accent-cyan: #38bdf8;
-            --accent-blue: #0284c7;
-            --accent-indigo: #818cf8;
-            --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
-            --accent-rose: #f43f5e;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --bg-page: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.94);
+            --bg-card-solid: #ffffff;
+            --border-card: rgba(15, 23, 42, 0.08);
+            --border-card-hover: rgba(2, 132, 199, 0.35);
+            --ink-950: #090d16;
+            --ink-800: #1e293b;
+            --ink-600: #475569;
+            --ink-500: #64748b;
+            --azure-600: #0284c7;
+            --azure-500: #38bdf8;
+            --violet-500: #8b5cf6;
+            --emerald-600: #059669;
+            --rose-600: #e11d48;
+            --amber-500: #f59e0b;
             --font-display: 'Figtree', sans-serif;
             --font-body: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -54,14 +53,14 @@
         body {
             width: 100vw;
             min-height: 100dvh;
-            background: var(--bg-base);
-            color: var(--text-primary);
+            background: var(--bg-page);
+            color: var(--ink-950);
             font-family: var(--font-body);
             overflow: hidden;
             position: relative;
         }
 
-        /* 3D Map Container */
+        /* 3D Vector Map Viewport */
         #map {
             position: absolute;
             top: 0;
@@ -70,614 +69,659 @@
             right: 0;
             width: 100%;
             height: 100%;
-            background: #020617;
             z-index: 1;
+            background: #f1f5f9;
         }
 
-        /* Top Floating Navigation Bar */
-        .glass-header {
+        /* Header Bar - Identical to HeaderBar.jsx in bengaluru-footfall-intelligence */
+        .observatory-header {
             position: absolute;
-            top: 16px;
-            left: 20px;
-            right: 20px;
-            height: 60px;
-            background: rgba(10, 15, 29, 0.82);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Signature Top 2px Gradient Accent Line */
+        .signature-gradient-bar {
+            height: 2.5px;
+            width: 100%;
+            background: linear-gradient(90deg, #0284c7 0%, #38bdf8 50%, #8b5cf6 100%);
+        }
+
+        .header-content {
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            z-index: 100;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            gap: 16px;
         }
 
-        .brand-section {
+        .header-brand {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .brand-logo-mark {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #0f172a 100%);
-            border: 1px solid rgba(56, 189, 248, 0.5);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.4);
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
         }
 
         .brand-logo-mark svg {
-            width: 22px;
-            height: 22px;
-            fill: #38bdf8;
+            width: 18px;
+            height: 18px;
+            fill: #ffffff;
         }
 
-        .brand-titles h1 {
+        .brand-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
             font-family: var(--font-display);
-            font-size: 15px;
+            font-size: 17px;
             font-weight: 800;
-            letter-spacing: 0.4px;
-            background: linear-gradient(90deg, #ffffff 0%, #93c5fd 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--ink-950);
+            letter-spacing: -0.3px;
+            line-height: 1;
         }
 
-        .brand-titles p {
-            font-size: 11px;
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            letter-spacing: 0.5px;
+        .brand-title span {
+            font-weight: 500;
+            font-size: 0.92em;
             text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--ink-500);
+            margin-left: 4px;
         }
 
-        .header-badges {
+        .brand-sub {
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--ink-500);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-top: 2px;
+        }
+
+        .header-right-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .pill-badge {
-            font-size: 11px;
-            font-family: var(--font-mono);
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
+        .select-pill-container {
             display: flex;
             align-items: center;
             gap: 6px;
+            background: #f8fafc;
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            font-size: 11.5px;
+            font-family: var(--font-mono);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
 
-        .pill-badge-highlight {
-            background: rgba(56, 189, 248, 0.12);
-            border-color: rgba(56, 189, 248, 0.35);
-            color: var(--accent-cyan);
+        .select-pill-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--ink-500);
+            letter-spacing: 0.5px;
         }
 
-        .pill-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent-emerald);
-            box-shadow: 0 0 8px var(--accent-emerald);
+        .header-select {
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ink-950);
+            outline: none;
+            cursor: pointer;
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .header-select:focus {
+            border-color: var(--azure-600);
         }
 
-        .btn-sheet {
+        .btn-sheet-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             padding: 7px 14px;
             border-radius: 8px;
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            color: #fff;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #ffffff;
             text-decoration: none;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 2px 10px rgba(2, 132, 199, 0.3);
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
             transition: all 0.2s ease;
         }
 
-        .btn-sheet:hover {
-            background: #0284c7;
+        .btn-sheet-link:hover {
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
         }
 
-        /* Top Metrics Floating Strip */
-        .metrics-strip {
+        /* Top Metrics Row Floating on the Map */
+        .floating-kpi-row {
             position: absolute;
-            top: 88px;
+            top: 72px;
             left: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
-            z-index: 90;
+            z-index: 40;
         }
 
-        .metric-pill {
-            background: rgba(10, 15, 29, 0.85);
+        .kpi-chip {
+            background: var(--bg-card);
             backdrop-filter: blur(14px);
-            border: 1px solid var(--border-subtle);
+            border: 1px solid var(--border-card);
             border-radius: 10px;
             padding: 8px 14px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
-        .metric-pill-label {
+        .kpi-chip-title {
             font-size: 9.5px;
             font-family: var(--font-mono);
-            color: var(--text-muted);
+            font-weight: 700;
+            color: var(--ink-500);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .metric-pill-val {
+        .kpi-chip-val {
             font-size: 16px;
             font-weight: 800;
             font-family: var(--font-mono);
-            color: #fff;
+            color: var(--ink-950);
             margin-top: 1px;
         }
 
-        /* Left Floating Control Drawer */
-        .drawer-left {
+        /* Floating Left Search & Ward Control Dock */
+        .dock-left {
             position: absolute;
-            top: 162px;
+            top: 146px;
             bottom: 24px;
             left: 20px;
             width: 360px;
-            background: rgba(10, 15, 29, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border-card);
             border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
             display: flex;
             flex-direction: column;
-            z-index: 95;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            z-index: 40;
             overflow: hidden;
             container-type: inline-size;
         }
 
-        .drawer-header {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-subtle);
-            background: rgba(15, 23, 42, 0.6);
-        }
-
-        .search-box {
+        /* Universal Electoral Search Bar */
+        .search-container {
+            padding: 14px;
+            border-bottom: 1px solid var(--border-card);
+            background: #ffffff;
             position: relative;
         }
 
-        .search-box svg {
+        .search-input-wrap {
+            position: relative;
+        }
+
+        .search-input-wrap svg {
             position: absolute;
             left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            width: 15px;
-            height: 15px;
-            fill: var(--text-muted);
+            width: 16px;
+            height: 16px;
+            fill: var(--ink-500);
         }
 
-        .search-box input {
+        .search-input {
             width: 100%;
-            background: #060913;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #f8fafc;
+            border: 1px solid rgba(15, 23, 42, 0.12);
             border-radius: 8px;
-            padding: 9px 12px 9px 36px;
-            color: #fff;
+            padding: 9px 12px 9px 38px;
             font-size: 12.5px;
+            color: var(--ink-950);
+            font-weight: 500;
             outline: none;
             transition: all 0.2s;
         }
 
-        .search-box input:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+        .search-input:focus {
+            border-color: var(--azure-600);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
         }
 
-        /* Control Toggles */
-        .control-toggles {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-subtle);
+        /* Real-Time Search Results Dropdown */
+        .search-results-overlay {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 14px;
+            right: 14px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .search-result-row {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            transition: background 0.15s;
+        }
+
+        .search-result-row:hover {
+            background: #f1f5f9;
+        }
+
+        .search-result-badge {
+            font-size: 9.5px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--azure-600);
+        }
+
+        /* Perspective & Layer Controls */
+        .dock-controls {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-card);
+            background: #fcfdfe;
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .toggle-row {
+        .control-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 11.5px;
-            color: var(--text-secondary);
+            font-size: 11px;
+            color: var(--ink-600);
+            font-weight: 600;
         }
 
-        .toggle-btn-group {
+        .btn-toggle-group {
             display: flex;
-            background: #060913;
+            background: #f1f5f9;
             border-radius: 6px;
             padding: 2px;
-            border: 1px solid var(--border-subtle);
+            border: 1px solid rgba(15, 23, 42, 0.06);
         }
 
-        .toggle-chip {
-            padding: 4px 10px;
+        .btn-toggle-chip {
+            padding: 4px 9px;
             border-radius: 4px;
             font-size: 10.5px;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--ink-500);
             background: transparent;
-            color: var(--text-muted);
             border: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
-        .toggle-chip.active {
-            background: var(--accent-blue);
-            color: #fff;
-            box-shadow: 0 1px 4px rgba(2, 132, 199, 0.4);
+        .btn-toggle-chip.active {
+            background: #ffffff;
+            color: var(--azure-600);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
-        /* Wards List */
-        .drawer-list {
+        /* Scrollable Wards Directory */
+        .wards-list-wrap {
             flex: 1;
             overflow-y: auto;
             padding: 12px;
         }
 
-        .section-label {
+        .list-section-title {
             font-size: 10px;
             font-family: var(--font-mono);
-            color: var(--text-muted);
+            color: var(--ink-500);
             text-transform: uppercase;
+            font-weight: 700;
             letter-spacing: 0.6px;
-            margin: 6px 4px 10px;
+            margin: 4px 6px 10px;
         }
 
-        .ward-card-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
+        .ward-card-box {
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.07);
             border-radius: 10px;
-            padding: 12px;
+            padding: 12px 14px;
             margin-bottom: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .ward-card-item:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-cyan);
+        .ward-card-box:hover {
+            border-color: var(--azure-600);
             transform: translateX(2px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.08);
         }
 
-        .ward-card-item.selected {
-            border-color: var(--accent-cyan);
-            background: rgba(56, 189, 248, 0.08);
-            box-shadow: inset 3px 0 0 var(--accent-cyan);
+        .ward-card-box.active {
+            border-color: var(--azure-600);
+            background: rgba(2, 132, 199, 0.04);
+            box-shadow: inset 3px 0 0 var(--azure-600);
         }
 
-        .ward-item-top {
+        .ward-card-head {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 4px;
         }
 
-        .ward-number-tag {
+        .ward-badge-pill {
             font-size: 10px;
             font-family: var(--font-mono);
             font-weight: 700;
-            padding: 2px 6px;
+            padding: 2px 7px;
             border-radius: 4px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent-cyan);
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--azure-600);
         }
 
-        .ward-name-title {
+        .ward-card-name {
             font-family: var(--font-display);
-            font-size: 13.5px;
-            font-weight: 700;
-            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--ink-950);
             margin-bottom: 6px;
         }
 
-        .ward-quick-stats {
+        .ward-card-stats {
             display: flex;
             align-items: center;
             gap: 12px;
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--ink-600);
         }
 
-        .ward-quick-stats span {
+        .ward-card-stats span {
             font-family: var(--font-mono);
-            font-weight: 600;
-            color: #fff;
+            font-weight: 700;
+            color: var(--ink-950);
         }
 
-        /* Right Floating Inspector Panel (HUD) */
-        .hud-inspector {
+        /* Floating Right Scorecard - Modeled after SiteScorecard.jsx in ICE */
+        .scorecard-hud {
             position: absolute;
-            top: 88px;
+            top: 72px;
             right: 20px;
             width: 380px;
-            max-height: calc(100dvh - 120px);
-            background: rgba(10, 15, 29, 0.9);
+            max-height: calc(100dvh - 100px);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
+            border: 1px solid var(--border-card);
             border-radius: 14px;
-            padding: 20px;
-            z-index: 95;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            padding: 18px 20px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+            z-index: 45;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
-        .hud-close-btn {
+        .scorecard-close {
             position: absolute;
             top: 14px;
             right: 14px;
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
             width: 26px;
             height: 26px;
             border-radius: 6px;
-            color: var(--text-secondary);
+            background: #f1f5f9;
+            border: none;
+            color: var(--ink-500);
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
         }
 
-        .hud-close-btn:hover {
-            color: #fff;
-            background: rgba(255, 255, 255, 0.16);
+        .scorecard-close:hover {
+            color: var(--ink-950);
+            background: #e2e8f0;
         }
 
-        .hud-header-badge {
+        .scorecard-tag {
             display: inline-flex;
             font-size: 10px;
             font-family: var(--font-mono);
             font-weight: 700;
             padding: 3px 8px;
             border-radius: 4px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            margin-bottom: 6px;
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--azure-600);
             text-transform: uppercase;
         }
 
-        .hud-title {
+        .scorecard-title {
             font-family: var(--font-display);
-            font-size: 18px;
-            font-weight: 800;
-            color: #fff;
-            line-height: 1.25;
+            font-size: 19px;
+            font-weight: 900;
+            color: var(--ink-950);
+            line-height: 1.2;
+            letter-spacing: -0.3px;
         }
 
-        .hud-subtitle {
+        .scorecard-subtitle {
             font-size: 11.5px;
-            color: var(--text-secondary);
+            color: var(--ink-500);
             margin-top: 2px;
         }
 
-        .hud-metrics-grid {
+        .scorecard-kpi-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .hud-card {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid var(--border-subtle);
+        .scorecard-box {
+            background: #f8fafc;
+            border: 1px solid rgba(15, 23, 42, 0.07);
             border-radius: 8px;
             padding: 10px 12px;
         }
 
-        .hud-card-lbl {
+        .scorecard-box-lbl {
             font-size: 9.5px;
             font-family: var(--font-mono);
-            color: var(--text-muted);
+            color: var(--ink-500);
             text-transform: uppercase;
+            font-weight: 700;
         }
 
-        .hud-card-val {
+        .scorecard-box-val {
             font-size: 16px;
             font-weight: 800;
             font-family: var(--font-mono);
-            color: #fff;
+            color: var(--ink-950);
             margin-top: 2px;
         }
 
-        /* Demographic Progress Bar */
-        .gender-split-wrap {
+        /* Demographics Bar */
+        .progress-bar-wrap {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
 
-        .split-bar-container {
-            height: 8px;
+        .demographics-bar {
+            height: 7px;
             border-radius: 4px;
-            background: #1e293b;
+            background: #e2e8f0;
             overflow: hidden;
             display: flex;
         }
 
-        .split-bar-male {
-            background: var(--accent-cyan);
+        .demographics-bar-male {
+            background: var(--azure-600);
             height: 100%;
         }
 
-        .split-bar-female {
-            background: var(--accent-rose);
+        .demographics-bar-female {
+            background: var(--rose-600);
             height: 100%;
         }
 
-        .split-legend {
+        .demographics-legend {
             display: flex;
             justify-content: space-between;
             font-size: 10.5px;
             font-family: var(--font-mono);
-            color: var(--text-secondary);
+            color: var(--ink-600);
         }
 
-        .hud-section-header {
-            font-size: 11px;
-            font-family: var(--font-mono);
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .chip-list {
+        .hud-chips-wrap {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 5px;
         }
 
-        .chip-tag {
-            font-size: 10.5px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid var(--border-subtle);
+        .hud-chip {
+            font-size: 11px;
+            background: #f1f5f9;
+            border: 1px solid rgba(15, 23, 42, 0.06);
             border-radius: 6px;
             padding: 4px 8px;
-            color: #cbd5e1;
-            line-height: 1.2;
+            color: var(--ink-800);
+            line-height: 1.25;
         }
 
-        .btn-open-part {
+        .hud-btn-primary {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             width: 100%;
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            color: #fff;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #ffffff;
             text-decoration: none;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
             transition: all 0.2s;
-            margin-top: 4px;
         }
 
-        .btn-open-part:hover {
-            background: #0284c7;
+        .hud-btn-primary:hover {
             transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
         }
 
-        /* Bottom Floating 3D Map Perspective Control HUD */
-        .map-perspective-controls {
+        /* 3D Map Floating Camera HUD */
+        .map-hud-controls {
             position: absolute;
             bottom: 24px;
             right: 20px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            z-index: 90;
+            z-index: 40;
         }
 
-        .perspective-btn {
-            background: rgba(10, 15, 29, 0.88);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-subtle);
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+        .map-hud-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            color: var(--ink-800);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             font-family: var(--font-mono);
-            transition: all 0.2s;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.15s;
         }
 
-        .perspective-btn:hover {
-            border-color: var(--accent-cyan);
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent-cyan);
+        .map-hud-btn:hover {
+            color: var(--azure-600);
+            border-color: var(--azure-600);
+            background: #f8fafc;
         }
 
-        /* Floating 3D Tooltip */
-        .map-hover-card {
+        /* Hover Tooltip */
+        .map-hover-tooltip {
             position: absolute;
             display: none;
             pointer-events: none;
-            background: rgba(10, 15, 29, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-glow);
+            background: #ffffff;
+            border: 1px solid rgba(15, 23, 42, 0.12);
             border-radius: 8px;
             padding: 8px 12px;
             font-size: 11px;
-            color: #fff;
-            z-index: 200;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-            transform: translate(-50%, -120%);
+            color: var(--ink-950);
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transform: translate(-50%, -125%);
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 900px) {
-            .glass-header {
-                height: 52px;
-                padding: 0 12px;
-                left: 10px;
-                right: 10px;
-                top: 10px;
-            }
-            .header-badges { display: none; }
-            .metrics-strip {
-                display: none;
-            }
-            .drawer-left {
+            .observatory-header .header-right-controls { display: none; }
+            .floating-kpi-row { display: none; }
+            .dock-left {
                 width: calc(100% - 20px);
-                height: 40%;
+                height: 42%;
                 top: auto;
                 bottom: 10px;
                 left: 10px;
-                border-radius: 12px;
             }
-            .hud-inspector {
+            .scorecard-hud {
                 width: calc(100% - 20px);
                 max-height: 50%;
-                right: 10px;
                 top: auto;
                 bottom: 10px;
-            }
-            .map-perspective-controls {
-                bottom: calc(40% + 20px);
                 right: 10px;
             }
         }
@@ -685,181 +729,182 @@
 </head>
 <body>
 
-    <!-- 3D Vector Map Canvas -->
+    <!-- 3D Vector Map Container -->
     <div id="map"></div>
 
-    <!-- Floating Top Header Bar -->
-    <header class="glass-header">
-        <div class="brand-section">
-            <div class="brand-logo-mark">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-            </div>
-            <div class="brand-titles">
-                <h1>AGT INTELLIGENCE</h1>
-                <p>Bengaluru Electoral Intelligence Layer • AC-160 Shantinagar</p>
-            </div>
-        </div>
+    <!-- Observatory Header Bar -->
+    <header class="observatory-header">
+        <div class="signature-gradient-bar"></div>
+        <div class="header-content">
+            <a href="index.html" class="header-brand">
+                <div class="brand-logo-mark">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                </div>
+                <div class="brand-title-wrap">
+                    <div class="brand-title">AGT<span>Intelligence</span></div>
+                    <div class="brand-sub">Electoral & Ward Intelligence Layer • AC-160 Shantinagar</div>
+                </div>
+            </a>
 
-        <div class="header-badges">
-            <div class="pill-badge pill-badge-highlight">
-                <span class="pill-dot"></span>
-                Special Intensive Revision 2026
-            </div>
-            <div class="pill-badge">
-                135,159 Verified Electors
-            </div>
-            <div class="pill-badge">
-                7 BBMP Wards
-            </div>
-        </div>
+            <!-- Right Controls: Ward Selector & Polling Booth Selector -->
+            <div class="header-right-controls">
+                <!-- Ward Select Dropdown -->
+                <div class="select-pill-container">
+                    <span class="select-pill-label">Ward:</span>
+                    <select id="headerWardSelect" class="header-select">
+                        <option value="ALL">All 7 BBMP Wards (135,159 Voters)</option>
+                    </select>
+                </div>
 
-        <div class="header-actions">
-            <a href="https://docs.google.com/spreadsheets/d/11IFVlZ0-npAND4NBa_ptw68ZSvRjmouY/edit" target="_blank" rel="noopener" class="btn-sheet">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/>
-                </svg>
-                Google Sheet
-            </a>
-            <a href="data/shantinagar_wards.geojson" target="_blank" class="btn-sheet" style="background: rgba(30, 41, 59, 0.8); border-color: rgba(255,255,255,0.15);">
-                GeoJSON
-            </a>
-            <a href="index.html" class="btn-sheet" style="background: rgba(30, 41, 59, 0.8); border-color: rgba(255,255,255,0.15);">
-                SEZ Maps
-            </a>
+                <!-- Booth Select Dropdown -->
+                <div class="select-pill-container">
+                    <span class="select-pill-label">Booth:</span>
+                    <select id="headerBoothSelect" class="header-select" style="max-width: 240px;">
+                        <option value="">Jump to Polling Booth (193 Booths)...</option>
+                    </select>
+                </div>
+
+                <!-- Direct Google Sheet Link -->
+                <a href="https://docs.google.com/spreadsheets/d/11IFVlZ0-npAND4NBa_ptw68ZSvRjmouY/edit" target="_blank" rel="noopener" class="btn-sheet-link">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-4H6v-2h4V7h2v4h4v2h-4v4z"/>
+                    </svg>
+                    Google Sheet ↗
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- Top KPI Metrics Strip -->
-    <div class="metrics-strip">
-        <div class="metric-pill">
-            <span class="metric-pill-label">Total Electorate</span>
-            <span class="metric-pill-val">135,159</span>
+    <!-- Top KPI Metrics Row -->
+    <div class="floating-kpi-row">
+        <div class="kpi-chip">
+            <span class="kpi-chip-title">Total Electorate</span>
+            <span class="kpi-chip-val" id="kpiElectorate">135,159</span>
         </div>
-        <div class="metric-pill">
-            <span class="metric-pill-label">Polling Stations</span>
-            <span class="metric-pill-val">193</span>
+        <div class="kpi-chip">
+            <span class="kpi-chip-title">Polling Stations</span>
+            <span class="kpi-chip-val">193 Booths</span>
         </div>
-        <div class="metric-pill">
-            <span class="metric-pill-label">Gender Ratio</span>
-            <span class="metric-pill-val" style="color: var(--accent-cyan);">986.4</span>
+        <div class="kpi-chip">
+            <span class="kpi-chip-title">Gender Ratio</span>
+            <span class="kpi-chip-val" style="color: var(--azure-600);">986.4</span>
         </div>
-        <div class="metric-pill">
-            <span class="metric-pill-label">Avg Voter Age</span>
-            <span class="metric-pill-val" style="color: var(--accent-emerald);">45.4 yrs</span>
+        <div class="kpi-chip">
+            <span class="kpi-chip-title">Avg Voter Age</span>
+            <span class="kpi-chip-val" style="color: var(--emerald-600);">45.4 yrs</span>
         </div>
-        <div class="metric-pill">
-            <span class="metric-pill-label">Dense Ward</span>
-            <span class="metric-pill-val" style="color: var(--accent-rose);">Nilasandra (43.9k)</span>
+        <div class="kpi-chip">
+            <span class="kpi-chip-title">Largest Ward</span>
+            <span class="kpi-chip-val" style="color: var(--rose-600);">Nilasandra (43.9k)</span>
         </div>
     </div>
 
-    <!-- Left Control & Ward Navigator Drawer -->
-    <aside class="drawer-left">
-        <div class="drawer-header">
-            <div class="search-box">
+    <!-- Left Control & Universal Search Dock -->
+    <aside class="dock-left">
+        <!-- Universal Electoral Search Box -->
+        <div class="search-container">
+            <div class="search-input-wrap">
                 <svg viewBox="0 0 24 24">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                 </svg>
-                <input type="text" id="searchInput" placeholder="Search ward, school, or street..." />
+                <input type="text" id="universalSearch" class="search-input" placeholder="Search street, school, booth (e.g. Richmond, 79)..." />
             </div>
+
+            <!-- Autocomplete Suggestions Overlay -->
+            <div class="search-results-overlay" id="searchOverlay"></div>
         </div>
 
-        <!-- 3D Perspective Controls -->
-        <div class="control-toggles">
-            <div class="toggle-row">
-                <span>Map Perspective:</span>
-                <div class="toggle-btn-group">
-                    <button class="toggle-chip active" id="btn3D">3D Pitched</button>
-                    <button class="toggle-chip" id="btn2D">2D Flat</button>
+        <!-- 3D Map Perspective Controls -->
+        <div class="dock-controls">
+            <div class="control-row">
+                <span>3D Camera Tilt:</span>
+                <div class="btn-toggle-group">
+                    <button class="btn-toggle-chip active" id="btnTilt3D">3D (48°)</button>
+                    <button class="btn-toggle-chip" id="btnTilt2D">2D Flat</button>
                 </div>
             </div>
 
-            <div class="toggle-row">
+            <div class="control-row">
                 <span>3D Ward Extrusion:</span>
-                <div class="toggle-btn-group">
-                    <button class="toggle-chip active" id="btnExtrudeOn">Elevated</button>
-                    <button class="toggle-chip" id="btnExtrudeOff">Flat</button>
+                <div class="btn-toggle-group">
+                    <button class="btn-toggle-chip active" id="btnExtrudeOn">Elevated</button>
+                    <button class="btn-toggle-chip" id="btnExtrudeOff">Flat</button>
                 </div>
             </div>
 
-            <div class="toggle-row">
+            <div class="control-row">
                 <span>Choropleth Mode:</span>
-                <div class="toggle-btn-group">
-                    <button class="toggle-chip active" id="modeElectors">Voters</button>
-                    <button class="toggle-chip" id="modeGender">Ratio</button>
-                    <button class="toggle-chip" id="modeAge">Age</button>
+                <div class="btn-toggle-group">
+                    <button class="btn-toggle-chip active" id="modeVoters">Voters</button>
+                    <button class="btn-toggle-chip" id="modeRatio">Ratio</button>
+                    <button class="btn-toggle-chip" id="modeAge">Age</button>
                 </div>
             </div>
         </div>
 
-        <!-- Scrollable Wards List -->
-        <div class="drawer-list" id="wardsListContainer">
-            <div class="section-label">BBMP Wards in Shantinagar (7 Wards)</div>
+        <!-- Wards List Directory -->
+        <div class="wards-list-wrap" id="wardsList">
+            <div class="list-section-title">BBMP Wards in Shantinagar</div>
             <!-- Dynamically populated cards -->
         </div>
     </aside>
 
-    <!-- Right Floating Entity Inspector (HUD) -->
-    <div class="hud-inspector" id="hudInspector" style="display: none;">
-        <button class="hud-close-btn" id="hudCloseBtn">&times;</button>
+    <!-- Floating Right Scorecard - Modeled after SiteScorecard.jsx -->
+    <div class="scorecard-hud" id="scorecardHUD">
+        <button class="scorecard-close" id="scorecardClose">&times;</button>
         <div>
-            <div class="hud-header-badge" id="hudBadge">Ward Boundary</div>
-            <div class="hud-title" id="hudTitle">Nilasandra Ward 116</div>
-            <div class="hud-subtitle" id="hudSubtitle">Central Bengaluru • Special Intensive Revision 2026</div>
+            <div class="scorecard-tag" id="scTag">Ward Intelligence</div>
+            <div class="scorecard-title" id="scTitle">Nilasandra Ward 116</div>
+            <div class="scorecard-subtitle" id="scSubtitle">AC-160 Shantinagar • Special Intensive Revision 2026</div>
         </div>
 
-        <div class="hud-metrics-grid">
-            <div class="hud-card">
-                <div class="hud-card-lbl">Total Electors</div>
-                <div class="hud-card-val" id="hudElectors">43,914</div>
+        <div class="scorecard-kpi-grid">
+            <div class="scorecard-box">
+                <div class="scorecard-box-lbl">Total Electors</div>
+                <div class="scorecard-box-val" id="scElectors">43,914</div>
             </div>
-            <div class="hud-card">
-                <div class="hud-card-lbl">Polling Booths</div>
-                <div class="hud-card-val" id="hudBooths">57</div>
+            <div class="scorecard-box">
+                <div class="scorecard-box-lbl">Polling Booths</div>
+                <div class="scorecard-box-val" id="scBooths">57 Booths</div>
             </div>
-            <div class="hud-card">
-                <div class="hud-card-lbl">Gender Ratio</div>
-                <div class="hud-card-val" id="hudGenderRatio" style="color: var(--accent-cyan);">1,080.7</div>
+            <div class="scorecard-box">
+                <div class="scorecard-box-lbl">Gender Ratio</div>
+                <div class="scorecard-box-val" id="scRatio" style="color: var(--azure-600);">1,080.7</div>
             </div>
-            <div class="hud-card">
-                <div class="hud-card-lbl">Avg Voter Age</div>
-                <div class="hud-card-val" id="hudAvgAge" style="color: var(--accent-emerald);">43.1 yrs</div>
-            </div>
-        </div>
-
-        <!-- Gender Split Bar -->
-        <div class="gender-split-wrap">
-            <div class="hud-section-header">Gender Demographics</div>
-            <div class="split-bar-container">
-                <div class="split-bar-male" id="hudBarMale" style="width: 48%;"></div>
-                <div class="split-bar-female" id="hudBarFemale" style="width: 52%;"></div>
-            </div>
-            <div class="split-legend">
-                <span id="hudMaleCount">Male: 21,105 (48%)</span>
-                <span id="hudFemaleCount">Female: 22,809 (52%)</span>
+            <div class="scorecard-box">
+                <div class="scorecard-box-lbl">Avg Voter Age</div>
+                <div class="scorecard-box-val" id="scAge" style="color: var(--emerald-600);">43.1 yrs</div>
             </div>
         </div>
 
-        <!-- Prominent Catchment Localities -->
+        <!-- Demographic Split Bar -->
+        <div class="progress-bar-wrap">
+            <div class="demographics-legend">
+                <span id="scMaleLbl">Male: 21,105 (48%)</span>
+                <span id="scFemaleLbl">Female: 22,809 (52%)</span>
+            </div>
+            <div class="demographics-bar">
+                <div class="demographics-bar-male" id="scBarMale" style="width: 48%;"></div>
+                <div class="demographics-bar-female" id="scBarFemale" style="width: 52%;"></div>
+            </div>
+        </div>
+
+        <!-- Major Localities / Streets -->
         <div>
-            <div class="hud-section-header">Key Catchment Streets & Localities</div>
-            <div class="chip-list" id="hudStreetsList">
-                <!-- Dynamically filled -->
-            </div>
+            <div class="list-section-title" style="margin: 0 0 6px 0;">Catchment Streets & Localities</div>
+            <div class="hud-chips-wrap" id="scStreets"></div>
         </div>
 
-        <!-- Key Polling Institutions -->
+        <!-- Major Schools / Polling Institutions -->
         <div>
-            <div class="hud-section-header">Key Polling Institutions</div>
-            <div class="chip-list" id="hudSchoolsList">
-                <!-- Dynamically filled -->
-            </div>
+            <div class="list-section-title" style="margin: 0 0 6px 0;">Key Polling Institutions</div>
+            <div class="hud-chips-wrap" id="scSchools"></div>
         </div>
 
-        <!-- Action Button -->
-        <a href="https://docs.google.com/spreadsheets/d/11IFVlZ0-npAND4NBa_ptw68ZSvRjmouY/edit" target="_blank" rel="noopener" class="btn-open-part" id="hudActionBtn">
+        <!-- One-Click Google Sheet Link -->
+        <a href="https://docs.google.com/spreadsheets/d/11IFVlZ0-npAND4NBa_ptw68ZSvRjmouY/edit" target="_blank" rel="noopener" class="hud-btn-primary" id="scActionBtn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
             </svg>
@@ -867,58 +912,33 @@
         </a>
     </div>
 
-    <!-- Bottom Right Map Camera Perspective Buttons -->
-    <div class="map-perspective-controls">
-        <button class="perspective-btn" id="btnTilt3D" title="Toggle 3D Camera Tilt">3D</button>
-        <button class="perspective-btn" id="btnCompass" title="Reset North">N</button>
-        <button class="perspective-btn" id="btnZoomIn" title="Zoom In">+</button>
-        <button class="perspective-btn" id="btnZoomOut" title="Zoom Out">&minus;</button>
+    <!-- Map Floating HUD Navigation Controls -->
+    <div class="map-hud-controls">
+        <button class="map-hud-btn" id="hudTilt" title="Toggle 3D View">3D</button>
+        <button class="map-hud-btn" id="hudNorth" title="Reset North">N</button>
+        <button class="map-hud-btn" id="hudPlus" title="Zoom In">+</button>
+        <button class="map-hud-btn" id="hudMinus" title="Zoom Out">&minus;</button>
     </div>
 
     <!-- Hover Cursor Card -->
-    <div class="map-hover-card" id="hoverCard"></div>
+    <div class="map-hover-tooltip" id="mapTooltip"></div>
 
     <script>
-        // Data sources
+        // Datasets
         const wardsGeoJSON = window.SHANTINAGAR_WARDS_GEOJSON || { type: 'FeatureCollection', features: [] };
         const electoralData = window.ELECTORAL_DATA || { booths: [] };
         const booths = electoralData.booths || [];
 
-        // State
         let is3D = true;
         let isExtruded = true;
-        let choroplethMode = 'electors'; // 'electors', 'gender', 'age'
-        let selectedWardNo = null;
+        let choroplethMode = 'voters'; // 'voters', 'ratio', 'age'
 
-        // Color ramp generator
-        function getWardChoroplethColor(feature, mode) {
-            const props = feature.properties;
-            if (mode === 'electors') {
-                const count = props.total_electors || 0;
-                if (count > 35000) return '#f43f5e'; // High density (Rose)
-                if (count > 20000) return '#f59e0b'; // Moderate (Amber)
-                if (count > 15000) return '#0284c7'; // Medium (Sky Blue)
-                return '#38bdf8'; // Compact (Cyan)
-            } else if (mode === 'gender') {
-                const gr = props.gender_ratio || 1000;
-                if (gr >= 1150) return '#ec4899'; // High female (Pink)
-                if (gr >= 1100) return '#818cf8'; // Moderate (Indigo)
-                return '#06b6d4'; // Cyan
-            } else if (mode === 'age') {
-                const age = props.avg_age || 45;
-                if (age >= 48) return '#a855f7'; // Purple (Older avg)
-                if (age >= 45) return '#3b82f6'; // Blue
-                return '#10b981'; // Emerald (Younger avg)
-            }
-            return '#38bdf8';
-        }
-
-        // Initialize MapLibre GL 3D Map
+        // Initialize MapLibre GL with Carto Positron (High-contrast clean light basemap matching bengaluru-footfall-intelligence)
         const map = new maplibregl.Map({
             container: 'map',
-            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-            center: [77.6180, 12.9630],
-            zoom: 13.6,
+            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            center: [77.6180, 12.9600],
+            zoom: 13.5,
             pitch: 48,
             bearing: -15,
             attributionControl: false
@@ -927,7 +947,7 @@
         map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
 
         map.on('load', () => {
-            // 1. Add Wards GeoJSON Source
+            // 1. Add Wards Source
             map.addSource('shantinagar-wards', {
                 type: 'geojson',
                 data: wardsGeoJSON
@@ -943,35 +963,35 @@
                         'case',
                         ['==', ['get', 'WARD_NO'], 116], '#f43f5e',
                         ['==', ['get', 'WARD_NO'], 112], '#f59e0b',
-                        ['==', ['get', 'WARD_NO'], 114], '#818cf8',
+                        ['==', ['get', 'WARD_NO'], 114], '#8b5cf6',
                         ['==', ['get', 'WARD_NO'], 111], '#0284c7',
                         ['==', ['get', 'WARD_NO'], 115], '#06b6d4',
-                        ['==', ['get', 'WARD_NO'], 117], '#10b981',
+                        ['==', ['get', 'WARD_NO'], 117], '#059669',
                         '#38bdf8'
                     ],
                     'fill-extrusion-height': [
                         'interpolate', ['linear'], ['get', 'total_electors'],
-                        0, 50,
+                        0, 60,
                         50000, 480
                     ],
                     'fill-extrusion-base': 0,
-                    'fill-extrusion-opacity': 0.72
+                    'fill-extrusion-opacity': 0.58
                 }
             });
 
-            // 3. Add Glowing Ward Boundary Line Layer
+            // 3. Add Sharp Ward Outlines
             map.addLayer({
                 id: 'wards-outline',
                 type: 'line',
                 source: 'shantinagar-wards',
                 paint: {
-                    'line-color': '#38bdf8',
+                    'line-color': '#0284c7',
                     'line-width': 2.5,
-                    'line-opacity': 0.95
+                    'line-opacity': 0.9
                 }
             });
 
-            // 4. Add Ward 3D Centroid Labels
+            // 4. Add Ward 3D Floating Centroid Labels
             map.addLayer({
                 id: 'wards-labels',
                 type: 'symbol',
@@ -980,18 +1000,17 @@
                     'text-field': ['concat', 'Ward ', ['to-string', ['get', 'WARD_NO']], '\n', ['get', 'WARD_NAME']],
                     'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                     'text-size': 12,
-                    'text-letter-spacing': 0.05,
                     'text-offset': [0, 0],
                     'text-anchor': 'center'
                 },
                 paint: {
-                    'text-color': '#ffffff',
-                    'text-halo-color': '#000000',
-                    'text-halo-width': 2
+                    'text-color': '#090d16',
+                    'text-halo-color': '#ffffff',
+                    'text-halo-width': 2.5
                 }
             });
 
-            // 5. Add Polling Booth Points GeoJSON Source
+            // 5. Add Polling Booths GeoJSON
             const boothsGeoJSON = {
                 type: 'FeatureCollection',
                 features: booths.map(b => ({
@@ -1006,190 +1025,180 @@
                 data: boothsGeoJSON
             });
 
-            // Polling Booths Glowing Circles
+            // Polling Booth Glow
             map.addLayer({
                 id: 'booths-glow',
                 type: 'circle',
                 source: 'polling-booths',
                 paint: {
-                    'circle-radius': 9,
-                    'circle-color': '#38bdf8',
-                    'circle-opacity': 0.35,
-                    'circle-blur': 0.5
+                    'circle-radius': 8,
+                    'circle-color': '#0284c7',
+                    'circle-opacity': 0.25,
+                    'circle-blur': 0.4
                 }
             });
 
+            // Polling Booth Core Pin
             map.addLayer({
                 id: 'booths-core',
                 type: 'circle',
                 source: 'polling-booths',
                 paint: {
                     'circle-radius': 4.5,
-                    'circle-color': '#ffffff',
+                    'circle-color': '#0284c7',
                     'circle-stroke-width': 2,
-                    'circle-stroke-color': '#0284c7'
+                    'circle-stroke-color': '#ffffff'
                 }
             });
 
-            // 6. Interactive Events
-            setupInteractivity();
+            initInteractivity();
         });
 
-        // Setup Hover & Click Interactivity
-        function setupInteractivity() {
-            const hoverCard = document.getElementById('hoverCard');
+        // Initialize Interactivity
+        function initInteractivity() {
+            const tooltip = document.getElementById('mapTooltip');
 
-            // Mousemove over Ward
+            // Ward Hover
             map.on('mousemove', 'wards-extrusion', (e) => {
                 map.getCanvas().style.cursor = 'pointer';
                 if (e.features.length > 0) {
                     const props = e.features[0].properties;
-                    hoverCard.style.display = 'block';
-                    hoverCard.style.left = e.point.x + 'px';
-                    hoverCard.style.top = e.point.y + 'px';
-                    hoverCard.innerHTML = `<strong>Ward ${props.WARD_NO} • ${props.WARD_NAME}</strong><br/>Electors: <strong>${Number(props.total_electors).toLocaleString()}</strong> | Booths: <strong>${props.booths_count}</strong>`;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = e.point.x + 'px';
+                    tooltip.style.top = e.point.y + 'px';
+                    tooltip.innerHTML = `<strong>Ward ${props.WARD_NO} • ${props.WARD_NAME}</strong><br/>Electors: <strong>${Number(props.total_electors).toLocaleString()}</strong> | Booths: <strong>${props.booths_count}</strong>`;
                 }
             });
 
             map.on('mouseleave', 'wards-extrusion', () => {
                 map.getCanvas().style.cursor = '';
-                hoverCard.style.display = 'none';
+                tooltip.style.display = 'none';
             });
 
-            // Click on Ward Polygon
+            // Ward Click
             map.on('click', 'wards-extrusion', (e) => {
                 if (e.features.length > 0) {
-                    const feature = e.features[0];
-                    selectWard(feature.properties.WARD_NO, true);
+                    selectWard(e.features[0].properties.WARD_NO, true);
                 }
             });
 
-            // Mousemove over Booth Point
+            // Booth Hover
             map.on('mousemove', 'booths-core', (e) => {
                 map.getCanvas().style.cursor = 'pointer';
                 if (e.features.length > 0) {
                     const props = e.features[0].properties;
-                    hoverCard.style.display = 'block';
-                    hoverCard.style.left = e.point.x + 'px';
-                    hoverCard.style.top = e.point.y + 'px';
-                    hoverCard.innerHTML = `<strong>Part #${props.part_no}: ${props.building}</strong><br/>Voters: <strong>${props.total_electors}</strong> | Gender Ratio: <strong>${props.gender_ratio}</strong>`;
+                    tooltip.style.display = 'block';
+                    tooltip.style.left = e.point.x + 'px';
+                    tooltip.style.top = e.point.y + 'px';
+                    tooltip.innerHTML = `<strong>Part #${props.part_no}: ${props.building}</strong><br/>Electors: <strong>${props.total_electors}</strong> | Gender Ratio: <strong>${props.gender_ratio}</strong>`;
                 }
             });
 
             map.on('mouseleave', 'booths-core', () => {
                 map.getCanvas().style.cursor = '';
-                hoverCard.style.display = 'none';
+                tooltip.style.display = 'none';
             });
 
-            // Click on Booth Point
+            // Booth Click
             map.on('click', 'booths-core', (e) => {
                 if (e.features.length > 0) {
                     const b = e.features[0].properties;
                     if (typeof b.sections === 'string') {
                         try { b.sections = JSON.parse(b.sections); } catch(err) { b.sections = [b.sections]; }
                     }
-                    showBoothHUD(b);
+                    showBoothScorecard(b);
                 }
             });
         }
 
-        // Show Ward in Right Inspector
-        function selectWard(wardNo, flyCamera = true) {
-            selectedWardNo = wardNo;
-            const feature = wardsGeoJSON.features.find(f => f.properties.WARD_NO == wardNo);
-            if (!feature) return;
+        // Accurate Ward Selection & Zoom using Pre-calculated Centroids & Bounding Boxes
+        function selectWard(wardNo, fly = true) {
+            const feat = wardsGeoJSON.features.find(f => f.properties.WARD_NO == wardNo);
+            if (!feat) return;
 
-            const props = feature.properties;
-            document.getElementById('hudInspector').style.display = 'flex';
-            document.getElementById('hudBadge').textContent = `BBMP Ward #${props.WARD_NO}`;
-            document.getElementById('hudTitle').textContent = `${props.WARD_NAME} Ward`;
-            document.getElementById('hudSubtitle').textContent = `AC-160 Shantinagar • ${props.booths_count} Polling Booths`;
-            
-            document.getElementById('hudElectors').textContent = Number(props.total_electors).toLocaleString();
-            document.getElementById('hudBooths').textContent = props.booths_count;
-            document.getElementById('hudGenderRatio').textContent = props.gender_ratio;
-            document.getElementById('hudAvgAge').textContent = `${props.avg_age} yrs`;
+            const props = feat.properties;
 
-            // Male / Female Split
+            // Update Scorecard HUD
+            document.getElementById('scorecardHUD').style.display = 'flex';
+            document.getElementById('scTag').textContent = `BBMP Ward #${props.WARD_NO}`;
+            document.getElementById('scTitle').textContent = `${props.WARD_NAME} Ward`;
+            document.getElementById('scSubtitle').textContent = `AC-160 Shantinagar • ${props.booths_count} Polling Stations`;
+
+            document.getElementById('scElectors').textContent = Number(props.total_electors).toLocaleString();
+            document.getElementById('scBooths').textContent = `${props.booths_count} Booths`;
+            document.getElementById('scRatio').textContent = props.gender_ratio;
+            document.getElementById('scAge').textContent = `${props.avg_age} yrs`;
+
             const male = props.male || 0;
             const female = props.female || 0;
             const tot = male + female;
             const mPct = tot > 0 ? Math.round((male / tot) * 100) : 50;
             const fPct = 100 - mPct;
 
-            document.getElementById('hudBarMale').style.width = mPct + '%';
-            document.getElementById('hudBarFemale').style.width = fPct + '%';
-            document.getElementById('hudMaleCount').textContent = `Male: ${male.toLocaleString()} (${mPct}%)`;
-            document.getElementById('hudFemaleCount').textContent = `Female: ${female.toLocaleString()} (${fPct}%)`;
+            document.getElementById('scBarMale').style.width = mPct + '%';
+            document.getElementById('scBarFemale').style.width = fPct + '%';
+            document.getElementById('scMaleLbl').textContent = `Male: ${male.toLocaleString()} (${mPct}%)`;
+            document.getElementById('scFemaleLbl').textContent = `Female: ${female.toLocaleString()} (${fPct}%)`;
 
-            // Catchment Streets
-            const streetsEl = document.getElementById('hudStreetsList');
+            // Streets
+            const streetsEl = document.getElementById('scStreets');
             streetsEl.innerHTML = '';
             (props.catchment_streets || []).forEach(s => {
                 const chip = document.createElement('span');
-                chip.className = 'chip-tag';
+                chip.className = 'hud-chip';
                 chip.textContent = '📍 ' + s;
                 streetsEl.appendChild(chip);
             });
 
-            // Key Schools
-            const schoolsEl = document.getElementById('hudSchoolsList');
+            // Schools
+            const schoolsEl = document.getElementById('scSchools');
             schoolsEl.innerHTML = '';
             (props.key_schools || []).forEach(s => {
                 const chip = document.createElement('span');
-                chip.className = 'chip-tag';
-                chip.style.borderColor = 'rgba(56, 189, 248, 0.3)';
-                chip.style.color = '#38bdf8';
+                chip.className = 'hud-chip';
+                chip.style.borderColor = 'rgba(2, 132, 199, 0.3)';
+                chip.style.color = '#0284c7';
                 chip.textContent = '🏫 ' + s;
                 schoolsEl.appendChild(chip);
             });
 
-            document.getElementById('hudActionBtn').textContent = `View Ward ${props.WARD_NO} in Google Spreadsheet`;
+            document.getElementById('scActionBtn').textContent = `Open Ward ${props.WARD_NO} in Google Spreadsheet`;
 
-            // Highlight in drawer
-            document.querySelectorAll('.ward-card-item').forEach(el => {
+            // Highlight in left list
+            document.querySelectorAll('.ward-card-box').forEach(el => {
                 if (el.getAttribute('data-ward') == wardNo) {
-                    el.classList.add('selected');
+                    el.classList.add('active');
                     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else {
-                    el.classList.remove('selected');
+                    el.classList.remove('active');
                 }
             });
 
-            // Fly camera to Ward in 3D Perspective
-            if (flyCamera) {
-                const coords = feature.geometry.coordinates[0];
-                let minX = 180, maxX = -180, minY = 90, maxY = -90;
-                coords.forEach(([lng, lat]) => {
-                    if (lng < minX) minX = lng;
-                    if (lng > maxX) maxX = lng;
-                    if (lat < minY) minY = lat;
-                    if (lat > maxY) maxY = lat;
-                });
-                const centerLng = (minX + maxX) / 2;
-                const centerLat = (minY + maxY) / 2;
+            // Sync Header Dropdown
+            document.getElementById('headerWardSelect').value = wardNo;
 
-                map.flyTo({
-                    center: [centerLng, centerLat],
-                    zoom: 14.5,
-                    pitch: is3D ? 52 : 0,
-                    bearing: -10,
-                    duration: 1800
+            // Fly Map using pre-calculated Bounding Box
+            if (fly && props.bbox) {
+                map.fitBounds(props.bbox, {
+                    padding: { top: 80, bottom: 40, left: 380, right: 400 },
+                    pitch: is3D ? 48 : 0,
+                    bearing: is3D ? -15 : 0,
+                    duration: 1600
                 });
             }
         }
 
-        // Show Booth in Right Inspector
-        function showBoothHUD(b) {
-            document.getElementById('hudInspector').style.display = 'flex';
-            document.getElementById('hudBadge').textContent = `Polling Booth • Part #${b.part_no}`;
-            document.getElementById('hudTitle').textContent = b.building || b.booth_name;
-            document.getElementById('hudSubtitle').textContent = `Ward ${b.ward_no} • ${b.ward_name}`;
+        // Show Individual Polling Booth in Scorecard
+        function showBoothScorecard(b) {
+            document.getElementById('scorecardHUD').style.display = 'flex';
+            document.getElementById('scTag').textContent = `Polling Booth • Part #${b.part_no}`;
+            document.getElementById('scTitle').textContent = b.building || b.booth_name;
+            document.getElementById('scSubtitle').textContent = `Ward ${b.ward_no} • ${b.ward_name}`;
 
-            document.getElementById('hudElectors').textContent = Number(b.total_electors).toLocaleString();
-            document.getElementById('hudBooths').textContent = `Part #${b.part_no}`;
-            document.getElementById('hudGenderRatio').textContent = b.gender_ratio;
-            document.getElementById('hudAvgAge').textContent = `${b.avg_age} yrs`;
+            document.getElementById('scElectors').textContent = Number(b.total_electors).toLocaleString();
+            document.getElementById('scBooths').textContent = `Part #${b.part_no}`;
+            document.getElementById('scRatio').textContent = b.gender_ratio;
+            document.getElementById('scAge').textContent = `${b.avg_age} yrs`;
 
             const male = b.male || 0;
             const female = b.female || 0;
@@ -1197,128 +1206,206 @@
             const mPct = tot > 0 ? Math.round((male / tot) * 100) : 50;
             const fPct = 100 - mPct;
 
-            document.getElementById('hudBarMale').style.width = mPct + '%';
-            document.getElementById('hudBarFemale').style.width = fPct + '%';
-            document.getElementById('hudMaleCount').textContent = `Male: ${male.toLocaleString()} (${mPct}%)`;
-            document.getElementById('hudFemaleCount').textContent = `Female: ${female.toLocaleString()} (${fPct}%)`;
+            document.getElementById('scBarMale').style.width = mPct + '%';
+            document.getElementById('scBarFemale').style.width = fPct + '%';
+            document.getElementById('scMaleLbl').textContent = `Male: ${male.toLocaleString()} (${mPct}%)`;
+            document.getElementById('scFemaleLbl').textContent = `Female: ${female.toLocaleString()} (${fPct}%)`;
 
             // Streets
-            const streetsEl = document.getElementById('hudStreetsList');
+            const streetsEl = document.getElementById('scStreets');
             streetsEl.innerHTML = '';
             (b.sections || []).forEach(s => {
                 const chip = document.createElement('span');
-                chip.className = 'chip-tag';
+                chip.className = 'hud-chip';
                 chip.textContent = '📍 ' + s;
                 streetsEl.appendChild(chip);
             });
 
-            // School info
-            const schoolsEl = document.getElementById('hudSchoolsList');
-            schoolsEl.innerHTML = `<span class="chip-tag" style="color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);">🏫 ${b.booth_name}</span>`;
+            // Schools
+            const schoolsEl = document.getElementById('scSchools');
+            schoolsEl.innerHTML = `<span class="hud-chip" style="color: #0284c7; border-color: rgba(2, 132, 199, 0.3);">🏫 ${b.booth_name}</span>`;
 
-            document.getElementById('hudActionBtn').textContent = `Open Part #${b.part_no} in Google Spreadsheet`;
+            document.getElementById('scActionBtn').textContent = `Open Part #${b.part_no} in Google Spreadsheet`;
 
-            // Fly Camera
+            // Fly camera right onto the booth
             map.flyTo({
                 center: [b.lng, b.lat],
                 zoom: 16.5,
-                pitch: 55,
-                bearing: -5,
+                pitch: 52,
+                bearing: -10,
                 duration: 1500
             });
         }
 
-        // Populate Left Drawer Ward Cards
-        function populateWardsDrawer() {
-            const container = document.getElementById('wardsListContainer');
+        // Populate Left Wards List
+        function populateWardsList() {
+            const container = document.getElementById('wardsList');
+            const headerSelect = document.getElementById('headerWardSelect');
+
             wardsGeoJSON.features.forEach(f => {
                 const props = f.properties;
+
+                // 1. Add Card to left dock
                 const card = document.createElement('div');
-                card.className = 'ward-card-item';
+                card.className = 'ward-card-box';
                 card.setAttribute('data-ward', props.WARD_NO);
 
                 card.innerHTML = `
-                    <div class="ward-item-top">
-                        <span class="ward-number-tag">Ward #${props.WARD_NO}</span>
-                        <span style="font-size: 11px; color: var(--accent-emerald); font-weight: 700;">${props.booths_count} Booths</span>
+                    <div class="ward-card-head">
+                        <span class="ward-badge-pill">Ward #${props.WARD_NO}</span>
+                        <span style="font-size: 11px; font-weight: 700; color: var(--emerald-600);">${props.booths_count} Booths</span>
                     </div>
-                    <div class="ward-name-title">${props.WARD_NAME}</div>
-                    <div class="ward-quick-stats">
+                    <div class="ward-card-name">${props.WARD_NAME}</div>
+                    <div class="ward-card-stats">
                         <div>Voters: <span>${Number(props.total_electors).toLocaleString()}</span></div>
                         <div>Ratio: <span>${props.gender_ratio}</span></div>
                         <div>Age: <span>${props.avg_age}</span></div>
                     </div>
                 `;
 
-                card.addEventListener('click', () => {
-                    selectWard(props.WARD_NO, true);
-                });
-
+                card.addEventListener('click', () => selectWard(props.WARD_NO, true));
                 container.appendChild(card);
+
+                // 2. Add Option to Header Dropdown
+                const opt = document.createElement('option');
+                opt.value = props.WARD_NO;
+                opt.textContent = `Ward ${props.WARD_NO} - ${props.WARD_NAME} (${(props.total_electors / 1000).toFixed(1)}k Voters)`;
+                headerSelect.appendChild(opt);
+            });
+
+            // Populate Booth Dropdown
+            const boothSelect = document.getElementById('headerBoothSelect');
+            booths.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.part_no;
+                opt.textContent = `Part #${b.part_no}: ${b.building} (${b.total_electors} electors)`;
+                boothSelect.appendChild(opt);
             });
         }
 
-        // Search Filter
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase().trim();
-            document.querySelectorAll('.ward-card-item').forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(term) ? 'block' : 'none';
-            });
-
-            // If query matches a specific booth number or school
-            const foundBooth = booths.find(b => 
-                String(b.part_no) === term ||
-                b.booth_name.toLowerCase().includes(term) ||
-                b.building.toLowerCase().includes(term) ||
-                b.sections.some(s => s.toLowerCase().includes(term))
-            );
-            if (foundBooth && term.length >= 3) {
-                showBoothHUD(foundBooth);
+        // Header Select Event Listeners
+        document.getElementById('headerWardSelect').addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === 'ALL') {
+                map.flyTo({ center: [77.6180, 12.9600], zoom: 13.5, pitch: 48, bearing: -15, duration: 1500 });
+                document.getElementById('scorecardHUD').style.display = 'none';
+            } else {
+                selectWard(parseInt(val), true);
             }
         });
 
-        // 3D Perspective Controls
-        document.getElementById('btn3D').addEventListener('click', () => {
-            is3D = true;
-            document.getElementById('btn3D').classList.add('active');
-            document.getElementById('btn2D').classList.remove('active');
-            map.easeTo({ pitch: 50, bearing: -15, duration: 1000 });
+        document.getElementById('headerBoothSelect').addEventListener('change', (e) => {
+            const val = parseInt(e.target.value);
+            const found = booths.find(b => b.part_no === val);
+            if (found) showBoothScorecard(found);
         });
 
-        document.getElementById('btn2D').addEventListener('click', () => {
-            is3D = false;
-            document.getElementById('btn2D').classList.add('active');
-            document.getElementById('btn3D').classList.remove('active');
-            map.easeTo({ pitch: 0, bearing: 0, duration: 1000 });
+        // Universal Electoral Search Engine
+        const searchInput = document.getElementById('universalSearch');
+        const searchOverlay = document.getElementById('searchOverlay');
+
+        searchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase().trim();
+            if (q.length < 2) {
+                searchOverlay.style.display = 'none';
+                return;
+            }
+
+            const results = [];
+
+            // 1. Search Wards
+            wardsGeoJSON.features.forEach(f => {
+                const p = f.properties;
+                if (String(p.WARD_NO).includes(q) || p.WARD_NAME.toLowerCase().includes(q)) {
+                    results.push({
+                        type: 'WARD',
+                        label: `Ward ${p.WARD_NO} - ${p.WARD_NAME}`,
+                        sub: `${Number(p.total_electors).toLocaleString()} voters • ${p.booths_count} booths`,
+                        action: () => selectWard(p.WARD_NO, true)
+                    });
+                }
+            });
+
+            // 2. Search Polling Booths & Buildings
+            booths.forEach(b => {
+                if (String(b.part_no) === q || b.booth_name.toLowerCase().includes(q) || b.building.toLowerCase().includes(q)) {
+                    results.push({
+                        type: 'BOOTH',
+                        label: `Part #${b.part_no}: ${b.building}`,
+                        sub: `Ward ${b.ward_no} • ${b.total_electors} electors`,
+                        action: () => showBoothScorecard(b)
+                    });
+                }
+            });
+
+            // 3. Search Streets
+            booths.forEach(b => {
+                b.sections.forEach(s => {
+                    if (s.toLowerCase().includes(q)) {
+                        results.push({
+                            type: 'STREET',
+                            label: s,
+                            sub: `Part #${b.part_no} (${b.building}) • Ward ${b.ward_no}`,
+                            action: () => showBoothScorecard(b)
+                        });
+                    }
+                });
+            });
+
+            // Render Results
+            searchOverlay.innerHTML = '';
+            if (results.length === 0) {
+                searchOverlay.innerHTML = `<div style="padding: 10px; font-size: 11px; color: var(--ink-500); text-align: center;">No matches found for "${q}".</div>`;
+            } else {
+                results.slice(0, 10).forEach(r => {
+                    const row = document.createElement('div');
+                    row.className = 'search-result-row';
+                    row.innerHTML = `
+                        <div>
+                            <div style="font-weight: 700; color: var(--ink-950);">${r.label}</div>
+                            <div style="font-size: 10px; color: var(--ink-500);">${r.sub}</div>
+                        </div>
+                        <span class="search-result-badge">${r.type}</span>
+                    `;
+                    row.addEventListener('click', () => {
+                        searchOverlay.style.display = 'none';
+                        searchInput.value = r.label;
+                        r.action();
+                    });
+                    searchOverlay.appendChild(row);
+                });
+            }
+            searchOverlay.style.display = 'block';
         });
 
+        // Hide search overlay on blur
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchOverlay.contains(e.target)) {
+                searchOverlay.style.display = 'none';
+            }
+        });
+
+        // Toggle Controls
         document.getElementById('btnTilt3D').addEventListener('click', () => {
-            is3D = !is3D;
-            map.easeTo({ pitch: is3D ? 52 : 0, bearing: is3D ? -15 : 0, duration: 1000 });
-            document.getElementById('btn3D').classList.toggle('active', is3D);
-            document.getElementById('btn2D').classList.toggle('active', !is3D);
+            is3D = true;
+            document.getElementById('btnTilt3D').classList.add('active');
+            document.getElementById('btnTilt2D').classList.remove('active');
+            map.easeTo({ pitch: 48, bearing: -15, duration: 900 });
         });
 
-        document.getElementById('btnCompass').addEventListener('click', () => {
-            map.easeTo({ bearing: 0, pitch: 0, duration: 800 });
+        document.getElementById('btnTilt2D').addEventListener('click', () => {
+            is3D = false;
+            document.getElementById('btnTilt2D').classList.add('active');
+            document.getElementById('btnTilt3D').classList.remove('active');
+            map.easeTo({ pitch: 0, bearing: 0, duration: 900 });
         });
 
-        document.getElementById('btnZoomIn').addEventListener('click', () => map.zoomIn());
-        document.getElementById('btnZoomOut').addEventListener('click', () => map.zoomOut());
-
-        document.getElementById('hudCloseBtn').addEventListener('click', () => {
-            document.getElementById('hudInspector').style.display = 'none';
-            document.querySelectorAll('.ward-card-item').forEach(c => c.classList.remove('selected'));
-        });
-
-        // 3D Extrusion Height Toggle
         document.getElementById('btnExtrudeOn').addEventListener('click', () => {
             document.getElementById('btnExtrudeOn').classList.add('active');
             document.getElementById('btnExtrudeOff').classList.remove('active');
             map.setPaintProperty('wards-extrusion', 'fill-extrusion-height', [
                 'interpolate', ['linear'], ['get', 'total_electors'],
-                0, 50,
+                0, 60,
                 50000, 480
             ]);
         });
@@ -1329,48 +1416,61 @@
             map.setPaintProperty('wards-extrusion', 'fill-extrusion-height', 0);
         });
 
-        // Choropleth Mode Selector
-        function updateChoropleth(mode) {
-            choroplethMode = mode;
-            ['modeElectors', 'modeGender', 'modeAge'].forEach(id => document.getElementById(id).classList.remove('active'));
-            if (mode === 'electors') {
-                document.getElementById('modeElectors').classList.add('active');
+        // Choropleth Modes
+        function setChoropleth(mode) {
+            ['modeVoters', 'modeRatio', 'modeAge'].forEach(id => document.getElementById(id).classList.remove('active'));
+            if (mode === 'voters') {
+                document.getElementById('modeVoters').classList.add('active');
                 map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
                     'interpolate', ['linear'], ['get', 'total_electors'],
                     0, '#38bdf8',
                     15000, '#0284c7',
-                    22000, '#818cf8',
+                    22000, '#8b5cf6',
                     35000, '#f59e0b',
-                    45000, '#f43f5e'
+                    45000, '#e11d48'
                 ]);
-            } else if (mode === 'gender') {
-                document.getElementById('modeGender').classList.add('active');
+            } else if (mode === 'ratio') {
+                document.getElementById('modeRatio').classList.add('active');
                 map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
                     'interpolate', ['linear'], ['get', 'gender_ratio'],
-                    1050, '#38bdf8',
-                    1100, '#818cf8',
-                    1150, '#ec4899',
-                    1200, '#f43f5e'
+                    1050, '#0284c7',
+                    1100, '#8b5cf6',
+                    1150, '#db2777',
+                    1200, '#e11d48'
                 ]);
             } else if (mode === 'age') {
                 document.getElementById('modeAge').classList.add('active');
                 map.setPaintProperty('wards-extrusion', 'fill-extrusion-color', [
                     'interpolate', ['linear'], ['get', 'avg_age'],
-                    42, '#10b981',
-                    45, '#38bdf8',
-                    47, '#818cf8',
-                    50, '#a855f7'
+                    42, '#059669',
+                    45, '#0284c7',
+                    47, '#8b5cf6',
+                    50, '#d97706'
                 ]);
             }
         }
 
-        document.getElementById('modeElectors').addEventListener('click', () => updateChoropleth('electors'));
-        document.getElementById('modeGender').addEventListener('click', () => updateChoropleth('gender'));
-        document.getElementById('modeAge').addEventListener('click', () => updateChoropleth('age'));
+        document.getElementById('modeVoters').addEventListener('click', () => setChoropleth('voters'));
+        document.getElementById('modeRatio').addEventListener('click', () => setChoropleth('ratio'));
+        document.getElementById('modeAge').addEventListener('click', () => setChoropleth('age'));
+
+        // Map HUD Controls
+        document.getElementById('hudTilt').addEventListener('click', () => {
+            is3D = !is3D;
+            map.easeTo({ pitch: is3D ? 48 : 0, bearing: is3D ? -15 : 0, duration: 900 });
+            document.getElementById('btnTilt3D').classList.toggle('active', is3D);
+            document.getElementById('btnTilt2D').classList.toggle('active', !is3D);
+        });
+
+        document.getElementById('hudNorth').addEventListener('click', () => map.easeTo({ bearing: 0, pitch: 0, duration: 800 }));
+        document.getElementById('hudPlus').addEventListener('click', () => map.zoomIn());
+        document.getElementById('hudMinus').addEventListener('click', () => map.zoomOut());
+        document.getElementById('scorecardClose').addEventListener('click', () => {
+            document.getElementById('scorecardHUD').style.display = 'none';
+        });
 
         // Initialize
-        populateWardsDrawer();
-        // Automatically select the largest ward on load (Ward 116 Nilasandra)
+        populateWardsList();
         setTimeout(() => selectWard(116, false), 800);
     </script>
 </body>
