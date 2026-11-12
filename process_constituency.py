@@ -2,6 +2,7 @@ import io
 import re
 import os
 import sys
+import json
 import time
 import argparse
 import subprocess
@@ -11,6 +12,9 @@ import pymupdf
 import Vision, Quartz
 from Foundation import NSData
 import pandas as pd
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 CYRILLIC_TO_LATIN = {
     'Х': 'X', 'х': 'x',
@@ -46,12 +50,26 @@ def run_vision_ocr(image_bytes):
     return results
 
 def parse_single_pdf(pdf_path):
-    """Parses all voters from a single electoral roll PDF."""
+    """Parses all voters from a single electoral roll PDF with persistent cache."""
+    cache_dir = os.path.join(os.path.dirname(pdf_path), ".cache")
+    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+    cache_file = os.path.join(cache_dir, f"{base_name}.json")
+    
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cached_data = json.load(f)
+            if isinstance(cached_data, list) and len(cached_data) > 0:
+                return cached_data
+        except Exception:
+            pass
+
     try:
         doc = pymupdf.open(pdf_path)
     except Exception as e:
         print(f"Error opening {pdf_path}: {e}")
         return []
+
         
     total_pages = len(doc)
     if total_pages < 3:
@@ -287,6 +305,13 @@ def parse_single_pdf(pdf_path):
                 })
 
     print(f"  [Done] {os.path.basename(pdf_path)}: Extracted {len(voters)} voters")
+    try:
+        os.makedirs(cache_dir, exist_ok=True)
+        with open(cache_file, 'w', encoding='utf-8') as f:
+            json.dump(voters, f, ensure_ascii=False)
+    except Exception:
+        pass
+
     return voters
 
 def process_constituency(constituency_folder_path, rclone_remote="gdrive:", root_folder_id="1mWKMVs2ibWWZG0bCO3QwK0yZtYGabZh5", workers=4, max_files=None, upload_after=True):
@@ -321,7 +346,7 @@ def process_constituency(constituency_folder_path, rclone_remote="gdrive:", root
     pdf_files = sorted(pdf_files, key=part_key)
 
     # 2. Local working directories
-    local_dir = os.path.abspath(f"./downloads/{clean_name}")
+    local_dir = os.path.join(BASE_DIR, "downloads", clean_name)
     os.makedirs(local_dir, exist_ok=True)
     
     print(f"Downloading PDFs to local cache: {local_dir}...")
@@ -361,7 +386,7 @@ def process_constituency(constituency_folder_path, rclone_remote="gdrive:", root
 
     # 4. Generate Master Excel File
     master_excel_filename = f"{clean_name}_Master_Electoral_Roll.xlsx"
-    master_excel_path = os.path.abspath(master_excel_filename)
+    master_excel_path = os.path.join(BASE_DIR, master_excel_filename)
     
     print(f"Compiling Master Excel file: {master_excel_filename}...")
     df = pd.DataFrame(all_voters)

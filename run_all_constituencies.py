@@ -3,6 +3,7 @@ import sys
 import subprocess
 import time
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_FOLDER_ID = "1mWKMVs2ibWWZG0bCO3QwK0yZtYGabZh5"
 
 CONSTITUENCIES = [
@@ -47,9 +48,10 @@ def is_already_done(c_path):
     """Check if the master excel already exists locally or on Google Drive."""
     clean_name = c_path.split('/')[-1]
     expected_filename = f"{clean_name}_Master_Electoral_Roll.xlsx"
+    local_file = os.path.join(BASE_DIR, expected_filename)
     
     # 1. Fast local check
-    if os.path.exists(expected_filename) and os.path.getsize(expected_filename) > 500 * 1024:
+    if os.path.exists(local_file) and os.path.getsize(local_file) > 500 * 1024:
         return True
         
     # 2. Direct remote file check
@@ -95,7 +97,7 @@ def main():
             "--workers", "6"
         ]
         
-        ret = subprocess.run(cmd)
+        ret = subprocess.run(cmd, cwd=BASE_DIR)
         t_elapsed = time.time() - t_start
         
         if ret.returncode != 0:
@@ -104,7 +106,7 @@ def main():
             print(f" [COMPLETED] Finished {clean_name} in {t_elapsed/60:.1f} mins!", flush=True)
             
             # Clean up local PDF cache to keep disk space free
-            local_cache = os.path.abspath(f"./downloads/{clean_name}")
+            local_cache = os.path.join(BASE_DIR, "downloads", clean_name)
             if os.path.exists(local_cache):
                 subprocess.run(["rm", "-rf", local_cache])
                 print(f" Cleaned up local cache {local_cache}", flush=True)
